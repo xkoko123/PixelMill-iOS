@@ -1,0 +1,537 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D84825D51E0125C9007FD9D3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825D41E0125C9007FD9D3 /* main.m */; };
+		D84825D81E0125C9007FD9D3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825D71E0125C9007FD9D3 /* AppDelegate.m */; };
+		D84825DB1E0125C9007FD9D3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825DA1E0125C9007FD9D3 /* ViewController.m */; };
+		D84825DE1E0125C9007FD9D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D84825DC1E0125C9007FD9D3 /* Main.storyboard */; };
+		D84825E01E0125C9007FD9D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D84825DF1E0125C9007FD9D3 /* Assets.xcassets */; };
+		D84825E31E0125C9007FD9D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D84825E11E0125C9007FD9D3 /* LaunchScreen.storyboard */; };
+		D84825EE1E0125C9007FD9D3 /* PixelMillTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825ED1E0125C9007FD9D3 /* PixelMillTests.m */; };
+		D84825F91E0125C9007FD9D3 /* PixelMillUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825F81E0125C9007FD9D3 /* PixelMillUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D84825EA1E0125C9007FD9D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D84825C81E0125C8007FD9D3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D84825CF1E0125C9007FD9D3;
+			remoteInfo = PixelMill;
+		};
+		D84825F51E0125C9007FD9D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D84825C81E0125C8007FD9D3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D84825CF1E0125C9007FD9D3;
+			remoteInfo = PixelMill;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D84825D01E0125C9007FD9D3 /* PixelMill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PixelMill.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D84825D41E0125C9007FD9D3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D84825D61E0125C9007FD9D3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D84825D71E0125C9007FD9D3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D84825D91E0125C9007FD9D3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		D84825DA1E0125C9007FD9D3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D84825DD1E0125C9007FD9D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D84825DF1E0125C9007FD9D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D84825E21E0125C9007FD9D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D84825E41E0125C9007FD9D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D84825E91E0125C9007FD9D3 /* PixelMillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelMillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D84825ED1E0125C9007FD9D3 /* PixelMillTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PixelMillTests.m; sourceTree = "<group>"; };
+		D84825EF1E0125C9007FD9D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D84825F41E0125C9007FD9D3 /* PixelMillUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelMillUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D84825F81E0125C9007FD9D3 /* PixelMillUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PixelMillUITests.m; sourceTree = "<group>"; };
+		D84825FA1E0125C9007FD9D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D84825CD1E0125C9007FD9D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84825E61E0125C9007FD9D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84825F11E0125C9007FD9D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D84825C71E0125C8007FD9D3 = {
+			isa = PBXGroup;
+			children = (
+				D84825D21E0125C9007FD9D3 /* PixelMill */,
+				D84825EC1E0125C9007FD9D3 /* PixelMillTests */,
+				D84825F71E0125C9007FD9D3 /* PixelMillUITests */,
+				D84825D11E0125C9007FD9D3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D84825D11E0125C9007FD9D3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D84825D01E0125C9007FD9D3 /* PixelMill.app */,
+				D84825E91E0125C9007FD9D3 /* PixelMillTests.xctest */,
+				D84825F41E0125C9007FD9D3 /* PixelMillUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D84825D21E0125C9007FD9D3 /* PixelMill */ = {
+			isa = PBXGroup;
+			children = (
+				D84825D61E0125C9007FD9D3 /* AppDelegate.h */,
+				D84825D71E0125C9007FD9D3 /* AppDelegate.m */,
+				D84825D91E0125C9007FD9D3 /* ViewController.h */,
+				D84825DA1E0125C9007FD9D3 /* ViewController.m */,
+				D84825DC1E0125C9007FD9D3 /* Main.storyboard */,
+				D84825DF1E0125C9007FD9D3 /* Assets.xcassets */,
+				D84825E11E0125C9007FD9D3 /* LaunchScreen.storyboard */,
+				D84825E41E0125C9007FD9D3 /* Info.plist */,
+				D84825D31E0125C9007FD9D3 /* Supporting Files */,
+			);
+			path = PixelMill;
+			sourceTree = "<group>";
+		};
+		D84825D31E0125C9007FD9D3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D84825D41E0125C9007FD9D3 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D84825EC1E0125C9007FD9D3 /* PixelMillTests */ = {
+			isa = PBXGroup;
+			children = (
+				D84825ED1E0125C9007FD9D3 /* PixelMillTests.m */,
+				D84825EF1E0125C9007FD9D3 /* Info.plist */,
+			);
+			path = PixelMillTests;
+			sourceTree = "<group>";
+		};
+		D84825F71E0125C9007FD9D3 /* PixelMillUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D84825F81E0125C9007FD9D3 /* PixelMillUITests.m */,
+				D84825FA1E0125C9007FD9D3 /* Info.plist */,
+			);
+			path = PixelMillUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D84825CF1E0125C9007FD9D3 /* PixelMill */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D84825FD1E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMill" */;
+			buildPhases = (
+				D84825CC1E0125C9007FD9D3 /* Sources */,
+				D84825CD1E0125C9007FD9D3 /* Frameworks */,
+				D84825CE1E0125C9007FD9D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PixelMill;
+			productName = PixelMill;
+			productReference = D84825D01E0125C9007FD9D3 /* PixelMill.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D84825E81E0125C9007FD9D3 /* PixelMillTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D84826001E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMillTests" */;
+			buildPhases = (
+				D84825E51E0125C9007FD9D3 /* Sources */,
+				D84825E61E0125C9007FD9D3 /* Frameworks */,
+				D84825E71E0125C9007FD9D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D84825EB1E0125C9007FD9D3 /* PBXTargetDependency */,
+			);
+			name = PixelMillTests;
+			productName = PixelMillTests;
+			productReference = D84825E91E0125C9007FD9D3 /* PixelMillTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D84825F31E0125C9007FD9D3 /* PixelMillUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D84826031E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMillUITests" */;
+			buildPhases = (
+				D84825F01E0125C9007FD9D3 /* Sources */,
+				D84825F11E0125C9007FD9D3 /* Frameworks */,
+				D84825F21E0125C9007FD9D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D84825F61E0125C9007FD9D3 /* PBXTargetDependency */,
+			);
+			name = PixelMillUITests;
+			productName = PixelMillUITests;
+			productReference = D84825F41E0125C9007FD9D3 /* PixelMillUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D84825C81E0125C8007FD9D3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = tygogo;
+				TargetAttributes = {
+					D84825CF1E0125C9007FD9D3 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 3Q2KCLD6NT;
+						ProvisioningStyle = Automatic;
+					};
+					D84825E81E0125C9007FD9D3 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 3Q2KCLD6NT;
+						ProvisioningStyle = Automatic;
+						TestTargetID = D84825CF1E0125C9007FD9D3;
+					};
+					D84825F31E0125C9007FD9D3 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 3Q2KCLD6NT;
+						ProvisioningStyle = Automatic;
+						TestTargetID = D84825CF1E0125C9007FD9D3;
+					};
+				};
+			};
+			buildConfigurationList = D84825CB1E0125C8007FD9D3 /* Build configuration list for PBXProject "PixelMill" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D84825C71E0125C8007FD9D3;
+			productRefGroup = D84825D11E0125C9007FD9D3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D84825CF1E0125C9007FD9D3 /* PixelMill */,
+				D84825E81E0125C9007FD9D3 /* PixelMillTests */,
+				D84825F31E0125C9007FD9D3 /* PixelMillUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D84825CE1E0125C9007FD9D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84825E31E0125C9007FD9D3 /* LaunchScreen.storyboard in Resources */,
+				D84825E01E0125C9007FD9D3 /* Assets.xcassets in Resources */,
+				D84825DE1E0125C9007FD9D3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84825E71E0125C9007FD9D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84825F21E0125C9007FD9D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D84825CC1E0125C9007FD9D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84825DB1E0125C9007FD9D3 /* ViewController.m in Sources */,
+				D84825D81E0125C9007FD9D3 /* AppDelegate.m in Sources */,
+				D84825D51E0125C9007FD9D3 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84825E51E0125C9007FD9D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84825EE1E0125C9007FD9D3 /* PixelMillTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84825F01E0125C9007FD9D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84825F91E0125C9007FD9D3 /* PixelMillUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D84825EB1E0125C9007FD9D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D84825CF1E0125C9007FD9D3 /* PixelMill */;
+			targetProxy = D84825EA1E0125C9007FD9D3 /* PBXContainerItemProxy */;
+		};
+		D84825F61E0125C9007FD9D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D84825CF1E0125C9007FD9D3 /* PixelMill */;
+			targetProxy = D84825F51E0125C9007FD9D3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D84825DC1E0125C9007FD9D3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D84825DD1E0125C9007FD9D3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D84825E11E0125C9007FD9D3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D84825E21E0125C9007FD9D3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D84825FB1E0125C9007FD9D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D84825FC1E0125C9007FD9D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D84825FE1E0125C9007FD9D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
+				INFOPLIST_FILE = PixelMill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMill;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D84825FF1E0125C9007FD9D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
+				INFOPLIST_FILE = PixelMill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMill;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		D84826011E0125C9007FD9D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
+				INFOPLIST_FILE = PixelMillTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMillTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelMill.app/PixelMill";
+			};
+			name = Debug;
+		};
+		D84826021E0125C9007FD9D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
+				INFOPLIST_FILE = PixelMillTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMillTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelMill.app/PixelMill";
+			};
+			name = Release;
+		};
+		D84826041E0125C9007FD9D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
+				INFOPLIST_FILE = PixelMillUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMillUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = PixelMill;
+			};
+			name = Debug;
+		};
+		D84826051E0125C9007FD9D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
+				INFOPLIST_FILE = PixelMillUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMillUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = PixelMill;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D84825CB1E0125C8007FD9D3 /* Build configuration list for PBXProject "PixelMill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D84825FB1E0125C9007FD9D3 /* Debug */,
+				D84825FC1E0125C9007FD9D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D84825FD1E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D84825FE1E0125C9007FD9D3 /* Debug */,
+				D84825FF1E0125C9007FD9D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D84826001E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMillTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D84826011E0125C9007FD9D3 /* Debug */,
+				D84826021E0125C9007FD9D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D84826031E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMillUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D84826041E0125C9007FD9D3 /* Debug */,
+				D84826051E0125C9007FD9D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D84825C81E0125C8007FD9D3 /* Project object */;
+}
