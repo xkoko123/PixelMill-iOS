@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "AYTabBarController.h"
 
+#import "UIColor+colorWithInt.h"
 @interface AppDelegate ()
 
 @end
@@ -17,6 +19,22 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    [UIColor colorWithInt:0xf86924];
+    
+    AYTabBarController *tabVc = [[AYTabBarController alloc] init];
+    
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:56 / 255.0 green:65 / 255.0 blue:80 / 255.0 alpha:1]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:56 / 255.0 green:72 / 255.0 blue:97 / 255.0 alpha:1]];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                           NSFontAttributeName:[UIFont fontWithName:@"Pixel" size:17]}];
+    [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+    
+    [self.window setRootViewController:tabVc];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

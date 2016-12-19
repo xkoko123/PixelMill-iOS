@@ -7,14 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D8468ED01E03A6AC0086F173 /* UIColor+colorWithInt.m in Sources */ = {isa = PBXBuildFile; fileRef = D8468ECF1E03A6AC0086F173 /* UIColor+colorWithInt.m */; };
+		D8468ED21E03EEAB0086F173 /* PIXEL.TTF in Resources */ = {isa = PBXBuildFile; fileRef = D8468ED11E03EE430086F173 /* PIXEL.TTF */; };
+		D8468ED41E040D800086F173 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8468ED31E040D800086F173 /* Assets.xcassets */; };
 		D84825D51E0125C9007FD9D3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825D41E0125C9007FD9D3 /* main.m */; };
 		D84825D81E0125C9007FD9D3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825D71E0125C9007FD9D3 /* AppDelegate.m */; };
 		D84825DB1E0125C9007FD9D3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825DA1E0125C9007FD9D3 /* ViewController.m */; };
 		D84825DE1E0125C9007FD9D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D84825DC1E0125C9007FD9D3 /* Main.storyboard */; };
-		D84825E01E0125C9007FD9D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D84825DF1E0125C9007FD9D3 /* Assets.xcassets */; };
 		D84825E31E0125C9007FD9D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D84825E11E0125C9007FD9D3 /* LaunchScreen.storyboard */; };
 		D84825EE1E0125C9007FD9D3 /* PixelMillTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825ED1E0125C9007FD9D3 /* PixelMillTests.m */; };
 		D84825F91E0125C9007FD9D3 /* PixelMillUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84825F81E0125C9007FD9D3 /* PixelMillUITests.m */; };
+		D8580D8C1E01B2BA009648ED /* AYBaseCanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580D8B1E01B2BA009648ED /* AYBaseCanvasView.m */; };
+		D8580D8F1E01B4E3009648ED /* AYCanvasA.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580D8E1E01B4E3009648ED /* AYCanvasA.m */; };
+		D8580D921E025AA9009648ED /* AYCanvasB.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580D911E025AA9009648ED /* AYCanvasB.m */; };
+		D8580DA81E02A12E009648ED /* AYTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DA71E02A12E009648ED /* AYTabBarController.m */; };
+		D8580DAB1E02A9FE009648ED /* AYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DAA1E02A9FE009648ED /* AYNavigationController.m */; };
+		D8580DAE1E02AAEB009648ED /* AYBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DAD1E02AAEB009648ED /* AYBaseViewController.m */; };
+		D8580DB11E02AB14009648ED /* AYExploreController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DB01E02AB14009648ED /* AYExploreController.m */; };
+		D8580DB41E02AB27009648ED /* AYMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DB31E02AB27009648ED /* AYMessageController.m */; };
+		D8580DB71E02AB34009648ED /* AYMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DB61E02AB34009648ED /* AYMeController.m */; };
+		D8580DBC1E02B490009648ED /* AYDrawController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DBB1E02B490009648ED /* AYDrawController.m */; };
+		D88DC06E1E02E62000C32C81 /* AYLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */; };
+		D88DC0721E02EF7400C32C81 /* AYPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC0711E02EF7400C32C81 /* AYPopupWindow.m */; };
+		D88DC0771E0301A600C32C81 /* AYUnderLineTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC0761E0301A600C32C81 /* AYUnderLineTextField.m */; };
+		D8BDFCCC1E066F65006C562B /* AYBoardCanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = D8BDFCCB1E066F65006C562B /* AYBoardCanvas.m */; };
+		D8BDFCD81E06B2A5006C562B /* AYPixelsManage.m in Sources */ = {isa = PBXBuildFile; fileRef = D8BDFCD71E06B2A5006C562B /* AYPixelsManage.m */; };
+		D8BDFCDE1E06B8BC006C562B /* AYBaseDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8BDFCDD1E06B8BC006C562B /* AYBaseDrawView.m */; };
+		D8BDFCE11E06C5FA006C562B /* AYFingerDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8BDFCE01E06C5FA006C562B /* AYFingerDrawView.m */; };
+		D8BDFCE41E06C9BC006C562B /* AYCursorDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8BDFCE31E06C9BC006C562B /* AYCursorDrawView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +55,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D8468ECE1E03A6AC0086F173 /* UIColor+colorWithInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+colorWithInt.h"; sourceTree = "<group>"; };
+		D8468ECF1E03A6AC0086F173 /* UIColor+colorWithInt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+colorWithInt.m"; sourceTree = "<group>"; };
+		D8468ED11E03EE430086F173 /* PIXEL.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = PIXEL.TTF; sourceTree = "<group>"; };
+		D8468ED31E040D800086F173 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D84825D01E0125C9007FD9D3 /* PixelMill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PixelMill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D84825D41E0125C9007FD9D3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D84825D61E0125C9007FD9D3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -42,7 +66,6 @@
 		D84825D91E0125C9007FD9D3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		D84825DA1E0125C9007FD9D3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D84825DD1E0125C9007FD9D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D84825DF1E0125C9007FD9D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D84825E21E0125C9007FD9D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D84825E41E0125C9007FD9D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D84825E91E0125C9007FD9D3 /* PixelMillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelMillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +74,43 @@
 		D84825F41E0125C9007FD9D3 /* PixelMillUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelMillUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D84825F81E0125C9007FD9D3 /* PixelMillUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PixelMillUITests.m; sourceTree = "<group>"; };
 		D84825FA1E0125C9007FD9D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8580D8A1E01B2BA009648ED /* AYBaseCanvasView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYBaseCanvasView.h; sourceTree = "<group>"; };
+		D8580D8B1E01B2BA009648ED /* AYBaseCanvasView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYBaseCanvasView.m; sourceTree = "<group>"; };
+		D8580D8D1E01B4E3009648ED /* AYCanvasA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCanvasA.h; sourceTree = "<group>"; };
+		D8580D8E1E01B4E3009648ED /* AYCanvasA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCanvasA.m; sourceTree = "<group>"; };
+		D8580D901E025AA9009648ED /* AYCanvasB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCanvasB.h; sourceTree = "<group>"; };
+		D8580D911E025AA9009648ED /* AYCanvasB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCanvasB.m; sourceTree = "<group>"; };
+		D8580DA61E02A12E009648ED /* AYTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYTabBarController.h; sourceTree = "<group>"; };
+		D8580DA71E02A12E009648ED /* AYTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYTabBarController.m; sourceTree = "<group>"; };
+		D8580DA91E02A9FE009648ED /* AYNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYNavigationController.h; sourceTree = "<group>"; };
+		D8580DAA1E02A9FE009648ED /* AYNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYNavigationController.m; sourceTree = "<group>"; };
+		D8580DAC1E02AAEB009648ED /* AYBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYBaseViewController.h; sourceTree = "<group>"; };
+		D8580DAD1E02AAEB009648ED /* AYBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYBaseViewController.m; sourceTree = "<group>"; };
+		D8580DAF1E02AB14009648ED /* AYExploreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYExploreController.h; sourceTree = "<group>"; };
+		D8580DB01E02AB14009648ED /* AYExploreController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYExploreController.m; sourceTree = "<group>"; };
+		D8580DB21E02AB27009648ED /* AYMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYMessageController.h; sourceTree = "<group>"; };
+		D8580DB31E02AB27009648ED /* AYMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMessageController.m; sourceTree = "<group>"; };
+		D8580DB51E02AB34009648ED /* AYMeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYMeController.h; sourceTree = "<group>"; };
+		D8580DB61E02AB34009648ED /* AYMeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMeController.m; sourceTree = "<group>"; };
+		D8580DBA1E02B490009648ED /* AYDrawController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYDrawController.h; sourceTree = "<group>"; };
+		D8580DBB1E02B490009648ED /* AYDrawController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYDrawController.m; sourceTree = "<group>"; };
+		D88DC06C1E02E62000C32C81 /* AYLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYLoginViewController.h; sourceTree = "<group>"; };
+		D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYLoginViewController.m; sourceTree = "<group>"; };
+		D88DC0701E02EF7400C32C81 /* AYPopupWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYPopupWindow.h; sourceTree = "<group>"; };
+		D88DC0711E02EF7400C32C81 /* AYPopupWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYPopupWindow.m; sourceTree = "<group>"; };
+		D88DC0751E0301A600C32C81 /* AYUnderLineTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYUnderLineTextField.h; sourceTree = "<group>"; };
+		D88DC0761E0301A600C32C81 /* AYUnderLineTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYUnderLineTextField.m; sourceTree = "<group>"; };
+		D8BDFCCA1E066F65006C562B /* AYBoardCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYBoardCanvas.h; sourceTree = "<group>"; };
+		D8BDFCCB1E066F65006C562B /* AYBoardCanvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYBoardCanvas.m; sourceTree = "<group>"; };
+		D8BDFCD61E06B2A5006C562B /* AYPixelsManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYPixelsManage.h; sourceTree = "<group>"; };
+		D8BDFCD71E06B2A5006C562B /* AYPixelsManage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYPixelsManage.m; sourceTree = "<group>"; };
+		D8BDFCDC1E06B8BC006C562B /* AYBaseDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYBaseDrawView.h; sourceTree = "<group>"; };
+		D8BDFCDD1E06B8BC006C562B /* AYBaseDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYBaseDrawView.m; sourceTree = "<group>"; };
+		D8BDFCDF1E06C5FA006C562B /* AYFingerDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYFingerDrawView.h; sourceTree = "<group>"; };
+		D8BDFCE01E06C5FA006C562B /* AYFingerDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYFingerDrawView.m; sourceTree = "<group>"; };
+		D8BDFCE21E06C9BC006C562B /* AYCursorDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCursorDrawView.h; sourceTree = "<group>"; };
+		D8BDFCE31E06C9BC006C562B /* AYCursorDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCursorDrawView.m; sourceTree = "<group>"; };
+		D8BDFCE51E06EA86006C562B /* AYPublicHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AYPublicHeader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +138,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D8468ECD1E03A6150086F173 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				D8468ECE1E03A6AC0086F173 /* UIColor+colorWithInt.h */,
+				D8468ECF1E03A6AC0086F173 /* UIColor+colorWithInt.m */,
+			);
+			name = Category;
+			sourceTree = "<group>";
+		};
 		D84825C71E0125C8007FD9D3 = {
 			isa = PBXGroup;
 			children = (
@@ -101,13 +170,18 @@
 		D84825D21E0125C9007FD9D3 /* PixelMill */ = {
 			isa = PBXGroup;
 			children = (
+				D8580DB81E02B42F009648ED /* NEW */,
+				D8580D971E029FA9009648ED /* EXPLORE */,
+				D8580DA21E02A079009648ED /* MESSAGE */,
+				D8580D981E02A004009648ED /* ME */,
+				D8580D961E029E91009648ED /* COMMON */,
 				D84825D61E0125C9007FD9D3 /* AppDelegate.h */,
 				D84825D71E0125C9007FD9D3 /* AppDelegate.m */,
 				D84825D91E0125C9007FD9D3 /* ViewController.h */,
 				D84825DA1E0125C9007FD9D3 /* ViewController.m */,
 				D84825DC1E0125C9007FD9D3 /* Main.storyboard */,
-				D84825DF1E0125C9007FD9D3 /* Assets.xcassets */,
 				D84825E11E0125C9007FD9D3 /* LaunchScreen.storyboard */,
+				D8468ED31E040D800086F173 /* Assets.xcassets */,
 				D84825E41E0125C9007FD9D3 /* Info.plist */,
 				D84825D31E0125C9007FD9D3 /* Supporting Files */,
 			);
@@ -117,6 +191,7 @@
 		D84825D31E0125C9007FD9D3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D8468ED11E03EE430086F173 /* PIXEL.TTF */,
 				D84825D41E0125C9007FD9D3 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -138,6 +213,199 @@
 				D84825FA1E0125C9007FD9D3 /* Info.plist */,
 			);
 			path = PixelMillUITests;
+			sourceTree = "<group>";
+		};
+		D8580D961E029E91009648ED /* COMMON */ = {
+			isa = PBXGroup;
+			children = (
+				D8468ECD1E03A6150086F173 /* Category */,
+				D8580D9E1E02A038009648ED /* Controller */,
+				D8580D9D1E02A034009648ED /* View */,
+				D8580D9C1E02A02E009648ED /* Model */,
+				D8BDFCE51E06EA86006C562B /* AYPublicHeader.h */,
+			);
+			name = COMMON;
+			sourceTree = "<group>";
+		};
+		D8580D971E029FA9009648ED /* EXPLORE */ = {
+			isa = PBXGroup;
+			children = (
+				D8580D9B1E02A018009648ED /* Model */,
+				D8580D9A1E02A013009648ED /* View */,
+				D8580D991E02A00B009648ED /* Controller */,
+			);
+			name = EXPLORE;
+			sourceTree = "<group>";
+		};
+		D8580D981E02A004009648ED /* ME */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DA11E02A049009648ED /* Controller */,
+				D8580DA01E02A044009648ED /* View */,
+				D8580D9F1E02A03F009648ED /* Model */,
+			);
+			name = ME;
+			sourceTree = "<group>";
+		};
+		D8580D991E02A00B009648ED /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DAF1E02AB14009648ED /* AYExploreController.h */,
+				D8580DB01E02AB14009648ED /* AYExploreController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		D8580D9A1E02A013009648ED /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		D8580D9B1E02A018009648ED /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		D8580D9C1E02A02E009648ED /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		D8580D9D1E02A034009648ED /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D8BDFCC91E066E8A006C562B /* DrawingBoard */,
+				D88DC06F1E02EED700C32C81 /* Canvas */,
+				D88DC0701E02EF7400C32C81 /* AYPopupWindow.h */,
+				D88DC0711E02EF7400C32C81 /* AYPopupWindow.m */,
+				D88DC0751E0301A600C32C81 /* AYUnderLineTextField.h */,
+				D88DC0761E0301A600C32C81 /* AYUnderLineTextField.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		D8580D9E1E02A038009648ED /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DA61E02A12E009648ED /* AYTabBarController.h */,
+				D8580DA71E02A12E009648ED /* AYTabBarController.m */,
+				D8580DA91E02A9FE009648ED /* AYNavigationController.h */,
+				D8580DAA1E02A9FE009648ED /* AYNavigationController.m */,
+				D8580DAC1E02AAEB009648ED /* AYBaseViewController.h */,
+				D8580DAD1E02AAEB009648ED /* AYBaseViewController.m */,
+				D88DC06C1E02E62000C32C81 /* AYLoginViewController.h */,
+				D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		D8580D9F1E02A03F009648ED /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		D8580DA01E02A044009648ED /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		D8580DA11E02A049009648ED /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DB51E02AB34009648ED /* AYMeController.h */,
+				D8580DB61E02AB34009648ED /* AYMeController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		D8580DA21E02A079009648ED /* MESSAGE */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DA51E02A0A2009648ED /* Model */,
+				D8580DA41E02A09A009648ED /* View */,
+				D8580DA31E02A094009648ED /* Controlle */,
+			);
+			name = MESSAGE;
+			sourceTree = "<group>";
+		};
+		D8580DA31E02A094009648ED /* Controlle */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DB21E02AB27009648ED /* AYMessageController.h */,
+				D8580DB31E02AB27009648ED /* AYMessageController.m */,
+			);
+			name = Controlle;
+			sourceTree = "<group>";
+		};
+		D8580DA41E02A09A009648ED /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		D8580DA51E02A0A2009648ED /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		D8580DB81E02B42F009648ED /* NEW */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DB91E02B437009648ED /* Controller */,
+			);
+			name = NEW;
+			sourceTree = "<group>";
+		};
+		D8580DB91E02B437009648ED /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D8580DBA1E02B490009648ED /* AYDrawController.h */,
+				D8580DBB1E02B490009648ED /* AYDrawController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		D88DC06F1E02EED700C32C81 /* Canvas */ = {
+			isa = PBXGroup;
+			children = (
+				D8580D8A1E01B2BA009648ED /* AYBaseCanvasView.h */,
+				D8580D8B1E01B2BA009648ED /* AYBaseCanvasView.m */,
+				D8580D8D1E01B4E3009648ED /* AYCanvasA.h */,
+				D8580D8E1E01B4E3009648ED /* AYCanvasA.m */,
+				D8580D901E025AA9009648ED /* AYCanvasB.h */,
+				D8580D911E025AA9009648ED /* AYCanvasB.m */,
+			);
+			name = Canvas;
+			sourceTree = "<group>";
+		};
+		D8BDFCC91E066E8A006C562B /* DrawingBoard */ = {
+			isa = PBXGroup;
+			children = (
+				D8BDFCD61E06B2A5006C562B /* AYPixelsManage.h */,
+				D8BDFCD71E06B2A5006C562B /* AYPixelsManage.m */,
+				D8BDFCCA1E066F65006C562B /* AYBoardCanvas.h */,
+				D8BDFCCB1E066F65006C562B /* AYBoardCanvas.m */,
+				D8BDFCDC1E06B8BC006C562B /* AYBaseDrawView.h */,
+				D8BDFCDD1E06B8BC006C562B /* AYBaseDrawView.m */,
+				D8BDFCDF1E06C5FA006C562B /* AYFingerDrawView.h */,
+				D8BDFCE01E06C5FA006C562B /* AYFingerDrawView.m */,
+				D8BDFCE21E06C9BC006C562B /* AYCursorDrawView.h */,
+				D8BDFCE31E06C9BC006C562B /* AYCursorDrawView.m */,
+			);
+			name = DrawingBoard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,7 +470,7 @@
 		D84825C81E0125C8007FD9D3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = tygogo;
 				TargetAttributes = {
 					D84825CF1E0125C9007FD9D3 = {
@@ -249,8 +517,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8468ED21E03EEAB0086F173 /* PIXEL.TTF in Resources */,
 				D84825E31E0125C9007FD9D3 /* LaunchScreen.storyboard in Resources */,
-				D84825E01E0125C9007FD9D3 /* Assets.xcassets in Resources */,
+				D8468ED41E040D800086F173 /* Assets.xcassets in Resources */,
 				D84825DE1E0125C9007FD9D3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,9 +545,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8580DA81E02A12E009648ED /* AYTabBarController.m in Sources */,
+				D8580DAB1E02A9FE009648ED /* AYNavigationController.m in Sources */,
 				D84825DB1E0125C9007FD9D3 /* ViewController.m in Sources */,
+				D8580DAE1E02AAEB009648ED /* AYBaseViewController.m in Sources */,
 				D84825D81E0125C9007FD9D3 /* AppDelegate.m in Sources */,
+				D8580D921E025AA9009648ED /* AYCanvasB.m in Sources */,
+				D8BDFCCC1E066F65006C562B /* AYBoardCanvas.m in Sources */,
+				D8BDFCD81E06B2A5006C562B /* AYPixelsManage.m in Sources */,
+				D8580D8F1E01B4E3009648ED /* AYCanvasA.m in Sources */,
+				D8468ED01E03A6AC0086F173 /* UIColor+colorWithInt.m in Sources */,
+				D8580DB71E02AB34009648ED /* AYMeController.m in Sources */,
+				D88DC06E1E02E62000C32C81 /* AYLoginViewController.m in Sources */,
+				D8580DB11E02AB14009648ED /* AYExploreController.m in Sources */,
+				D8BDFCE11E06C5FA006C562B /* AYFingerDrawView.m in Sources */,
+				D88DC0771E0301A600C32C81 /* AYUnderLineTextField.m in Sources */,
+				D8580DBC1E02B490009648ED /* AYDrawController.m in Sources */,
+				D8BDFCE41E06C9BC006C562B /* AYCursorDrawView.m in Sources */,
 				D84825D51E0125C9007FD9D3 /* main.m in Sources */,
+				D88DC0721E02EF7400C32C81 /* AYPopupWindow.m in Sources */,
+				D8BDFCDE1E06B8BC006C562B /* AYBaseDrawView.m in Sources */,
+				D8580D8C1E01B2BA009648ED /* AYBaseCanvasView.m in Sources */,
+				D8580DB41E02AB27009648ED /* AYMessageController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +639,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -398,6 +687,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -428,7 +718,7 @@
 				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
 				INFOPLIST_FILE = PixelMill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMill;
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.Quiz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -440,7 +730,7 @@
 				DEVELOPMENT_TEAM = 3Q2KCLD6NT;
 				INFOPLIST_FILE = PixelMill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = tygogo.PixelMill;
+				PRODUCT_BUNDLE_IDENTIFIER = tygogo.Quiz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -514,6 +804,7 @@
 				D84825FF1E0125C9007FD9D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D84826001E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMillTests" */ = {
 			isa = XCConfigurationList;
@@ -522,6 +813,7 @@
 				D84826021E0125C9007FD9D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D84826031E0125C9007FD9D3 /* Build configuration list for PBXNativeTarget "PixelMillUITests" */ = {
 			isa = XCConfigurationList;
@@ -530,6 +822,7 @@
 				D84826051E0125C9007FD9D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
