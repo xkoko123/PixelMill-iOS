@@ -45,7 +45,10 @@
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
-    [self drawCursor];
+    if (self.showExtendedContent) {
+        [self drawCursor];
+    }
+    
 }
 
 - (void)drawCursor
@@ -103,9 +106,11 @@
     [self pushToUndoQueue];
     CGPoint point = CGPointMake(_cursorX, _cursorY);
     CGPoint loc = [self locationWithPoint:point];
-    //    [self fillPixelAtLoc:loc];
+    [self drawPixelAtLoc:loc];
+    [self setNeedsDisplay];
     _lastLoc = loc;
     _isPress = YES;
+    
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (_isPress) {
@@ -117,7 +122,7 @@
         }
     });
     
-    [self setNeedsDisplay];
+    
 }
 
 -(void)touchUp
@@ -150,5 +155,7 @@
     CGPoint loc = [self locationWithPoint:point];
     [self fillUpWithLoc:loc];
 }
+
+
 
 @end

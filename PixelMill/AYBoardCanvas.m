@@ -33,6 +33,8 @@
 
         _showGrid = YES;
         _showAlignmentLine = NO;
+        
+        _showExtendedContent = YES;
 
         
         _gridLayer = [CAShapeLayer layer];
@@ -54,6 +56,8 @@
         
         _showGrid = YES;
         _showAlignmentLine = NO;
+        
+        _showExtendedContent = YES;
         
         _gridLayer = [CAShapeLayer layer];
         [self.layer addSublayer:_gridLayer];
@@ -157,18 +161,26 @@
     
 }
 
-
 - (UIImage*)exportImage
 {
-    _gridLayer.hidden = YES;
+    self.showExtendedContent = NO;
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [UIScreen mainScreen].scale);
     [[self layer] renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    _gridLayer.hidden = NO;
-    return image;
-//    UIImageWriteToSavedPhotosAlbum(image, self, nil, nil);
-    
+    self.showExtendedContent = YES;
+    return image;    
+}
+
+-(void)setShowExtendedContent:(BOOL)showExtendedContent
+{
+    _showExtendedContent = showExtendedContent;
+    if (showExtendedContent) {
+        _gridLayer.hidden = NO;
+    }else{
+        _gridLayer.hidden = YES;
+    }
+    [self setNeedsDisplay];
 }
 
 

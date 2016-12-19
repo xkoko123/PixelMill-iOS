@@ -26,7 +26,7 @@
 @property (nonatomic,assign) int bgColor;
 @property (nonatomic,assign) BOOL showGrid;
 @property (nonatomic,assign) BOOL showAlignmentLine;
-
+@property (nonatomic,assign) BOOL showExtendedContent;
 
 - (UIImage*)exportImage;
 @end

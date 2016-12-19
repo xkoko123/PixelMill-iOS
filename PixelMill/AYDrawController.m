@@ -107,6 +107,8 @@
                              self.view.frame.size.width, _tapbtnHeight);
     
     [tapBar addTarget:self action:@selector(didTapBartouchUp:) forControlEvents:UIControlEventTouchUpInside];
+    [tapBar addTarget:self action:@selector(didTapBartouchUp:) forControlEvents:UIControlEventTouchUpOutside];
+
     
     [tapBar addTarget:self action:@selector(didTapBartouchDown:) forControlEvents:UIControlEventTouchDown];
 
