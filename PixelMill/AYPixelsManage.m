@@ -115,22 +115,22 @@
     switch (move) {
         case MOVE_UP:
         {
-            movedOrigin = CGPointMake(_origin.x, _origin.y + 1);
+            movedOrigin = CGPointMake(_origin.x, _origin.y - 1);
         }
             break;
         case MOVE_DOWN:
         {
-            movedOrigin = CGPointMake(_origin.x, _origin.y - 1);
+            movedOrigin = CGPointMake(_origin.x, _origin.y + 1);
         }
             break;
         case MOVE_RIGHT:
         {
-            movedOrigin = CGPointMake(_origin.x - 1, _origin.y);
+            movedOrigin = CGPointMake(_origin.x + 1, _origin.y);
         }
             break;
         case MOVE_LEFT:
         {
-            movedOrigin = CGPointMake(_origin.x + 1, _origin.y);
+            movedOrigin = CGPointMake(_origin.x - 1, _origin.y);
         }
             break;
         default:
