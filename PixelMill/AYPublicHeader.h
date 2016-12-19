@@ -16,4 +16,10 @@ typedef NS_ENUM(NSUInteger, MOVE) {
     MOVE_RIGHT,
 };
 
+
+typedef NS_ENUM(NSUInteger, AYCursorDrawType) {
+    PEN = 0,
+    FILL,
+    StandardLine,
+};
 #endif /* AYPublicHeader_h */

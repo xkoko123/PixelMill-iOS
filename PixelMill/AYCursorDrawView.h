@@ -8,9 +8,10 @@
 //  模拟鼠标画图模式，，
 
 #import "AYBaseDrawView.h"
-
+#import "AYPublicHeader.h"
 @interface AYCursorDrawView : AYBaseDrawView
 
+@property (nonatomic, assign) AYCursorDrawType currentType;
 
 - (instancetype)initWithFrame:(CGRect)frame ansSize:(int)size;
 

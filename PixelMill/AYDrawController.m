@@ -11,6 +11,7 @@
 #import "UIColor+colorWithInt.h"
 #import "AYPublicHeader.h"
 #import "AYPixelsManage.h"
+
 @interface AYDrawController ()
 @property (nonatomic, strong)UIView *panelbar;
 @property (nonatomic, strong)UIButton *undoBtn;
@@ -347,7 +348,7 @@
 
 -(void)didClickFill
 {
-    [self.drawView fillUp];
+    [self.drawView setCurrentType:FILL];
 }
 
 -(void)didClickMove
