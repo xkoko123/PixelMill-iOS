@@ -7,10 +7,10 @@
 //
 
 #import "AYDrawController.h"
-#import "AYCursorDrawView.h"
 #import "UIColor+colorWithInt.h"
 #import "AYPublicHeader.h"
-#import "AYPixelsManage.h"
+#import "AYPixelAdapter.h"
+#import "AYCursorDrawer.h"
 
 @interface AYDrawController ()
 @property (nonatomic, strong)UIView *panelbar;
@@ -18,7 +18,7 @@
 @property (nonatomic, strong)UIButton *clearBtn;
 @property (nonatomic, strong)UIButton *fillBtn;
 @property (nonatomic, strong)UIButton *moveBtn;
-@property (nonatomic, strong)AYCursorDrawView *drawView;
+@property (nonatomic, strong)AYCursorDrawer *drawView;
 @property (nonatomic, strong)UIControl *movePanel;
 @end
 
@@ -43,8 +43,8 @@
         int red = arc4random()%256;
         int green = arc4random()%256;
         int blue = arc4random()%256;
-        NSInteger data = red * 256 * 256 + green * 256 + blue;
-        [arrM addObject:@(data)];
+//        NSInteger data = red * 256 * 256 + green * 256 + blue;
+        [arrM addObject:[UIColor colorWithRed:red / 255.0 green:green/255.0 blue:blue/255.0 alpha:1]];
     }
     self.pallets = [arrM copy];
     
@@ -97,8 +97,8 @@
 -(void)initCanvas
 {
     CGRect viewRect = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.width);
-    _drawView = [[AYCursorDrawView alloc] initWithFrame:viewRect ansSize:32];
-    _drawView.slectedColor = [self.pallets[0] intValue];
+    _drawView = [[AYCursorDrawer alloc] initWithFrame:viewRect andSize:64];
+    _drawView.slectedColor = self.pallets[0];
     [self.view addSubview:_drawView];
     
     //tapbtn;
@@ -224,7 +224,7 @@
     NSMutableArray *arryM = [[NSMutableArray alloc] init];
     CGFloat width = self.view.frame.size.width / 16.0;
     for (int i=0;i<self.pallets.count; i++) {
-        UIColor *color = [UIColor colorWithInt:[self.pallets[i] intValue]];
+        UIColor *color = self.pallets[i];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
         
@@ -389,19 +389,13 @@
 -(void)didTapBartouchUp:(UIControl*)btn
 {
     btn.alpha = 1.0;
-    if ([self.drawView isMemberOfClass:[AYCursorDrawView class]]) {
-        id x = self.drawView;
-        [x touchUp];
-    }
+    [self.drawView touchUp];
 }
 
 -(void)didTapBartouchDown:(UIControl*)btn
 {
     btn.alpha = 0.8;
-    if ([self.drawView isMemberOfClass:[AYCursorDrawView class]]) {
-        id x = self.drawView;
-        [x touchDown];
-    }
+    [self.drawView touchDown];
 }
 
 -(void)didSelectColor:(UIButton*)btn
@@ -419,7 +413,7 @@
                                _colorHeight + _slectedColorOffset);
     }];
     
-    self.drawView.slectedColor = [self.pallets[btn.tag] intValue];
+    self.drawView.slectedColor = self.pallets[btn.tag];
 }
 
 - (void) disSelectAllColor
