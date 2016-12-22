@@ -10,10 +10,12 @@
 #import "UIColor+colorWithInt.h"
 @interface AYPixelAdapter()<NSCopying>
 
+
+
 @end
 @implementation AYPixelAdapter
 {
-    NSMutableDictionary *_dict;
+    
     CGPoint _origin;
     
 }
@@ -25,9 +27,12 @@
         _size = size;
         _dict = [[NSMutableDictionary alloc] init];
         _origin = CGPointZero;
+        _defaultColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
+        _visible = YES;
     }
     return self;
 }
+
 -(instancetype)initWithString:(NSString*)string
 {
     self = [super init];
@@ -38,9 +43,10 @@
         _size = size;
         _dict = [[NSMutableDictionary alloc] init];
         _origin = CGPointZero;
+        _visible = YES;
         
         for (int i=0;i<[splitArray count] -1 ; i++) {
-            int color = [[splitArray objectAtIndex: i+1] intValue];
+            NSInteger color = [[splitArray objectAtIndex: i+1] integerValue];
             int row = i / size;
             int col = i % size;
             [self replaceAtLoc:CGPointMake(row, col) Withcolor:[UIColor colorWithInt:color]];
@@ -54,7 +60,16 @@
     AYPixelAdapter *pa = [[[self class] allocWithZone:zone] init];
     pa.size = _size;
     pa->_origin = _origin;
-    pa->_dict = [_dict mutableCopy];
+    pa.defaultColor = self.defaultColor;
+    
+    NSMutableDictionary *dm = [[NSMutableDictionary alloc] init];
+    for (NSValue *v in [_dict allKeys]) {
+        UIColor *c = [_dict objectForKey:v];
+        UIColor *x = [UIColor colorWithInt:[c intData]];
+        [dm setObject:x forKey:v];
+    }
+    pa->_dict = dm;
+    
     return pa;
 }
 
@@ -70,12 +85,7 @@
     NSValue *key = [self keyForLoc:loc];
     
     UIColor *c = [_dict objectForKey:key];
-//    NSLog(@"%f %f %@", loc.y , loc.x, c);
-    if (c) {
-        return c;
-    }else{
-        return nil;
-    }
+    return c;
 }
 
 - (void)replaceAtLoc:(CGPoint)loc Withcolor:(UIColor*)color;
@@ -116,6 +126,7 @@
 //移动画布内容，返回是否成功
 - (BOOL)move:(MOVE)move
 {
+    NSLog(@"move");
     CGPoint movedOrigin;
     switch (move) {
         case MOVE_UP:
@@ -149,5 +160,45 @@
         return NO;
     }
 }
+- (void)removeAtLoc:(CGPoint)loc
+{
+    [_dict removeObjectForKey:[self keyForLoc:loc]];
+}
 
+
+- (NSString*)getStringData
+{
+    NSString *s = [NSString stringWithFormat:@"%d",_size];
+    
+    for (int row=0; row < _size;  row++) {
+        for (int col=0; col < _size;  col++) {
+            CGPoint loc = CGPointMake(row, col);
+            UIColor *color = [self colorWithLoc:loc];
+            NSInteger data;
+            if (color) {
+                data = [color intData];
+            }else{
+                data = [self.defaultColor intData];
+            }
+            s = [s stringByAppendingString:[NSString stringWithFormat:@"@%ld",data]];
+        }
+    }
+    return s;
+}
+
+-(UIColor *)colorWithKey:(NSValue *)key
+{
+    CGPoint loc = [key CGPointValue];
+    //row loc.x
+    //col loc.y
+    return [self colorWithLoc:CGPointMake(loc.y - _origin.x, loc.x - _origin.y)];
+}
+
+- (CGPoint)locWithKey:(NSValue*)key;
+{
+    CGPoint loc = [key CGPointValue];
+//    NSLog(@"%f   %f",loc.x,loc.y);
+    //x lie y han
+    return CGPointMake(loc.y - _origin.x, loc.x - _origin.y);
+}
 @end

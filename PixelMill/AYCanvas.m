@@ -27,15 +27,13 @@
         
         self.layer.drawsAsynchronously = YES;
         
-        _bgColor = [UIColor whiteColor];
-        
+        _bgColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
         self.adapter = [[AYPixelAdapter alloc] initWithSize:size];
         
         _showGrid = YES;
         _showAlignmentLine = NO;
         
         _showExtendedContent = YES;
-        
         _gridLayer = [CAShapeLayer layer];
         [self.layer addSublayer:_gridLayer];
         [self resetGridLayer];
@@ -45,9 +43,19 @@
 
 -(void)setAdapter:(AYPixelAdapter *)adapter
 {
+//    NSLog(@"dasd  %d %d",[_adapter.dict count], [adapter.dict count]);
+    
     _adapter = adapter;
     _size = adapter.size;
-    _pixelWidth = self.frame.size.width / _size ;
+    _pixelWidth = self.frame.size.width / _size;
+    [self setNeedsDisplay];
+}
+
+-(void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    _pixelWidth = frame.size.width / _size;
+    [self resetGridLayer];
     [self setNeedsDisplay];
 }
 
@@ -84,29 +92,51 @@
 -(void)drawRect:(CGRect)rect
 {
     [self drawContent];
+    if (!self.showExtendedContent) {
+        return;
+    }
 }
 
 -(void)drawContent
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
+//    for (int row=0; row<_size; row++) {
+//        for (int col=0; col<_size; col++) {
+//            UIColor *color = [self.adapter colorWithLoc:CGPointMake(row, col)];
+//            if (color) {
+//                NSLog(@"sadsa");
+//                [color setFill];
+//            }else{
+//                [self.bgColor setFill];
+//            }
+//            
+//            CGRect pixelRect = CGRectMake(col * _pixelWidth,
+//                                          row * _pixelWidth,
+//                                          _pixelWidth+0.5,
+//                                          _pixelWidth+0.5);
+//            CGContextAddRect(ctx, pixelRect);
+//            CGContextFillPath(ctx);
+//        }
+//    }
     
-    for (int row=0; row<_size; row++) {
-        for (int col=0; col<_size; col++) {
-            UIColor *color = [self.adapter colorWithLoc:CGPointMake(row, col)];
-            if (color) {
-                [color setFill];
-            }else{
-                [self.bgColor setFill];
-            }
-            
-            CGRect pixelRect = CGRectMake(col * _pixelWidth,
-                                          row * _pixelWidth,
-                                          _pixelWidth,
-                                          _pixelWidth);
-            CGContextAddRect(ctx, pixelRect);
-            CGContextFillPath(ctx);
+    for (NSValue *key in [self.adapter.dict allKeys] ) {
+        UIColor *color = [self.adapter colorWithKey:key];
+        CGPoint loc = [self.adapter locWithKey:key];
+        
+        if (color) {
+            [color setFill];
+        }else{
+            [self.bgColor setFill];
         }
+        
+        CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
+                                      loc.x * _pixelWidth,
+                                      _pixelWidth,
+                                      _pixelWidth);
+        CGContextAddRect(ctx, pixelRect);
+        CGContextFillPath(ctx);
+
     }
 }
 
@@ -144,7 +174,9 @@
 -(void)setShowExtendedContent:(BOOL)showExtendedContent
 {
     _showExtendedContent = showExtendedContent;
+    _gridLayer.hidden = !showExtendedContent;
     [self setNeedsDisplay];
 }
+
 
 @end

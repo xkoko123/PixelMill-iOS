@@ -11,19 +11,31 @@
 #import "AYPublicHeader.h"
 @interface AYPixelAdapter : NSObject
 @property (nonatomic, assign) int size;
+@property (nonatomic, strong) UIColor *defaultColor;
+@property(nonatomic,strong)NSMutableDictionary *dict;
+
+@property (nonatomic,assign) BOOL visible;
 
 -(instancetype)initWithSize:(int)size;
 -(instancetype)initWithString:(NSString*)string;
 - (UIColor*)colorWithLoc:(CGPoint)loc;
 
+
 - (void)replaceAtLoc:(CGPoint)loc Withcolor:(UIColor*)color;
+
+- (void)removeAtLoc:(CGPoint)loc;
 
 - (void)reset;
 
 - (void)resetOrigin;
 
--(BOOL)validateOrigin:(CGPoint)origin;
+- (BOOL)validateOrigin:(CGPoint)origin;
 
 - (BOOL)move:(MOVE)move;
+
+- (NSString*)getStringData;
+
+- (UIColor*)colorWithKey:(NSValue*)key;
+- (CGPoint)locWithKey:(NSValue*)key;
 
 @end

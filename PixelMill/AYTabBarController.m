@@ -10,7 +10,7 @@
 #import "AYMeController.h"
 #import "AYMessageController.h"
 #import "AYExploreController.h"
-#import "AYDrawController.h"
+#import "AYDrawViewController.h"
 #import "AYNavigationController.h"
 
 
@@ -93,7 +93,7 @@
 {
 
     if ([tabBarController.viewControllers indexOfObject:viewController] == 1) {
-        AYDrawController *dvc = [[AYDrawController alloc] init];
+        AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
         [self presentViewController:dvc animated:YES completion:nil];
         return NO;
     }

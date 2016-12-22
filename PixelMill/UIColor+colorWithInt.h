@@ -10,6 +10,8 @@
 
 @interface UIColor (colorWithInt)
 
-+(UIColor*)colorWithInt:(int)i;
++(UIColor *)colorWithInt:(NSInteger)i;
+
+- (NSInteger)intData;
 
 @end

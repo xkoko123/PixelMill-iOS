@@ -11,10 +11,7 @@
 @implementation AYDrawView
 {
     @protected
-    
-    CAShapeLayer *_gridLayer;
-    CAShapeLayer *_alignmentLineLayer;
-    
+        
     NSMutableArray *_undoQueue;
     NSMutableArray *_redoQueue;
 }
@@ -94,6 +91,39 @@
     }
 }
 
+-(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
+{
+    
+    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
+    
+    if(distance<1){
+        [self erasePixelAtLoc:locB];
+        return;
+    }
+    
+    if(locA.x > locB.x){
+        CGPoint temp = locA;
+        locA = locB;
+        locB = temp;
+    }
+    
+    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
+    
+    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
+    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
+        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
+            int y = k * ( x - locA.x) + locA.y;
+            [self erasePixelAtLoc:CGPointMake(x, y)];
+            
+        }
+    }else{
+        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
+            int x = locA.x + (y - locA.y) / k;
+            [self erasePixelAtLoc:CGPointMake(x, y)];
+        }
+    }
+}
+
 #pragma mark - 撤回
 
 -(void)pushToUndoQueue
@@ -101,6 +131,7 @@
     if (_undoQueue.count > self.maxUndoQueueCount) {
         [_undoQueue removeObjectAtIndex:0];
     }
+    
     [_undoQueue addObject:[self.adapter copy]];
 }
 
@@ -109,8 +140,10 @@
     if ([_undoQueue count] >0) {
         [self pushToRedoQueue];
         self.adapter = [_undoQueue lastObject];
+
+//        self.adapter = [[AYPixelAdapter alloc] initWithSize:_size];
+        
         [_undoQueue removeLastObject];
-        //        [self setNeedsDisplay]; 加在setter中了
     }
 }
 
@@ -162,7 +195,6 @@
         return;
     }
     
-    [self pushToUndoQueue];
     [self fillUp:row andCol:col andColor:c];
     [self setNeedsDisplay];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -203,5 +235,17 @@
 }
 
 
+-(void)erasePixelAtLoc:(CGPoint)loc
+{
+    [self.adapter removeAtLoc:CGPointMake(loc.y, loc.x)];
+}
 
+//通知视图修改adapter....
+-(void)setAdapter:(AYPixelAdapter *)adapter
+{
+    [super setAdapter:adapter];
+    if ([self.deligate respondsToSelector:@selector(drawViewDataChange:)]) {
+        [self.deligate drawViewDataChange:adapter];
+    }
+}
 @end

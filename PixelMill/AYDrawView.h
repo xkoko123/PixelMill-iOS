@@ -8,11 +8,24 @@
 
 #import "AYCanvas.h"
 
+@class AYPixelAdapter;
+
+@protocol AYDrawViewDeligate <NSObject>
+
+@optional
+
+-(void)drawViewDataChange:(AYPixelAdapter*)adapter;
+
+@end
+
 @interface AYDrawView : AYCanvas
 
 
 @property (nonatomic, assign) int maxUndoQueueCount;
 @property (nonatomic, strong) UIColor *slectedColor;
+
+
+@property (nonatomic,assign)id deligate;
 
 
 - (instancetype)initWithFrame:(CGRect)frame andSize:(int)size;
@@ -22,7 +35,11 @@
 
 -(void)drawPixelAtLoc:(CGPoint)loc;
 
+-(void)erasePixelAtLoc:(CGPoint)loc;
+
 -(void)addLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB;
+
+-(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB;
 
 -(void)move:(NSUInteger)move;
 
