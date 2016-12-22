@@ -6,11 +6,11 @@
 //  Copyright © 2016 tygogo. All rights reserved.
 //
 
-#import "AYDrawController.h"
+#import "AYDrawController1.h"
 #import "UIColor+colorWithInt.h"
 #import "AYPublicHeader.h"
 #import "AYPixelAdapter.h"
-#import "AYCursorDrawer.h"
+#import "AYCursorDrawView.h"
 
 @interface AYDrawController ()
 @property (nonatomic, strong)UIView *panelbar;
@@ -18,7 +18,7 @@
 @property (nonatomic, strong)UIButton *clearBtn;
 @property (nonatomic, strong)UIButton *fillBtn;
 @property (nonatomic, strong)UIButton *moveBtn;
-@property (nonatomic, strong)AYCursorDrawer *drawView;
+@property (nonatomic, strong)AYCursorDrawView *drawView;
 @property (nonatomic, strong)UIControl *movePanel;
 @end
 
@@ -97,7 +97,7 @@
 -(void)initCanvas
 {
     CGRect viewRect = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.width);
-    _drawView = [[AYCursorDrawer alloc] initWithFrame:viewRect andSize:64];
+    _drawView = [[AYCursorDrawView alloc] initWithFrame:viewRect andSize:32];
     _drawView.slectedColor = self.pallets[0];
     [self.view addSubview:_drawView];
     
@@ -313,8 +313,6 @@
 }
 
 
-
-
 /*
 #pragma mark - Navigation
 
@@ -328,8 +326,6 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-
 
 -(void)didClickUndo
 {
@@ -348,7 +344,7 @@
 
 -(void)didClickFill
 {
-    [self.drawView setCurrentType:FILL];
+    [self.drawView setCurrentType:BUCKET];
 }
 
 -(void)didClickMove
@@ -367,6 +363,7 @@
 {
     // TODO: UPLOAD
 //    [self.drawView.pixelsManage exportData];
+    NSLog(@"%@", [self.drawView.adapter getStringData]);
     UIImage *image =  [self.drawView exportImage];
     UIActivityViewController *ac = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
     
@@ -455,11 +452,7 @@
             break;
     }
 }
--(void)didClickEraser:(UIButton *)btn
-{
-    [self disSelectAllColor];
-    self.drawView.slectedColor = self.drawView.bgColor;
-}
+
 
 
 @end

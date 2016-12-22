@@ -43,7 +43,7 @@
 
 //计算混合后的颜色 只能用在argb模式上,,,
 //color1 背景色   color2覆盖色
-+(UIColor*)blendColor:(UIColor*)color1 andColor:(UIColor*)color2
++(UIColor*)blendBgColor:(UIColor*)color1 andFrontColor:(UIColor*)color2
 {
     CGFloat a1,r1,g1,b1,   a2,r2,g2,b2;
     [color1 getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
@@ -57,4 +57,10 @@
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
+-(CGFloat)getAlpha
+{
+    CGFloat a;
+    [self getRed:nil green:nil blue:nil alpha:&a];
+    return a;
+}
 @end

@@ -160,6 +160,8 @@
     
     _drawView = [[AYCursorDrawView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:32];
     _drawView.deligate = self;
+    _drawView.layerAdapters = self.layerAdapters;
+    _drawView.layerBlendMode = YES;
     _drawView.backgroundColor = [UIColor clearColor];
     [_drawBoard addSubview:_drawView];
     [self.layerAdapters addObject:_drawView.adapter];
@@ -371,38 +373,35 @@
 -(void)resetLayer
 {
     NSLog(@"reset layer");
-    for (UIView *v in [_drawBoard subviews]) {
-        [v removeFromSuperview];
-    }
-    for (UIView *v in [_drawView subviews]) {
-        [v removeFromSuperview];
-    }
     
-    [_drawBoard addSubview:_drawView];
+    
+    
 
-    for (int i=0; i<self.layerAdapters.count; i++) {
-        AYPixelAdapter *adapter = [self.layerAdapters objectAtIndex:i];
-
-        if (i == self.editIndex) {
-            _drawView.adapter = adapter;
-        }else{
-            if (adapter.visible == NO) {
-                break;
-            }
-            AYCanvas *layer = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:32];
-            layer.adapter = adapter;
-            layer.backgroundColor = [UIColor clearColor];
-            layer.showExtendedContent = NO;
-            
-            //上
-            if (i > self.editIndex) {
-                [_drawBoard insertSubview:layer atIndex:0];
-                //下
-            }else if(i < self.editIndex){
-                [_drawView addSubview:layer];
-            }
-        }
-    }
+//    for (int i=0; i<self.layerAdapters.count; i++) {
+//        AYPixelAdapter *adapter = [self.layerAdapters objectAtIndex:i];
+//
+//        if (i == self.editIndex) {
+//            _drawView.adapter = adapter;
+//            _drawView.layerAdapters = self.layerAdapters;
+//            _drawView.layerBlendMode = YES;
+//        }else{
+//            if (adapter.visible == NO) {
+//                break;
+//            }
+//            AYCanvas *layer = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:32];
+//            layer.adapter = adapter;
+//            layer.backgroundColor = [UIColor clearColor];
+//            layer.showExtendedContent = NO;
+//            
+//            //上
+//            if (i > self.editIndex) {
+//                [_drawBoard insertSubview:layer atIndex:0];
+//                //下
+//            }else if(i < self.editIndex){
+//                [_drawView addSubview:layer];
+//            }
+//        }
+//    }
 
 }
 
@@ -578,16 +577,18 @@
 
 -(void)didChangedVisibleOrEditIndex:(NSInteger)index
 {
-    NSLog(@"%d",index);
     self.editIndex = index;
-    [self resetLayer];
+    _drawView.adapter = [self.layerAdapters objectAtIndex:self.editIndex];
 }
+
 -(void)setEditIndex:(NSInteger)editIndex
 {
     _editIndex = editIndex;
 }
+
 -(void)drawViewDataChange:(AYPixelAdapter *)adapter
 {
+    adapter.visible = [self.layerAdapters objectAtIndex:self.editIndex];
     [self.layerAdapters replaceObjectAtIndex:self.editIndex withObject:adapter];
 }
 

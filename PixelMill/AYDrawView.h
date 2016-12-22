@@ -53,4 +53,6 @@
 -(void)undo;
 
 -(void)redo;
+
+-(void)clearUndoRedo;
 @end

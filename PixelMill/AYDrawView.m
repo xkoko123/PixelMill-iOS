@@ -58,6 +58,7 @@
     [self.adapter replaceAtLoc:CGPointMake(loc.y, loc.x) Withcolor:self.slectedColor];
 }
 
+
 -(void)addLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
@@ -90,6 +91,7 @@
         }
     }
 }
+
 
 -(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
@@ -126,6 +128,7 @@
 
 #pragma mark - 撤回
 
+
 -(void)pushToUndoQueue
 {
     if (_undoQueue.count > self.maxUndoQueueCount) {
@@ -147,6 +150,7 @@
     }
 }
 
+
 -(void)pushToRedoQueue
 {
     if (_redoQueue.count > self.maxUndoQueueCount) {
@@ -154,6 +158,7 @@
     }
     [_redoQueue addObject:[self.adapter copy]];
 }
+
 
 -(void)redo
 {
@@ -164,6 +169,7 @@
         //        [self setNeedsDisplay];
     }
 }
+
 
 //清空
 -(void)clearCanvas
@@ -182,6 +188,7 @@
         [self setNeedsDisplay];
     }
 }
+
 
 -(void)fillUpWithLoc:(CGPoint)loc
 {
@@ -240,12 +247,23 @@
     [self.adapter removeAtLoc:CGPointMake(loc.y, loc.x)];
 }
 
+
+-(void)clearUndoRedo
+{
+    [_undoQueue removeAllObjects];
+    [_redoQueue removeAllObjects];
+}
+
+
 //通知视图修改adapter....
 -(void)setAdapter:(AYPixelAdapter *)adapter
 {
     [super setAdapter:adapter];
     if ([self.deligate respondsToSelector:@selector(drawViewDataChange:)]) {
-        [self.deligate drawViewDataChange:adapter];
+        [self.deligate  drawViewDataChange:adapter];
     }
 }
+
+
+
 @end

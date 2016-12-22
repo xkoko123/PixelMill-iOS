@@ -14,4 +14,8 @@
 
 - (NSInteger)intData;
 
+
+-(CGFloat)getAlpha;
+
++(UIColor*)blendBgColor:(UIColor*)color1 andFrontColor:(UIColor*)color2;
 @end

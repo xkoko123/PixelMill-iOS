@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "AYCanvas.h"
 #import "AYPixelAdapter.h"
+#import "UIColor+colorWithInt.h"
 
 @implementation AYCanvas
 {
@@ -26,7 +27,7 @@
     if (self) {
         
         self.layer.drawsAsynchronously = YES;
-        
+        self.layerBlendMode = NO;
         _bgColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
         self.adapter = [[AYPixelAdapter alloc] initWithSize:size];
         
@@ -100,7 +101,7 @@
 -(void)drawContent
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
+    NSLog(@"ss");
 //    for (int row=0; row<_size; row++) {
 //        for (int col=0; col<_size; col++) {
 //            UIColor *color = [self.adapter colorWithLoc:CGPointMake(row, col)];
@@ -119,25 +120,67 @@
 //            CGContextFillPath(ctx);
 //        }
 //    }
-    
-    for (NSValue *key in [self.adapter.dict allKeys] ) {
-        UIColor *color = [self.adapter colorWithKey:key];
-        CGPoint loc = [self.adapter locWithKey:key];
+    if (!self.layerBlendMode) {
+        for (NSValue *key in [self.adapter.dict allKeys] ) {
+            UIColor *color = [self.adapter colorWithKey:key];
+            CGPoint loc = [self.adapter locWithKey:key];
+            
+            if (color) {
+                [color setFill];
+            }else{
+                [self.bgColor setFill];
+            }
+            
+            CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
+                                          loc.x * _pixelWidth,
+                                          _pixelWidth,
+                                          _pixelWidth);
+            CGContextAddRect(ctx, pixelRect);
+            CGContextFillPath(ctx);
+        }
+    }else{
         
-        if (color) {
-            [color setFill];
-        }else{
-            [self.bgColor setFill];
+        for (int row=0; row<_size; row++) {
+            for (int col=0; col<_size; col++) {
+                UIColor *topColor = nil;
+                //从顶层向下扫
+                for (NSInteger i=0; i<self.layerAdapters.count; i++) {
+                    AYPixelAdapter *adapter = [self.layerAdapters objectAtIndex:i];
+                    if (adapter.visible){
+                        UIColor *color = [adapter colorWithLoc:CGPointMake(row, col)];//最上面的数据
+                        
+                        if (topColor == nil) {
+                            topColor = color;
+                        }else{
+                            topColor = [UIColor blendBgColor:color andFrontColor:topColor];
+                        }
+                        
+                        if ([color getAlpha] ==  1) {//遇到不透明的颜色后，，它下面的就不用混和了
+                            break;
+                        }
+                    }
+
+                }
+                
+                
+                
+                if (topColor) {
+                    [topColor setFill];
+                }else{
+                    [self.bgColor setFill];
+                }
+                
+                CGRect pixelRect = CGRectMake(col * _pixelWidth,
+                                              row * _pixelWidth,
+                                              _pixelWidth+0.5,
+                                              _pixelWidth+0.5);
+                CGContextAddRect(ctx, pixelRect);
+                CGContextFillPath(ctx);
+            }
         }
         
-        CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
-                                      loc.x * _pixelWidth,
-                                      _pixelWidth,
-                                      _pixelWidth);
-        CGContextAddRect(ctx, pixelRect);
-        CGContextFillPath(ctx);
-
     }
+
 }
 
 -(void)setBgColor:(UIColor *)bgColor

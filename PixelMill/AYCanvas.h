@@ -33,6 +33,9 @@
 @property (nonatomic,assign) BOOL showGrid;
 @property (nonatomic,assign) BOOL showAlignmentLine;
 
+@property (nonatomic, assign) BOOL layerBlendMode;
+@property (nonatomic, weak) NSMutableArray *layerAdapters;
+
 - (UIImage*)exportImage;
 @end
 
