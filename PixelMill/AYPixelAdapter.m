@@ -17,6 +17,9 @@
 {
     
     CGPoint _origin;
+    NSMutableArray *_undoQueue;
+    NSMutableArray *_redoQueue;
+
     
 }
 
@@ -27,8 +30,12 @@
         _size = size;
         _dict = [[NSMutableDictionary alloc] init];
         _origin = CGPointZero;
+        _maxUndoQueueCount = 10;
+
         _defaultColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
         _visible = YES;
+        _undoQueue = [[NSMutableArray alloc] init];
+        _redoQueue = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -39,11 +46,16 @@
     if(self){
         NSArray *splitArray = [string componentsSeparatedByString:@"@"];
         
+        _maxUndoQueueCount = 20;
         int size = [[splitArray objectAtIndex:0] intValue];
         _size = size;
         _dict = [[NSMutableDictionary alloc] init];
         _origin = CGPointZero;
         _visible = YES;
+        
+        _undoQueue = [[NSMutableArray alloc] init];
+        _redoQueue = [[NSMutableArray alloc] init];
+
         
         for (int i=0;i<[splitArray count] -1 ; i++) {
             NSInteger color = [[splitArray objectAtIndex: i+1] integerValue];
@@ -201,4 +213,61 @@
     //x lie y han
     return CGPointMake(loc.y - _origin.x, loc.x - _origin.y);
 }
+
+
+//undo redo
+-(void)pushToUndoQueue
+{
+    if (_undoQueue.count > self.maxUndoQueueCount) {
+        [_undoQueue removeObjectAtIndex:0];
+    }
+    
+//    NSMutableDictionary *dm = [[NSMutableDictionary alloc] init];
+//    for (NSValue *v in [_dict allKeys]) {
+//        UIColor *c = [_dict objectForKey:v];
+//        UIColor *x = [UIColor colorWithInt:[c intData]];
+//        [dm setObject:x forKey:v];
+//    }
+    
+    [_undoQueue addObject:[_dict mutableCopy]];
+}
+
+-(void)undo
+{
+    if ([_undoQueue count] >0) {
+        [self pushToRedoQueue];
+        _dict = [_undoQueue lastObject];
+        
+        [_undoQueue removeLastObject];
+    }
+}
+
+
+-(void)pushToRedoQueue
+{
+    if (_redoQueue.count > self.maxUndoQueueCount) {
+        [_redoQueue removeObjectAtIndex:0];
+    }
+//    NSMutableDictionary *dm = [[NSMutableDictionary alloc] init];
+//    for (NSValue *v in [_dict allKeys]) {
+//        UIColor *c = [_dict objectForKey:v];
+//        UIColor *x = [UIColor colorWithInt:[c intData]];
+//        [dm setObject:x forKey:v];
+//    }
+
+    
+    [_redoQueue addObject:[_dict mutableCopy]];
+}
+
+-(void)redo
+{
+    if ([_redoQueue count] >0) {
+        [self pushToUndoQueue];
+        _dict = [_redoQueue lastObject];
+        [_redoQueue removeLastObject];
+        //        [self setNeedsDisplay];
+    }
+}
+
+
 @end

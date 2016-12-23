@@ -12,7 +12,6 @@
 @protocol LayerTableViewCellDelegate<NSObject>
 
 @optional
-- (void) layerCellDidChangeEditingCellAt:(int)index;
 - (void) layerCellchangedData;
 - (void) layerCellRemoveCellAtRow:(NSInteger)index;
 @end
@@ -27,4 +26,6 @@
 
 
 @property (nonatomic, weak) id delegate;
+
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier andSize:(NSInteger)size;
 @end

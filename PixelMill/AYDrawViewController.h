@@ -10,4 +10,5 @@
 
 @interface AYDrawViewController : AYBaseViewController
 @property (nonatomic,assign)NSInteger editIndex;
+@property (nonatomic,assign)NSInteger size;
 @end

@@ -64,7 +64,7 @@
     
     CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
     
-    if(distance<1){
+    if(distance<=1){
         [self drawPixelAtLoc:locB];
         return;
     }
@@ -131,44 +131,26 @@
 
 -(void)pushToUndoQueue
 {
-    if (_undoQueue.count > self.maxUndoQueueCount) {
-        [_undoQueue removeObjectAtIndex:0];
-    }
-    
-    [_undoQueue addObject:[self.adapter copy]];
+    [self.adapter pushToUndoQueue];
 }
 
 -(void)undo
 {
-    if ([_undoQueue count] >0) {
-        [self pushToRedoQueue];
-        self.adapter = [_undoQueue lastObject];
-
-//        self.adapter = [[AYPixelAdapter alloc] initWithSize:_size];
-        
-        [_undoQueue removeLastObject];
-    }
+    [self.adapter undo];
+    [self setNeedsDisplay];
 }
 
 
 -(void)pushToRedoQueue
 {
-    if (_redoQueue.count > self.maxUndoQueueCount) {
-        [_redoQueue removeObjectAtIndex:0];
-    }
-    [_redoQueue addObject:[self.adapter copy]];
+    [self.adapter pushToRedoQueue];
 }
 
 
 -(void)redo
 {
-    if ([_redoQueue count] >0) {
-        [self pushToUndoQueue];
-        self.adapter = [_redoQueue lastObject];
-        [_redoQueue removeLastObject];
-        //        [self setNeedsDisplay];
-    }
-}
+    [self.adapter redo];
+    [self setNeedsDisplay];}
 
 
 //清空
@@ -248,19 +230,14 @@
 }
 
 
--(void)clearUndoRedo
-{
-    [_undoQueue removeAllObjects];
-    [_redoQueue removeAllObjects];
-}
 
 
 //通知视图修改adapter....
 -(void)setAdapter:(AYPixelAdapter *)adapter
 {
     [super setAdapter:adapter];
-    if ([self.deligate respondsToSelector:@selector(drawViewDataChange:)]) {
-        [self.deligate  drawViewDataChange:adapter];
+    if ([self.deligate respondsToSelector:@selector(drawViewChangeAdapter:)]) {
+        [self.deligate  drawViewChangeAdapter:adapter];
     }
 }
 

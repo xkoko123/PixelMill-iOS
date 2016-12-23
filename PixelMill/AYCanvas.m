@@ -101,7 +101,6 @@
 -(void)drawContent
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    NSLog(@"ss");
 //    for (int row=0; row<_size; row++) {
 //        for (int col=0; col<_size; col++) {
 //            UIColor *color = [self.adapter colorWithLoc:CGPointMake(row, col)];

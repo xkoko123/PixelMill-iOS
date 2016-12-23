@@ -27,7 +27,7 @@
 @property (nonatomic, strong) NSMutableArray *colors;
 @property (nonatomic, assign) int canvasSize;
 @property (nonatomic, strong) AYCursorDrawView *drawView;
-@property (nonatomic, strong) UIView *drawBoard;
+@property (nonatomic, strong) UIScrollView *drawBoard;
 @property (nonatomic, strong) UIControl *movePanel;
 
 @property (nonatomic,strong) UIControl *previewView;
@@ -58,7 +58,7 @@
 
     _editIndex = 0;
     
-    
+    self.size = 64;
     [self initTopBar];
     [self initDrawBoard];
     [self initTapButton];
@@ -66,7 +66,6 @@
     [self initColorBar];
     [self initMovePanel];
     
-    [self resetLayer];
 }
 
 //顶栏
@@ -145,10 +144,10 @@
 //画板
 -(void)initDrawBoard
 {
-    _drawBoard = [[UIView alloc] init];
+    _drawBoard = [[UIScrollView alloc] init];
     _drawBoard.backgroundColor = [UIColor whiteColor];
     _drawBoard.clipsToBounds = YES;
-    
+//    _drawBoard.contentSize = CGSizeMake(600, 600);
     [self.view addSubview:_drawBoard];
     [_drawBoard mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);
@@ -158,7 +157,7 @@
     
     
     
-    _drawView = [[AYCursorDrawView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:32];
+    _drawView = [[AYCursorDrawView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:self.size];
     _drawView.deligate = self;
     _drawView.layerAdapters = self.layerAdapters;
     _drawView.layerBlendMode = YES;
@@ -469,6 +468,7 @@
         AYLayerEditorView *v = [[AYLayerEditorView alloc] initWithEditIndex:self.editIndex andAdapters:self.layerAdapters];
         
         v.delegate = self;
+        v.size = self.size;
 
         [self.view addSubview:v];
         
@@ -574,23 +574,26 @@
     }
 }
 
+//代理。。修改了visible属性需要刷新显示！
+-(void)didChangedVisible
+{
+    [self.drawView setNeedsDisplay];
+}
 
--(void)didChangedVisibleOrEditIndex:(NSInteger)index
+//绘图控件的代理方法，，撤销时adpter是深拷贝的，，所以要复制过来，，
+-(void)drawViewChangeAdapter:(AYPixelAdapter *)adapter
+{
+    adapter.visible = [self.layerAdapters objectAtIndex:self.editIndex];
+    [self.layerAdapters replaceObjectAtIndex:self.editIndex withObject:adapter];
+}
+
+//代理，，layer侧滑关闭时需要修改绘图控件的编辑层
+-(void)didChangedEditIndex:(NSInteger)index
 {
     self.editIndex = index;
     _drawView.adapter = [self.layerAdapters objectAtIndex:self.editIndex];
 }
 
--(void)setEditIndex:(NSInteger)editIndex
-{
-    _editIndex = editIndex;
-}
-
--(void)drawViewDataChange:(AYPixelAdapter *)adapter
-{
-    adapter.visible = [self.layerAdapters objectAtIndex:self.editIndex];
-    [self.layerAdapters replaceObjectAtIndex:self.editIndex withObject:adapter];
-}
 
 /*
 #pragma mark - Navigation

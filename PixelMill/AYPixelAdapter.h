@@ -13,7 +13,7 @@
 @property (nonatomic, assign) int size;
 @property (nonatomic, strong) UIColor *defaultColor;
 @property(nonatomic,strong)NSMutableDictionary *dict;
-
+@property (nonatomic, assign)NSInteger maxUndoQueueCount;
 @property (nonatomic,assign) BOOL visible;
 
 -(instancetype)initWithSize:(int)size;
@@ -37,5 +37,14 @@
 
 - (UIColor*)colorWithKey:(NSValue*)key;
 - (CGPoint)locWithKey:(NSValue*)key;
+
+
+-(void)pushToUndoQueue;
+
+-(void)undo;
+
+-(void)redo;
+
+-(void)pushToRedoQueue;
 
 @end

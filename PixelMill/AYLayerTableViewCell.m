@@ -24,23 +24,21 @@
     // Configure the view for the selected state
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier andSize:(NSInteger)size
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+        self.backgroundColor = [UIColor lightGrayColor];
         
         
-        _canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 140, 140) andSize:32];
+        _canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 148, 148) andSize:size];
         [self.contentView addSubview:_canvas];
         _canvas.backgroundColor = [UIColor whiteColor];
         _canvas.showExtendedContent = NO;
         [_canvas mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(140, 140));
+            make.size.mas_equalTo(CGSizeMake(148, 148));
             make.centerY.equalTo(self.contentView.mas_centerY);
-            make.left.equalTo(self.contentView.mas_left).offset(5);
+            make.left.equalTo(self.contentView.mas_left).offset(1);
         }];
         
         _visibleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -65,7 +63,7 @@
         }];
         [_editingBtn setBackgroundImage:[UIImage imageNamed:@"back1"] forState:UIControlStateNormal];
         [_editingBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateSelected ];
-        [_editingBtn addTarget:self action:@selector(didClickEditingBtn) forControlEvents:UIControlEventTouchUpInside];
+//        [_editingBtn addTarget:self action:@selector(didClickEditingBtn) forControlEvents:UIControlEventTouchUpInside];
         
         
         _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -103,21 +101,20 @@
     }
 }
 
--(void)didClickEditingBtn
-{
-    //选中编辑 自动选中显示
-    self.canvas.adapter.visible = YES;
-    
-    if([self.delegate respondsToSelector:@selector(layerCellDidChangeEditingCellAt:)]){
-        [self.delegate layerCellDidChangeEditingCellAt:self.tag];
-    }
-}
+//-(void)didClickEditingBtn
+//{
+//    //选中编辑 自动选中显示
+//    self.canvas.adapter.visible = YES;
+//    
+//    if([self.delegate respondsToSelector:@selector(layerCellDidChangeEditingCellAt:)]){
+//        [self.delegate layerCellDidChangeEditingCellAt:self.tag];
+//    }
+//}
 
 
 -(void)didClickDeleteBtn
 {
     if ([self.delegate respondsToSelector:@selector(layerCellRemoveCellAtRow:)]) {
-        NSLog(@"remove %d",self.tag);
         [self.delegate layerCellRemoveCellAtRow:self.tag];
     }
 }

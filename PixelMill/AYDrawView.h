@@ -14,7 +14,8 @@
 
 @optional
 
--(void)drawViewDataChange:(AYPixelAdapter*)adapter;
+-(void)drawViewChangeAdapter:(AYPixelAdapter*)adapter;
+-(void)drawViewChangeAdapters:(NSMutableArray*)adapters;
 
 @end
 

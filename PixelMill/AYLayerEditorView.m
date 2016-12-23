@@ -38,10 +38,11 @@
         _editIndex = index;
         _layerAdapters = adapters;
         _tableView = [[UITableView alloc] init];
-        _tableView.backgroundColor = [UIColor grayColor];
         _tableView.rowHeight = 150;
+        _tableView.clipsToBounds = NO; 
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:_tableView];
         [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.mas_top);
@@ -101,8 +102,6 @@
             make.left.equalTo(_tableView.mas_right);
             make.right.equalTo(self.mas_right);
         }];
-        
-
     }
     return self;
 }
@@ -116,13 +115,16 @@
         [self layoutIfNeeded];
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        if ([self.delegate respondsToSelector:@selector(didChangedEditIndex:)]) {
+            [self.delegate didChangedEditIndex:self.editIndex];
+        }
     }];
     
 }
 
 -(void)didClickAddLayer
 {
-    AYPixelAdapter *adapter = [[AYPixelAdapter alloc] initWithSize:32];
+    AYPixelAdapter *adapter = [[AYPixelAdapter alloc] initWithSize:self.size];
     [self.layerAdapters addObject:adapter];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.layerAdapters.count-1 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:YES];
@@ -145,7 +147,7 @@
 {
     AYLayerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
-        cell = [[AYLayerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        cell = [[AYLayerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell" andSize:self.size];
     }
     cell.delegate = self;
     cell.tag = indexPath.row;
@@ -185,6 +187,19 @@
 }
 
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger index = indexPath.row;
+    
+    NSInteger old = self.editIndex;
+    self.editIndex = index;
+    AYPixelAdapter *adapter = [self.layerAdapters objectAtIndex:index];
+    adapter.visible = YES;
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:old inSection:0],
+                                             [NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:NO];
+    [self notifySuperViewReload];
+
+}
 
 #pragma mark - TableView 长按拖拽
 -(void)longPressed:(UILongPressGestureRecognizer*)sender
@@ -328,8 +343,8 @@
 
 -(void)notifySuperViewReload
 {
-    if([self.delegate respondsToSelector:@selector(didChangedVisibleOrEditIndex:)]){
-        [self.delegate didChangedVisibleOrEditIndex:self.editIndex];
+    if([self.delegate respondsToSelector:@selector(didChangedVisible)]){
+        [self.delegate didChangedVisible];
     }
 }
 
@@ -340,23 +355,27 @@
     [self notifySuperViewReload];
 }
 
-//cell改变了edit属性
--(void)layerCellDidChangeEditingCellAt:(int)index
-{
-    self.editIndex = index;
-    [self.tableView reloadData];
-    [self notifySuperViewReload];
-}
+////cell改变了edit属性
+//-(void)layerCellDidChangeEditingCellAt:(int)index
+//{
+//    self.editIndex = index;
+//    [self.tableView reloadData];
+//    [self notifySuperViewReload];
+//}
 
 -(void)layerCellRemoveCellAtRow:(NSInteger)index
 {
-    if (self.editIndex >= index) {
+
+    if (index == 0 && self.editIndex == 0) {
+        self.editIndex = 0;
+    }else if (self.editIndex >= index) {
         self.editIndex = self.editIndex-1;
     }
     [self.layerAdapters removeObjectAtIndex:index];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:YES];
     //因为我在cell的tag中附带了信息，所以删除后tag顺序会变乱，只能重新加载....
     [self.tableView reloadData];
+    
     [self notifySuperViewReload];
 }
 

@@ -11,14 +11,17 @@
 @protocol LayerEditorViewDelegate<NSObject>
 
 @optional
-- (void) didChangedVisibleOrEditIndex:(NSInteger)index;
+//dismiss时 调用这条代理
+- (void) didChangedEditIndex:(NSInteger)index;
+//一修改就调用
+- (void) didChangedVisible;
 
 @end
 
 
 @interface AYLayerEditorView : UIView
 
-
+@property (nonatomic,assign) NSInteger size;
 @property (nonatomic, weak) id delegate;
 
 @property (nonatomic,weak) NSMutableArray *layerAdapters;

@@ -15,13 +15,13 @@
 @end
 @implementation AYCursorDrawView
 {
-    CGPoint _cursorPosition;
-    CGPoint _cursorLoc;
-    CGPoint _lastLoc;
-    CGFloat _curcorWidth;
+    CGPoint _cursorPosition;//鼠标的画布坐标
+    CGPoint _cursorLoc;//鼠标的像素坐标
+    CGPoint _lastLoc;//上次的像素坐标
+    CGFloat _curcorWidth;//鼠标宽度
     BOOL _isPress;
-    CGPoint _beginLoc;
-    CGPoint _lastFigerPosition;
+    CGPoint _beginLoc;//接触屏幕或者按下鼠标时的像素坐标
+    CGPoint _lastFigerPosition;//最新的手指画布坐标
 }
 
 
@@ -59,10 +59,23 @@
 
 - (void)drawCursor
 {
+    UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(_cursorLoc.x *_pixelWidth,
+                                                                     _cursorLoc.y *_pixelWidth,
+                                                                     _pixelWidth,
+                                                                     _pixelWidth)];
+    [path moveToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth)];
+    [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth ,_cursorLoc.y *_pixelWidth)];
+    [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
+    [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
+    [path closePath];
+    [path setLineWidth:2];
+    [[UIColor redColor] setStroke];
+    [path stroke];
+    
     switch (self.currentType) {
         case PEN:
         {
-            UIBezierPath *path = [UIBezierPath bezierPath];
+            path = [UIBezierPath bezierPath];
             
             [path moveToPoint:CGPointMake(_cursorPosition.x, _cursorPosition.y)];
             [path addLineToPoint:CGPointMake(_cursorPosition.x + _curcorWidth,
@@ -170,7 +183,7 @@
     //当前操作类型
 
     if (_fingerMode) {
-        _beginLoc = _cursorLoc;
+        _beginLoc = [self locationWithPoint: [touch previousLocationInView:self]];        
     }
     
     switch (self.currentType) {
