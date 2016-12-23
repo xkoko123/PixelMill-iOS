@@ -23,7 +23,7 @@
     
 }
 
--(instancetype)initWithSize:(int)size
+-(instancetype)initWithSize:(NSInteger)size
 {
     self = [super init];
     if(self){

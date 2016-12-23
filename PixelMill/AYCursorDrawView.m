@@ -34,9 +34,17 @@
 */
 
 
--(instancetype)initWithFrame:(CGRect)frame andSize:(int)size
+-(instancetype)initWithFrame:(CGRect)frame andSize:(NSInteger)size
 {
-    self = [super initWithFrame:frame andSize:size];
+    self = [super initWithSize:size];
+    if (self) {
+        self.frame = frame;
+    }
+    return self;
+}
+-(instancetype)initWithSize:(NSInteger)size
+{
+    self = [super initWithSize:size];
     if (self) {
         _cursorPosition = CGPointMake(0, 0);
         _curcorWidth = 15;
@@ -68,7 +76,7 @@
     [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
     [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
     [path closePath];
-    [path setLineWidth:2];
+    [path setLineWidth:1];
     [[UIColor redColor] setStroke];
     [path stroke];
     
@@ -286,6 +294,10 @@
             break;
     }
     [self setNeedsDisplay];
+    //刷新previewView
+    if ([self.delegate respondsToSelector:@selector(cursorDrawHasRefreshContent)]) {
+        [self.delegate cursorDrawHasRefreshContent];
+    }
 }
 
 

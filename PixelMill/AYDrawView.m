@@ -26,16 +26,26 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andSize:(int)size
 {
-    self = [super initWithFrame:frame andSize:size];
+    self = [super initWithSize:size];
+    if (self) {
+        self.frame = frame;
+    }
+    return self;
+}
+
+-(instancetype)initWithSize:(NSInteger)size
+{
+    self = [super initWithSize:size];
     if (self) {
         _maxUndoQueueCount = 20;
         _undoQueue = [[NSMutableArray alloc] init];
         _redoQueue = [[NSMutableArray alloc] init];
         //TODO : sfsf
         _slectedColor = [UIColor blackColor];
-
+        
     }
     return self;
+
 }
 
 -(CGPoint)locationWithPoint:(CGPoint)point
@@ -236,9 +246,10 @@
 -(void)setAdapter:(AYPixelAdapter *)adapter
 {
     [super setAdapter:adapter];
-    if ([self.deligate respondsToSelector:@selector(drawViewChangeAdapter:)]) {
-        [self.deligate  drawViewChangeAdapter:adapter];
+    if ([self.delegate respondsToSelector:@selector(drawViewChangeAdapter:)]) {
+        [self.delegate  drawViewChangeAdapter:adapter];
     }
+
 }
 
 

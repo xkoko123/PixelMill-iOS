@@ -10,7 +10,7 @@
 
 @interface AYSwipeToolBarView : UIScrollView
 @property (nonatomic, strong)NSMutableArray *btns;
-@property (nonatomic, assign)CGFloat padding;
+@property (nonatomic, assign)UIEdgeInsets edgeInset;
 
 - (instancetype)initWithButtons:(NSArray *)btns;
 

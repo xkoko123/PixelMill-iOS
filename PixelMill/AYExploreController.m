@@ -12,6 +12,7 @@
 #import "AYPixelAdapter.h"
 #import "AYCanvas.h"
 #import "UIColor+colorWithInt.h"
+
 @interface AYExploreController ()
 
 @end
@@ -26,8 +27,6 @@
     [btn setTitle:@"fsdfsdf" forState:UIControlStateNormal];
     
     [self.view addSubview:btn];
-    
-
     
 //    UIColor *c1 = [UIColor colorWithInt:data];
 //    NSLog(@"===%@",c);
@@ -107,6 +106,8 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
 
 
 @end

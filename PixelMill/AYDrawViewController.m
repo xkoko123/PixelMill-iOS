@@ -19,8 +19,9 @@
 //#import "AYLayerViewController.h"
 #import "AYLayerEditorView.h"
 #import "AYLayerTableViewCell.h"
+#import "AYColorPickerViewController.h"
 
-@interface AYDrawViewController () <LayerEditorViewDelegate,AYDrawViewDeligate>
+@interface AYDrawViewController () <LayerEditorViewDelegate, AYDrawViewDelegate, UIScrollViewDelegate, AYCursorDrawViewDelegate, AYColorPickerViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *layerAdapters;
 
@@ -48,6 +49,7 @@
 @implementation AYDrawViewController
 {
     BOOL _isMovePanelExpanded;
+    UIView *container;
 }
 
 - (void)viewDidLoad {
@@ -56,9 +58,10 @@
     _isMovePanelExpanded = NO;
     _layerAdapters = [[NSMutableArray alloc] init];
 
+    NSLog(@"did load");
     _editIndex = 0;
-    
-    self.size = 64;
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.size = 32;
     [self initTopBar];
     [self initDrawBoard];
     [self initTapButton];
@@ -68,11 +71,24 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"willappear");
+    [super viewWillAppear:animated];
+    [self.drawView setNeedsDisplay];
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    NSLog(@"didappear");
+    [super viewDidAppear:animated];
+    [self.drawView setNeedsDisplay];
+}
+
 //顶栏
 -(void)initTopBar
 {
     _topBar = [[UIView alloc] init];
-    _topBar.backgroundColor = [UIColor blackColor];
+    _topBar.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_topBar];
     
     
@@ -85,7 +101,7 @@
     
     //返回
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [backBtn setImage:[[UIImage imageNamed:@"back"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [backBtn setImage:[[UIImage imageNamed:@"back"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(didClickBackBtn) forControlEvents:UIControlEventTouchUpInside];
     [_topBar addSubview:backBtn];
     
@@ -93,21 +109,23 @@
         make.size.mas_equalTo(CGSizeMake(40, 40));
         make.left.equalTo(_topBar).with.offset(2);
     }];
+    [backBtn setTintColor:[UIColor blackColor]];
+
     
     //上传
     UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [saveBtn setImage:[[UIImage imageNamed:@"upload"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [saveBtn setImage:[[UIImage imageNamed:@"upload"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [saveBtn addTarget:self action:@selector(didClickSaveBtn) forControlEvents:UIControlEventTouchUpInside];
     [_topBar addSubview:saveBtn];
     [saveBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(40, 40));
         make.right.equalTo(_topBar).with.offset(2);
     }];
+    [saveBtn setTintColor:[UIColor blackColor]];
     
     
     //中间！
     _previewView = [[UIControl alloc] init];
-    _previewView.backgroundColor = [UIColor yellowColor];
     [_topBar addSubview:_previewView];
     [_previewView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(40, 40));
@@ -147,32 +165,58 @@
     _drawBoard = [[UIScrollView alloc] init];
     _drawBoard.backgroundColor = [UIColor whiteColor];
     _drawBoard.clipsToBounds = YES;
-//    _drawBoard.contentSize = CGSizeMake(600, 600);
     [self.view addSubview:_drawBoard];
     [_drawBoard mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);
         make.height.equalTo(_drawBoard.mas_width);
         make.top.equalTo(_topBar.mas_bottom).offset(20);
+        make.left.equalTo(self.view.mas_left);
+    }];
+    _drawBoard.panGestureRecognizer.minimumNumberOfTouches = 2;
+    _drawBoard.delaysContentTouches = NO;
+    _drawBoard.bounces = NO;
+    _drawBoard.delegate = self;
+    _drawBoard.minimumZoomScale = 1;
+    _drawBoard.maximumZoomScale = 2;
+    _drawBoard.zoomScale = 1.0;
+    _drawBoard.bouncesZoom = NO;
+    
+    container = [[UIView alloc] init];
+    [_drawBoard addSubview:container];
+    
+    [container mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.left.right.equalTo(_drawBoard);
     }];
     
     
     
-    _drawView = [[AYCursorDrawView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:self.size];
-    _drawView.deligate = self;
+    _drawView = [[AYCursorDrawView alloc] initWithSize:self.size];
+    _drawView.delegate = self;
     _drawView.layerAdapters = self.layerAdapters;
     _drawView.layerBlendMode = YES;
     _drawView.backgroundColor = [UIColor clearColor];
-    [_drawBoard addSubview:_drawView];
+    
+    [container addSubview:_drawView];
+
+    [_drawView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(self.view.frame.size.width);
+        make.edges.equalTo(container);
+    }];
+    
+    
+    
     [self.layerAdapters addObject:_drawView.adapter];
     
-    
+    [_drawView layoutIfNeeded];
 }
 
 -(void)initTapButton
 {
     _tapButton = [[UIButton alloc] init];
-    _tapButton.backgroundColor = [UIColor purpleColor];
+    [_tapButton setBackgroundImage:[UIImage imageNamed:@"btn_grey_bg"] forState:UIControlStateNormal];
     [_tapButton addTarget:self action:@selector(didTapButtonDown:) forControlEvents:UIControlEventTouchDown];
+    [_tapButton setTitle:@"Tap!!!" forState:UIControlStateNormal];
+    _tapButton.titleLabel.font = [UIFont fontWithName:@"Pixel" size:30];
     
     [_tapButton addTarget:self action:@selector(didTapButtonUp:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -182,7 +226,7 @@
     
     [_tapButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);
-        make.height.mas_equalTo(70);
+        make.height.mas_equalTo(64);
         make.bottom.equalTo(self.view.mas_bottom);
     }];
     
@@ -191,22 +235,24 @@
 -(void)initToolsBar
 {
     UIButton *layerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    layerBtn.backgroundColor = [UIColor redColor];
+    layerBtn.backgroundColor = [UIColor whiteColor];
     [layerBtn addTarget:self action:@selector(didClickLayerBtn) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:layerBtn];
+    [layerBtn setBackgroundImage:[[UIImage imageNamed:@"layer_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [layerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(44, 44));
         make.left.mas_equalTo(self.view.mas_left);
         make.bottom.mas_equalTo(self.tapButton.mas_top);
     }];
+    [layerBtn setTintColor:[UIColor blackColor]];
     
     
     _toolsBar = [[AYSwipeToolBarView alloc] init];
-    _toolsBar.backgroundColor = [UIColor greenColor];
+    _toolsBar.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_toolsBar];
     
     [_toolsBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(49);
         make.left.equalTo(layerBtn.mas_right);
         make.right.equalTo(self.view.mas_right);
         make.bottom.mas_equalTo(self.tapButton.mas_top);
@@ -264,28 +310,45 @@
 {
     _colors = [[NSMutableArray alloc] init];
     NSMutableArray *arrM = [[NSMutableArray alloc] init];
-    for (int i=0; i<20; i++) {
-        CGFloat red = arc4random() % 255 / 255.0;
-        CGFloat blue = arc4random() % 255 / 255.0;
-        CGFloat green = arc4random() % 255 / 255.0;
-        UIColor *color = [UIColor colorWithRed:red green:green blue:blue alpha:1];
+    for (NSInteger i=0; i<16; i++) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        //读取颜色
+        NSInteger colorData = [userDefaults integerForKey:[NSString stringWithFormat:@"color%ld",i]];
+        NSLog(@"%ld",colorData);
+        UIColor *color;
+        if (colorData == 0) {
+            CGFloat red = arc4random() % 255 / 255.0;
+            CGFloat blue = arc4random() % 255 / 255.0;
+            CGFloat green = arc4random() % 255 / 255.0;
+            color = [UIColor colorWithRed:red green:green blue:blue alpha:1];
+        }else{
+            color = [UIColor colorWithInt:colorData];
+        }
+        
         [_colors addObject:color];
         
         
         UIControl *btn = [[UIControl alloc] init];
         btn.tag = i;
+        btn.layer.masksToBounds = YES;
+        btn.layer.cornerRadius = 5;
+        
         [btn setBackgroundColor:color];
         [btn addTarget:self action:@selector(didSlectedColor:) forControlEvents:UIControlEventTouchUpInside];
         [arrM addObject:btn];
+        UITapGestureRecognizer *gr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(willEnterColorPicker:)];
+        gr.numberOfTapsRequired = 2;
+//        gr.delaysTouchesBegan = NO;
+        [btn addGestureRecognizer:gr];
     }
     
     
     _colorBar = [[AYSwipeToolBarView alloc] init];
-    _colorBar.backgroundColor = [UIColor orangeColor];
+    _colorBar.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_colorBar];
     
     [_colorBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(49);
         make.left.equalTo(self.view.mas_left);
         make.right.equalTo(self.view.mas_right);
         make.bottom.mas_equalTo(_toolsBar.mas_top);
@@ -421,6 +484,7 @@
 -(void)didClickUndoBtn
 {
     [self.drawView undo];
+    [self refreshPreviewView];
 }
 
 -(void)didClickPenBtn
@@ -437,11 +501,14 @@
 -(void)didClickClearBtn
 {
     [self.drawView clearCanvas];
+    [self refreshPreviewView];
+
 }
 
 -(void)didClickRedoBtn
 {
     [self.drawView redo];
+    [self refreshPreviewView];
 }
 
 -(void)didClickBucketBtn
@@ -451,7 +518,7 @@
 
 -(void)didTapButtonDown:(UIButton*)sender
 {
-    sender.alpha = 0.8;
+    sender.alpha = 0.95;
     [self.drawView touchDown];
 }
 
@@ -578,6 +645,7 @@
 -(void)didChangedVisible
 {
     [self.drawView setNeedsDisplay];
+    [self refreshPreviewView];
 }
 
 //绘图控件的代理方法，，撤销时adpter是深拷贝的，，所以要复制过来，，
@@ -594,7 +662,16 @@
     _drawView.adapter = [self.layerAdapters objectAtIndex:self.editIndex];
 }
 
+//delegate
+-(void)cursorDrawHasRefreshContent
+{
+    [self refreshPreviewView];
+}
 
+-(void)colorPickerDidSlectedColor:(UIColor *)color
+{
+    _drawView.slectedColor = color;
+}
 /*
 #pragma mark - Navigation
 
@@ -605,11 +682,46 @@
 }
 */
 
+-(void)refreshPreviewView
+{
+    self.previewView.layer.contents = _drawView.layer.contents;
+    [self.previewView.layer display];
+}
 
 -(void)testtest
 {
     _drawView.frame = CGRectMake(0, 0, self.view.frame.size.width + 100, self.view.frame.size.width + 100);
     _drawView.center = _drawBoard.center;
+}
+
+-(void)willEnterColorPicker:(UIGestureRecognizer*)gr
+{
+    NSInteger index = gr.view.tag;
+    AYColorPickerViewController *vc = [[AYColorPickerViewController alloc] init];
+    vc.colors = self.colors;
+    vc.index = index;
+    vc.btn = gr.view;
+    vc.delegate = self;
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+
+
+
+-(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
+{
+    NSLog(@"end  %f",scale);
+    [_drawView layoutIfNeeded];
+    
+}
+-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return [_drawView superview];
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 @end

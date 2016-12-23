@@ -54,11 +54,15 @@
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
         [self.tableView addGestureRecognizer:longPress];
 
+        _tableView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _tableView.layer.shadowOffset = CGSizeMake(2, 2);
+        _tableView.layer.shadowOpacity = 0.3;
+        _tableView.layer.shadowRadius = 4;
         
         
         
         _toolBar = [[UIView alloc] init];
-        _toolBar.backgroundColor = [UIColor yellowColor];
+        _toolBar.backgroundColor = [UIColor whiteColor];
         [self addSubview: _toolBar];
         [_toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.mas_bottom);
@@ -68,11 +72,12 @@
         }];
         
         UIButton *addLayerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        addLayerBtn.backgroundColor = [UIColor redColor];
+
+        [addLayerBtn setImage:[[UIImage imageNamed:@"add"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
         [_toolBar addSubview:addLayerBtn];
         [addLayerBtn addTarget:self action:@selector(didClickAddLayer) forControlEvents:UIControlEventTouchUpInside];
         [addLayerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(40, 40));
+            make.size.mas_equalTo(CGSizeMake(36, 36));
             make.right.equalTo(_toolBar.mas_right).offset(-2);
             make.centerY.equalTo(_toolBar.mas_centerY);
         }];

@@ -10,6 +10,7 @@
 		0C3C3F9C31872D61C43967A0 /* libPods-PixelMillUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C280F5692F22B5057AC29D2 /* libPods-PixelMillUITests.a */; };
 		BF9E581C45C00CC8FA783A33 /* libPods-PixelMillTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9134440D2D3D097ED79E6D /* libPods-PixelMillTests.a */; };
 		D8192AE01E097CD8000CE4D1 /* AYCursorDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8192ADF1E097CD8000CE4D1 /* AYCursorDrawView.m */; };
+		D81C944D1E0D375D00D95616 /* AYColorPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81C944C1E0D375D00D95616 /* AYColorPickerViewController.m */; };
 		D829F7081E09526900622FDF /* AYDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F7071E09526900622FDF /* AYDrawViewController.m */; };
 		D83E80151E0830AC006B2B24 /* AYDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E800D1E0830AC006B2B24 /* AYDrawView.m */; };
 		D83E80161E0830AC006B2B24 /* AYPixelAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E800E1E0830AC006B2B24 /* AYPixelAdapter.m */; };
@@ -69,6 +70,8 @@
 		B21442F67D3D8874CE0FA8C2 /* Pods-PixelMillTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelMillTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PixelMillTests/Pods-PixelMillTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D8192ADE1E097CD8000CE4D1 /* AYCursorDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCursorDrawView.h; sourceTree = "<group>"; };
 		D8192ADF1E097CD8000CE4D1 /* AYCursorDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCursorDrawView.m; sourceTree = "<group>"; };
+		D81C944B1E0D375D00D95616 /* AYColorPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYColorPickerViewController.h; sourceTree = "<group>"; };
+		D81C944C1E0D375D00D95616 /* AYColorPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYColorPickerViewController.m; sourceTree = "<group>"; };
 		D829F7061E09526900622FDF /* AYDrawViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYDrawViewController.h; sourceTree = "<group>"; };
 		D829F7071E09526900622FDF /* AYDrawViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYDrawViewController.m; sourceTree = "<group>"; };
 		D83E800D1E0830AC006B2B24 /* AYDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYDrawView.m; sourceTree = "<group>"; };
@@ -438,6 +441,8 @@
 				D829F7071E09526900622FDF /* AYDrawViewController.m */,
 				D8E5EA6C1E0A45B600CF3CC5 /* AYLayerViewController.h */,
 				D8E5EA6D1E0A45B600CF3CC5 /* AYLayerViewController.m */,
+				D81C944B1E0D375D00D95616 /* AYColorPickerViewController.h */,
+				D81C944C1E0D375D00D95616 /* AYColorPickerViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -752,6 +757,7 @@
 				D8580DB11E02AB14009648ED /* AYExploreController.m in Sources */,
 				D829F7081E09526900622FDF /* AYDrawViewController.m in Sources */,
 				D8EC85FC1E0A5A6B0044AE57 /* AYLayerTableViewCell.m in Sources */,
+				D81C944D1E0D375D00D95616 /* AYColorPickerViewController.m in Sources */,
 				D88DC0771E0301A600C32C81 /* AYUnderLineTextField.m in Sources */,
 				D8580DBC1E02B490009648ED /* AYDrawController1.m in Sources */,
 				D845D2BB1E095DCF00754646 /* AYSwipeToolBarView.m in Sources */,

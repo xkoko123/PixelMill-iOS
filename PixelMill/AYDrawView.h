@@ -10,7 +10,7 @@
 
 @class AYPixelAdapter;
 
-@protocol AYDrawViewDeligate <NSObject>
+@protocol AYDrawViewDelegate <NSObject>
 
 @optional
 
@@ -26,11 +26,12 @@
 @property (nonatomic, strong) UIColor *slectedColor;
 
 
-@property (nonatomic,assign)id deligate;
+@property (nonatomic,assign)id delegate;
 
 
 - (instancetype)initWithFrame:(CGRect)frame andSize:(int)size;
 
+-(instancetype)initWithSize:(NSInteger)size;
 
 -(CGPoint)locationWithPoint:(CGPoint)point;
 

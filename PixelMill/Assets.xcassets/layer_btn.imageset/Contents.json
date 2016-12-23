@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "undo.png",
+      "filename" : "layer_btn@2x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "undo@2x.png",
+      "filename" : "layer_btn@3x.png",
       "scale" : "2x"
     },
     {

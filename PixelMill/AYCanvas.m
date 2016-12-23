@@ -11,9 +11,6 @@
 #import "UIColor+colorWithInt.h"
 
 @implementation AYCanvas
-{
-    
-}
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -23,28 +20,35 @@
 */
 -(instancetype)initWithFrame:(CGRect)frame andSize:(int)size
 {
-    self = [super initWithFrame:frame];
+    self = [super init];
     if (self) {
-        
+        self.frame = frame;
+    }
+    return self;
+}
+-(instancetype)initWithSize:(NSInteger)size
+{
+    self = [super init];
+    if (self) {
         self.layer.drawsAsynchronously = YES;
         self.layerBlendMode = NO;
         _bgColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
         self.adapter = [[AYPixelAdapter alloc] initWithSize:size];
         
-        _showGrid = YES;
+        _showGrid = NO;
         _showAlignmentLine = NO;
         
         _showExtendedContent = YES;
         _gridLayer = [CAShapeLayer layer];
         [self.layer addSublayer:_gridLayer];
         [self resetGridLayer];
+
     }
     return self;
 }
 
 -(void)setAdapter:(AYPixelAdapter *)adapter
 {
-//    NSLog(@"dasd  %d %d",[_adapter.dict count], [adapter.dict count]);
     
     _adapter = adapter;
     _size = adapter.size;
@@ -64,7 +68,7 @@
 {
     _gridLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);
     _gridLayer.lineWidth = 0.5;
-    _gridLayer.strokeColor = [UIColor darkGrayColor].CGColor;
+    _gridLayer.strokeColor = [UIColor grayColor].CGColor;
     
     UIBezierPath *path = [UIBezierPath bezierPath];
     if (self.showGrid) {
@@ -129,7 +133,8 @@
             }else{
                 [self.bgColor setFill];
             }
-            
+            //loc.y =>col
+            //loc.x =>row
             CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
                                           loc.x * _pixelWidth,
                                           _pixelWidth,
@@ -138,26 +143,34 @@
             CGContextFillPath(ctx);
         }
     }else{
-        
+
+
         for (int row=0; row<_size; row++) {
             for (int col=0; col<_size; col++) {
                 UIColor *topColor = nil;
                 //从顶层向下扫
                 for (NSInteger i=0; i<self.layerAdapters.count; i++) {
                     AYPixelAdapter *adapter = [self.layerAdapters objectAtIndex:i];
-                    if (adapter.visible){
-                        UIColor *color = [adapter colorWithLoc:CGPointMake(row, col)];//最上面的数据
-                        
-                        if (topColor == nil) {
-                            topColor = color;
-                        }else{
-                            topColor = [UIColor blendBgColor:color andFrontColor:topColor];
-                        }
-                        
-                        if ([color getAlpha] ==  1) {//遇到不透明的颜色后，，它下面的就不用混和了
-                            break;
-                        }
+                    if (adapter.visible == NO){
+                        continue;
                     }
+                    
+                    UIColor *color = [adapter colorWithLoc:CGPointMake(row, col)];//最上面的数据
+                    
+                    if (color == nil) {
+                        continue;
+                    }
+                    
+                    if (topColor == nil) {
+                        topColor = color;
+                    }else{
+                        topColor = [UIColor blendBgColor:color andFrontColor:topColor];
+                    }
+                    
+                    if ([color getAlpha] ==  1) {//遇到不透明的颜色后，，它下面的就不用混和了
+                        break;
+                    }
+
 
                 }
                 
@@ -171,8 +184,8 @@
                 
                 CGRect pixelRect = CGRectMake(col * _pixelWidth,
                                               row * _pixelWidth,
-                                              _pixelWidth+0.5,
-                                              _pixelWidth+0.5);
+                                              _pixelWidth,
+                                              _pixelWidth);
                 CGContextAddRect(ctx, pixelRect);
                 CGContextFillPath(ctx);
             }
@@ -220,5 +233,14 @@
     [self setNeedsDisplay];
 }
 
+
+-(void)layoutIfNeeded
+{
+    [super layoutIfNeeded];
+    _pixelWidth = self.frame.size.width / _size;
+    [self resetGridLayer];
+    [self setNeedsDisplay];
+
+}
 
 @end

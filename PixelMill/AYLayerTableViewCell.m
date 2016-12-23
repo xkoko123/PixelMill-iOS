@@ -40,6 +40,10 @@
             make.centerY.equalTo(self.contentView.mas_centerY);
             make.left.equalTo(self.contentView.mas_left).offset(1);
         }];
+        CALayer *layer = [CALayer layer];
+        layer.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1].CGColor;
+        layer.frame = _canvas.frame;
+        [_canvas.layer addSublayer:layer];
         
         _visibleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.contentView addSubview:_visibleBtn];
@@ -48,9 +52,10 @@
             make.left.equalTo(_canvas).offset(2);
             make.size.mas_equalTo(CGSizeMake(30, 30));
         }];
-        [_visibleBtn setBackgroundImage:[UIImage imageNamed:@"back1"] forState:UIControlStateNormal];
+        [_visibleBtn setBackgroundImage:[[UIImage imageNamed:@"layer_hide"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+        
         [_visibleBtn addTarget:self action:@selector(didClickVisibleBtn) forControlEvents:UIControlEventTouchUpInside];
-        [_visibleBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateSelected ];
+        [_visibleBtn setBackgroundImage:[[UIImage imageNamed:@"layer_hide"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
         
         
         
@@ -61,6 +66,7 @@
             make.left.equalTo(_canvas).offset(2);
             make.size.mas_equalTo(CGSizeMake(30, 30));
         }];
+        _editingBtn.userInteractionEnabled = NO;
         [_editingBtn setBackgroundImage:[UIImage imageNamed:@"back1"] forState:UIControlStateNormal];
         [_editingBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateSelected ];
 //        [_editingBtn addTarget:self action:@selector(didClickEditingBtn) forControlEvents:UIControlEventTouchUpInside];
@@ -73,7 +79,8 @@
             make.right.equalTo(_canvas).offset(-2);
             make.size.mas_equalTo(CGSizeMake(30, 30));
         }];
-        [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"back1"] forState:UIControlStateNormal];
+        [_deleteBtn setBackgroundImage:[[UIImage imageNamed:@"layer_delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_deleteBtn setTintColor:[UIColor redColor]];
         [_deleteBtn addTarget:self action:@selector(didClickDeleteBtn) forControlEvents:UIControlEventTouchUpInside];
 
         

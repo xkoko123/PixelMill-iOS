@@ -8,7 +8,7 @@
 
 #import "AYBaseViewController.h"
 
-@interface AYDrawViewController : AYBaseViewController
+@interface AYDrawViewController : UIViewController
 @property (nonatomic,assign)NSInteger editIndex;
 @property (nonatomic,assign)NSInteger size;
 @end

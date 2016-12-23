@@ -10,13 +10,13 @@
 #import <UIKit/UIKit.h>
 #import "AYPublicHeader.h"
 @interface AYPixelAdapter : NSObject
-@property (nonatomic, assign) int size;
+@property (nonatomic, assign) NSInteger size;
 @property (nonatomic, strong) UIColor *defaultColor;
 @property(nonatomic,strong)NSMutableDictionary *dict;
 @property (nonatomic, assign)NSInteger maxUndoQueueCount;
 @property (nonatomic,assign) BOOL visible;
 
--(instancetype)initWithSize:(int)size;
+-(instancetype)initWithSize:(NSInteger)size;
 -(instancetype)initWithString:(NSString*)string;
 - (UIColor*)colorWithLoc:(CGPoint)loc;
 
