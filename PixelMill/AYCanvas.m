@@ -114,7 +114,6 @@
 //            }else{
 //                [self.bgColor setFill];
 //            }
-//            
 //            CGRect pixelRect = CGRectMake(col * _pixelWidth,
 //                                          row * _pixelWidth,
 //                                          _pixelWidth+0.5,
@@ -123,6 +122,7 @@
 //            CGContextFillPath(ctx);
 //        }
 //    }
+    
     if (!self.layerBlendMode) {
         for (NSValue *key in [self.adapter.dict allKeys] ) {
             UIColor *color = [self.adapter colorWithKey:key];

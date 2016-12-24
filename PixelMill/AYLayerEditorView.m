@@ -167,9 +167,9 @@
     
     
     if (indexPath.row == self.editIndex) {
-        [cell.editingBtn setSelected:YES];
+        [cell.editingBtn setHidden:NO];
     }else{
-        [cell.editingBtn setSelected:NO];
+        [cell.editingBtn setHidden:YES];
     }
     
     if(self.layerAdapters.count <=1){
@@ -205,6 +205,7 @@
     [self notifySuperViewReload];
 
 }
+
 
 #pragma mark - TableView 长按拖拽
 -(void)longPressed:(UILongPressGestureRecognizer*)sender

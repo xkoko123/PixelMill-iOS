@@ -91,11 +91,11 @@
 }
 
 
-//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-//{
-//    AYLoginViewController *vc = [[AYLoginViewController alloc] init];
-//    [self.navigationController presentViewController:vc animated:YES completion:nil];
-//}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    AYLoginViewController *vc = [[AYLoginViewController alloc] init];
+    [self.navigationController presentViewController:vc animated:YES completion:nil];
+}
 
 /*
 #pragma mark - Navigation

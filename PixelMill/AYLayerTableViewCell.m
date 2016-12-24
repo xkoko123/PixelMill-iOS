@@ -97,7 +97,7 @@
 -(void)didClickVisibleBtn
 {
     //已选中编辑的项目 不能取消显示
-    if (self.editingBtn.isSelected) {
+    if (self.editingBtn.isHidden == NO) {
         self.canvas.adapter.visible = YES;
     }else{
         self.canvas.adapter.visible = !self.canvas.adapter.visible;

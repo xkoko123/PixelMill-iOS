@@ -87,7 +87,9 @@
 
 - (NSValue*)keyForLoc:(CGPoint)loc// row  col
 {
-    loc = CGPointMake(loc.y + _origin.y,loc.x + _origin.x);
+    int row = (int)(loc.y + _origin.y + _size) % _size;
+    int col = (int)(loc.x + _origin.x + _size) % _size;
+    loc = CGPointMake(row, col);
     NSValue *key = [NSValue valueWithCGPoint:loc];
     return key;
 }
@@ -95,10 +97,23 @@
 - (UIColor*)colorWithLoc:(CGPoint)loc
 {
     NSValue *key = [self keyForLoc:loc];
-    
     UIColor *c = [_dict objectForKey:key];
     return c;
 }
+
+-(UIColor *)colorWithKey:(NSValue *)key
+{
+    CGPoint loc = [key CGPointValue];
+    return [self colorWithLoc:CGPointMake((int)(-_origin.x + _size + loc.y) % _size, (int)(-_origin.y + _size + loc.x) % _size)];
+}
+
+
+- (CGPoint)locWithKey:(NSValue*)key;
+{
+    CGPoint loc = [key CGPointValue];
+    return CGPointMake((int)(-_origin.x + _size + loc.y) % _size, (int)(-_origin.y + _size + loc.x) % _size);
+}
+
 
 - (void)replaceAtLoc:(CGPoint)loc Withcolor:(UIColor*)color;
 {
@@ -120,57 +135,49 @@
 }
 
 
-
--(BOOL)validateOrigin:(CGPoint)origin
-{
-    //上移／／左移
-    if (origin.y<1-_size || origin.x<1-_size) {
-        return NO;
-    }
-    
-    if(origin.y > _size-1 || origin.x >_size-1){
-        return NO;
-    }
-    
-    return YES;
-}
+//最开始画布可以移动出空白区域的方式需要这个有效判断函数，，现在循环移动了啊啊啊啊啊啊
+//-(BOOL)validateOrigin:(CGPoint)origin
+//{
+//    //上移／／左移
+//    if (origin.y<1-_size || origin.x<1-_size) {
+//        return NO;
+//    }
+//    
+//    if(origin.y > _size-1 || origin.x >_size-1){
+//        return NO;
+//    }
+//    
+//    return YES;
+//}
 
 //移动画布内容，返回是否成功
 - (BOOL)move:(MOVE)move
 {
-    NSLog(@"move");
-    CGPoint movedOrigin;
     switch (move) {
         case MOVE_UP:
         {
-            movedOrigin = CGPointMake(_origin.x + 1, _origin.y);
+            _origin = CGPointMake((int)(_origin.x + 1 + _size) % _size, (int)(_origin.y + _size) % _size);
         }
             break;
         case MOVE_DOWN:
         {
-            movedOrigin = CGPointMake(_origin.x -1, _origin.y);
+            _origin = CGPointMake((int)(_origin.x - 1 + _size) % _size, (int)(_origin.y + _size) % _size);
         }
             break;
         case MOVE_RIGHT:
         {
-            movedOrigin = CGPointMake(_origin.x, _origin.y - 1);
+            _origin = CGPointMake((int)(_origin.x + _size) % _size, (int)(_origin.y - 1 + _size) % _size);
         }
             break;
         case MOVE_LEFT:
         {
-            movedOrigin = CGPointMake(_origin.x, _origin.y + 1);
+            _origin = CGPointMake((int)(_origin.x + _size) % _size, (int)(_origin.y + 1 + _size) % _size);
         }
             break;
         default:
             break;
     }
-    
-    if([self validateOrigin:movedOrigin]){
-        _origin = movedOrigin;
-        return YES;
-    }else{
-        return NO;
-    }
+    return YES;
 }
 - (void)removeAtLoc:(CGPoint)loc
 {
@@ -180,7 +187,7 @@
 
 - (NSString*)getStringData
 {
-    NSString *s = [NSString stringWithFormat:@"%d",_size];
+    NSString *s = [NSString stringWithFormat:@"%ld",_size];
     
     for (int row=0; row < _size;  row++) {
         for (int col=0; col < _size;  col++) {
@@ -198,22 +205,6 @@
     return s;
 }
 
--(UIColor *)colorWithKey:(NSValue *)key
-{
-    CGPoint loc = [key CGPointValue];
-    //row loc.x
-    //col loc.y
-    return [self colorWithLoc:CGPointMake(loc.y - _origin.x, loc.x - _origin.y)];
-}
-
-- (CGPoint)locWithKey:(NSValue*)key;
-{
-    CGPoint loc = [key CGPointValue];
-//    NSLog(@"%f   %f",loc.x,loc.y);
-    //x lie y han
-    return CGPointMake(loc.y - _origin.x, loc.x - _origin.y);
-}
-
 
 //undo redo
 -(void)pushToUndoQueue
@@ -222,12 +213,6 @@
         [_undoQueue removeObjectAtIndex:0];
     }
     
-//    NSMutableDictionary *dm = [[NSMutableDictionary alloc] init];
-//    for (NSValue *v in [_dict allKeys]) {
-//        UIColor *c = [_dict objectForKey:v];
-//        UIColor *x = [UIColor colorWithInt:[c intData]];
-//        [dm setObject:x forKey:v];
-//    }
     
     [_undoQueue addObject:[_dict mutableCopy]];
 }

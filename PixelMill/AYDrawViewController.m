@@ -58,7 +58,6 @@
     _isMovePanelExpanded = NO;
     _layerAdapters = [[NSMutableArray alloc] init];
 
-    NSLog(@"did load");
     _editIndex = 0;
     self.view.backgroundColor = [UIColor whiteColor];
     self.size = 32;
@@ -69,19 +68,6 @@
     [self initColorBar];
     [self initMovePanel];
     
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    NSLog(@"willappear");
-    [super viewWillAppear:animated];
-    [self.drawView setNeedsDisplay];
-}
--(void)viewDidAppear:(BOOL)animated
-{
-    NSLog(@"didappear");
-    [super viewDidAppear:animated];
-    [self.drawView setNeedsDisplay];
 }
 
 //顶栏
@@ -162,15 +148,26 @@
 //画板
 -(void)initDrawBoard
 {
+    UIView *border = [[UIView alloc] init];
+    border.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:border];
+    [border mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(self.view.mas_width);
+        make.height.equalTo(border.mas_width);
+        make.top.equalTo(_topBar.mas_bottom).offset(20);
+        make.left.equalTo(self.view.mas_left);
+    }];
+    
     _drawBoard = [[UIScrollView alloc] init];
     _drawBoard.backgroundColor = [UIColor whiteColor];
     _drawBoard.clipsToBounds = YES;
-    [self.view addSubview:_drawBoard];
+    [border addSubview:_drawBoard];
+    CGFloat borderWidth = 2;
     [_drawBoard mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(self.view.mas_width);
+        make.width.equalTo(border.mas_width).offset(-borderWidth*2);
         make.height.equalTo(_drawBoard.mas_width);
-        make.top.equalTo(_topBar.mas_bottom).offset(20);
-        make.left.equalTo(self.view.mas_left);
+        make.top.equalTo(border).offset(borderWidth);
+        make.left.equalTo(border.mas_left).offset(borderWidth);
     }];
     _drawBoard.panGestureRecognizer.minimumNumberOfTouches = 2;
     _drawBoard.delaysContentTouches = NO;
@@ -199,7 +196,7 @@
     [container addSubview:_drawView];
 
     [_drawView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(self.view.frame.size.width);
+        make.width.height.equalTo(_drawBoard.mas_width);
         make.edges.equalTo(container);
     }];
     
@@ -294,15 +291,23 @@
     [clearBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [clearBtn addTarget:self action:@selector(didClickClearBtn) forControlEvents:UIControlEventTouchUpInside];
     
-    
+    //
+    UIButton *lineBtn = [[UIButton alloc] init];
+    [lineBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [lineBtn addTarget:self action:@selector(didClickLineBtn) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *circleBtn = [[UIButton alloc] init];
+    [circleBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [circleBtn addTarget:self action:@selector(didClickCircleBtn) forControlEvents:UIControlEventTouchUpInside];
+
+
+    //
     UIButton *fingerBtn = [[UIButton alloc] init];
     [fingerBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [fingerBtn addTarget:self action:@selector(didClickFingerBtn:) forControlEvents:UIControlEventTouchUpInside];
 
     
-    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, moveBtn, gridBtn, aligmentLineBtn, clearBtn,fingerBtn] mutableCopy];
-    
-
+    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, moveBtn, lineBtn, circleBtn, gridBtn, aligmentLineBtn, clearBtn,fingerBtn] mutableCopy];
 }
 
 
@@ -314,7 +319,6 @@
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         //读取颜色
         NSInteger colorData = [userDefaults integerForKey:[NSString stringWithFormat:@"color%ld",i]];
-        NSLog(@"%ld",colorData);
         UIColor *color;
         if (colorData == 0) {
             CGFloat red = arc4random() % 255 / 255.0;
@@ -434,7 +438,6 @@
 
 -(void)resetLayer
 {
-    NSLog(@"reset layer");
     
     
     
@@ -511,9 +514,19 @@
     [self refreshPreviewView];
 }
 
+-(void)didClickCircleBtn
+{
+    self.drawView.currentType = CIRCLE;
+}
+
 -(void)didClickBucketBtn
 {
     [self.drawView setCurrentType:BUCKET];
+}
+
+-(void)didClickLineBtn
+{
+    [self.drawView setCurrentType:LINE];
 }
 
 -(void)didTapButtonDown:(UIButton*)sender
@@ -639,6 +652,7 @@
         default:
             break;
     }
+    [self refreshPreviewView];
 }
 
 //代理。。修改了visible属性需要刷新显示！
@@ -690,8 +704,8 @@
 
 -(void)testtest
 {
-    _drawView.frame = CGRectMake(0, 0, self.view.frame.size.width + 100, self.view.frame.size.width + 100);
-    _drawView.center = _drawBoard.center;
+
+
 }
 
 -(void)willEnterColorPicker:(UIGestureRecognizer*)gr
@@ -710,7 +724,6 @@
 
 -(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
-    NSLog(@"end  %f",scale);
     [_drawView layoutIfNeeded];
     
 }

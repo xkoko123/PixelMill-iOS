@@ -23,5 +23,6 @@ typedef NS_ENUM(NSUInteger, AYCursorDrawType) {
     LINE,
     ERASER,
     FINGER,
+    CIRCLE,
 };
 #endif /* AYPublicHeader_h */

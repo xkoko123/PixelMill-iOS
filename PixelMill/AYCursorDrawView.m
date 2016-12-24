@@ -13,6 +13,8 @@
 
 
 @end
+
+
 @implementation AYCursorDrawView
 {
     CGPoint _cursorPosition;//鼠标的画布坐标
@@ -42,6 +44,8 @@
     }
     return self;
 }
+
+
 -(instancetype)initWithSize:(NSInteger)size
 {
     self = [super initWithSize:size];
@@ -56,15 +60,16 @@
     return self;
 }
 
+
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
     if (self.showExtendedContent) {
         [self drawCursor];
     }
-    
 }
 
+#pragma mark - 指针样式在这里修改
 - (void)drawCursor
 {
     UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(_cursorLoc.x *_pixelWidth,
@@ -82,6 +87,8 @@
     
     switch (self.currentType) {
         case PEN:
+        case LINE:
+        case CIRCLE:
         {
             path = [UIBezierPath bezierPath];
             
@@ -163,6 +170,7 @@
     return [self locationWithPoint:_cursorPosition];
 }
 
+
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
 //    if (self.currentType == FINGER) {
@@ -182,6 +190,8 @@
 
 }
 
+
+#pragma mark - 拖动过程中在这里添加
 //移动时处理拖动操作
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
@@ -190,9 +200,9 @@
     // TODO : 对坐标操作
     //当前操作类型
 
-    if (_fingerMode) {
-        _beginLoc = [self locationWithPoint: [touch previousLocationInView:self]];        
-    }
+//    if (_fingerMode) {
+//        _beginLoc = [self locationWithPoint: [touch previousLocationInView:self]];        
+//    }
     
     switch (self.currentType) {
         case PEN:
@@ -212,18 +222,21 @@
         }
             break;
 
-        case BUCKET:
+        case LINE:
         {
-            
+            if (_isPress || _fingerMode) {
+                [self drawLineBetweenLoc:_beginLoc and:_cursorLoc];
+            }
+
         }
             break;
-//        case FINGER:
-//        {
-//            CGPoint position1 = [touch previousLocationInView:self];
-//            CGPoint position2 = [touch locationInView:self];
-//            [self addLineBetweenLoc:[self locationWithPoint:position1] and: [self locationWithPoint:position2]];
-//        }
-//            break;
+        case CIRCLE:
+        {
+            if (_isPress || _fingerMode) {
+                [self drawCircleAtLoc:_beginLoc toLoc:_cursorLoc];
+            }
+            
+        }
         default:
             break;
     }
@@ -231,12 +244,15 @@
     _lastFigerPosition = [touch locationInView:self];
     [self setNeedsDisplay];
 }
+
+
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     if (_fingerMode) {
         [self touchUp];
     }
 }
+
 
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
@@ -245,6 +261,8 @@
     }
 }
 
+
+#pragma mark - 按下时在这里添加
 //按下时处理单击事件
 -(void)touchDown
 {
@@ -276,18 +294,17 @@
     [self setNeedsDisplay];
 }
 
+
+#pragma mark - 松手时在这里添加
 //松开时处理拖动操作
 -(void)touchUp
 {
     _isPress = NO;
     switch (self.currentType) {
-        case PEN:
+        case LINE:
+        case CIRCLE:
         {
-            //
-        }
-            break;
-        case BUCKET:
-        {
+            [self submitDrawingPixels];
         }
             break;
         default:
@@ -307,6 +324,7 @@
     [super setSlectedColor:slectedColor];
     [self setNeedsDisplay];
 }
+
 
 //选择工具过后 指针应该变
 -(void)setCurrentType:(AYCursorDrawType)currentType

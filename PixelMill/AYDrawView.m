@@ -14,6 +14,7 @@
         
     NSMutableArray *_undoQueue;
     NSMutableArray *_redoQueue;
+    NSMutableArray *_drawingPixels;//正在画但还没提交的东西
 }
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -42,10 +43,30 @@
         _redoQueue = [[NSMutableArray alloc] init];
         //TODO : sfsf
         _slectedColor = [UIColor blackColor];
+        _drawingPixels = [[NSMutableArray alloc] init];
         
     }
     return self;
 
+}
+
+-(void)drawRect:(CGRect)rect
+{
+    [super drawRect:rect];
+    
+    if ([_drawingPixels count] != 0) {//画正在画的点...
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        [self.slectedColor setFill];
+        for (NSValue *value in _drawingPixels ) {
+            CGPoint loc = [value CGPointValue];
+            CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
+                                          loc.x * _pixelWidth,
+                                          _pixelWidth,
+                                          _pixelWidth);
+            CGContextAddRect(ctx, pixelRect);
+            CGContextFillPath(ctx);
+        }
+    }
 }
 
 -(CGPoint)locationWithPoint:(CGPoint)point
@@ -68,36 +89,87 @@
     [self.adapter replaceAtLoc:CGPointMake(loc.y, loc.x) Withcolor:self.slectedColor];
 }
 
-
+//改为Bresenham算法
 -(void)addLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
-    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
+//    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
+//    
+//    if(distance<=1){
+//        [self drawPixelAtLoc:locB];
+//        return;
+//    }
+//    
+//    if(locA.x > locB.x){
+//        CGPoint temp = locA;
+//        locA = locB;
+//        locB = temp;
+//    }
+//    
+//    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
+//    
+//    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
+//    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
+//        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
+//            int y = k * ( x - locA.x) + locA.y;
+//            [self drawPixelAtLoc:CGPointMake(x, y)];
+//            
+//        }
+//    }else{
+//        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
+//            int x = locA.x + (y - locA.y) / k;
+//            [self drawPixelAtLoc:CGPointMake(x, y)];
+//        }
+//    }
+    int x0 = locA.x;
+    int y0 = locA.y;
+    int x1 = locB.x;
+    int y1 = locB.y;
+    BOOL steep;
+    short t, deltaX, deltaY, error;
+    CGFloat x,y,ystep;
     
-    if(distance<=1){
-        [self drawPixelAtLoc:locB];
-        return;
+    steep = (ABS(y1 - y0)  >  ABS(x1 - x0));
+    if (steep) {
+        t = x0;
+        x0 = y0;
+        y0 = t;
+        
+        t = x1;
+        x1 = y1;
+        y1 = t;
     }
     
-    if(locA.x > locB.x){
-        CGPoint temp = locA;
-        locA = locB;
-        locB = temp;
+    if (x0 > x1) {
+        t = x0;
+        x0 = x1;
+        x1 = t;
+        
+        t = y0;
+        y0 = y1;
+        y1 = t;
     }
     
-    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
+    deltaX = x1 - x0;
+    deltaY = ABS(y1 - y0);
+    error = 0;
+    y = y0;
     
-    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
-    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
-        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
-            int y = k * ( x - locA.x) + locA.y;
-            [self drawPixelAtLoc:CGPointMake(x, y)];
-            
-        }
+    if (y0 < y1) {
+        ystep = 1;
     }else{
-        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
-            int x = locA.x + (y - locA.y) / k;
+        ystep = -1;
+    }
+    for (x=x0; x <= x1; x++) {
+        if (steep) {
+            [self drawPixelAtLoc:CGPointMake(y, x)];
+        }else{
             [self drawPixelAtLoc:CGPointMake(x, y)];
+        }
+        error += deltaY;
+        if ((error << 1) >= deltaX ){
+            y += ystep;
+            error -= deltaX;
         }
     }
 }
@@ -106,36 +178,198 @@
 -(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
-    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
+//    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
+//    
+//    if(distance<1){
+//        [self erasePixelAtLoc:locB];
+//        return;
+//    }
+//    
+//    if(locA.x > locB.x){
+//        CGPoint temp = locA;
+//        locA = locB;
+//        locB = temp;
+//    }
+//    
+//    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
+//    
+//    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
+//    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
+//        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
+//            int y = k * ( x - locA.x) + locA.y;
+//            [self erasePixelAtLoc:CGPointMake(x, y)];
+//            
+//        }
+//    }else{
+//        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
+//            int x = locA.x + (y - locA.y) / k;
+//            [self erasePixelAtLoc:CGPointMake(x, y)];
+//        }
+//    }
+    int x0 = locA.x;
+    int y0 = locA.y;
+    int x1 = locB.x;
+    int y1 = locB.y;
+    BOOL steep;
+    short t, deltaX, deltaY, error;
+    CGFloat x,y,ystep;
     
-    if(distance<1){
-        [self erasePixelAtLoc:locB];
-        return;
+    steep = (ABS(y1 - y0)  >  ABS(x1 - x0));
+    if (steep) {
+        t = x0;
+        x0 = y0;
+        y0 = t;
+        
+        t = x1;
+        x1 = y1;
+        y1 = t;
     }
     
-    if(locA.x > locB.x){
-        CGPoint temp = locA;
-        locA = locB;
-        locB = temp;
+    if (x0 > x1) {
+        t = x0;
+        x0 = x1;
+        x1 = t;
+        
+        t = y0;
+        y0 = y1;
+        y1 = t;
     }
     
-    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
+    deltaX = x1 - x0;
+    deltaY = ABS(y1 - y0);
+    error = 0;
+    y = y0;
     
-    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
-    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
-        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
-            int y = k * ( x - locA.x) + locA.y;
-            [self erasePixelAtLoc:CGPointMake(x, y)];
-            
-        }
+    if (y0 < y1) {
+        ystep = 1;
     }else{
-        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
-            int x = locA.x + (y - locA.y) / k;
+        ystep = -1;
+    }
+    for (x=x0; x <= x1; x++) {
+        if (steep) {
+            [self erasePixelAtLoc:CGPointMake(y, x)];
+        }else{
             [self erasePixelAtLoc:CGPointMake(x, y)];
+        }
+        error += deltaY;
+        if ((error << 1) >= deltaX ){
+            y += ystep;
+            error -= deltaX;
+        }
+    }
+
+}
+
+
+//添加到那个里面。。。。
+-(void)drawLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
+{
+    
+    [_drawingPixels removeAllObjects];
+    int x0 = locA.x;
+    int y0 = locA.y;
+    int x1 = locB.x;
+    int y1 = locB.y;
+    BOOL steep;
+    short t, deltaX, deltaY, error;
+    CGFloat x,y,ystep;
+    
+    steep = (ABS(y1 - y0)  >  ABS(x1 - x0));
+    if (steep) {
+        t = x0;
+        x0 = y0;
+        y0 = t;
+        
+        t = x1;
+        x1 = y1;
+        y1 = t;
+    }
+    
+    if (x0 > x1) {
+        t = x0;
+        x0 = x1;
+        x1 = t;
+        
+        t = y0;
+        y0 = y1;
+        y1 = t;
+    }
+    
+    deltaX = x1 - x0;
+    deltaY = ABS(y1 - y0);
+    error = 0;
+    y = y0;
+    
+    if (y0 < y1) {
+        ystep = 1;
+    }else{
+        ystep = -1;
+    }
+    for (x=x0; x <= x1; x++) {
+        if (steep) {
+            [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
+        }else{
+            [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(y, x)]];
+        }
+        error += deltaY;
+        if ((error << 1) >= deltaX ){
+            y += ystep;
+            error -= deltaX;
         }
     }
 }
 
+// 以a为圆心，过b点画圆
+-(void)drawCircleAtLoc:(CGPoint)a toLoc:(CGPoint)b
+{
+    [_drawingPixels removeAllObjects];
+    int distance = sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    
+    [self drawCircleAtLoc:a withR:distance];
+}
+
+
+//以a为圆心 r为半径画圆
+-(void)drawCircleAtLoc:(CGPoint)point withR:(int)r
+{
+    int x = 0;
+    int y = r;
+    int mx = point.x;
+    int my = point.y;
+    int d = 1 - r;
+    
+    while (x<=y) {
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+y,mx+x)]];
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+x,mx+y)]];
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+y,mx-x)]];
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+x,mx-y)]];
+        
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-y,mx-x)]];
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-x,mx-y)]];
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-y,mx+x)]];
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-x,mx+y)]];
+        if(d < 0){
+            d = d+2*x+3;
+        }else{
+            d=d+2*(x-y)+5;
+            y--;
+        }
+        x++;
+    }
+    
+}
+
+//将正在处理中的像素点保存到画布中
+-(void)submitDrawingPixels
+{
+    if ([_drawingPixels count] != 0) {
+        for (NSValue *value in _drawingPixels ) {
+            CGPoint loc = [value CGPointValue];
+            [self drawPixelAtLoc:CGPointMake(loc.y, loc.x)];
+        }
+    }
+    [_drawingPixels removeAllObjects];
+}
 #pragma mark - 撤回
 
 
@@ -168,6 +402,7 @@
 {
     [self pushToUndoQueue];
     [self.adapter reset];
+    [_drawingPixels removeAllObjects];
     [self setNeedsDisplay];
 }
 
@@ -239,7 +474,16 @@
     [self.adapter removeAtLoc:CGPointMake(loc.y, loc.x)];
 }
 
+// TODO: 翻转
+-(void)flipHorizontal
+{
+    
+}
 
+-(void)flipVertical
+{
+    
+}
 
 
 //通知视图修改adapter....

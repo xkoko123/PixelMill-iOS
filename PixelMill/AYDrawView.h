@@ -43,6 +43,8 @@
 
 -(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB;
 
+-(void)drawLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB;
+
 -(void)move:(NSUInteger)move;
 
 -(void)clearCanvas;
@@ -57,4 +59,12 @@
 -(void)redo;
 
 -(void)clearUndoRedo;
+
+-(void)submitDrawingPixels;
+
+
+-(void)drawCircleAtLoc:(CGPoint)a toLoc:(CGPoint)b;
+
+-(void)drawCircleAtLoc:(CGPoint)point withR:(int)r;
+
 @end
