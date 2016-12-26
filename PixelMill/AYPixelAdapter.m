@@ -59,9 +59,9 @@
         
         for (int i=0;i<[splitArray count] -1 ; i++) {
             NSInteger color = [[splitArray objectAtIndex: i+1] integerValue];
-            int row = i / size;
-            int col = i % size;
-            [self replaceAtLoc:CGPointMake(row, col) Withcolor:[UIColor colorWithInt:color]];
+            int y = i / size;
+            int x = i % size;
+            [self replaceAtLoc:CGPointMake(x, y) Withcolor:[UIColor colorWithInt:color]];
         }
     }
     return self;
@@ -87,9 +87,9 @@
 
 - (NSValue*)keyForLoc:(CGPoint)loc// row  col
 {
-    int row = (int)(loc.y + _origin.y + _size) % _size;
-    int col = (int)(loc.x + _origin.x + _size) % _size;
-    loc = CGPointMake(row, col);
+    int y = (int)(loc.y + _origin.y + _size) % _size;
+    int x = (int)(loc.x + _origin.x + _size) % _size;
+    loc = CGPointMake(x, y);
     NSValue *key = [NSValue valueWithCGPoint:loc];
     return key;
 }
@@ -104,19 +104,25 @@
 -(UIColor *)colorWithKey:(NSValue *)key
 {
     CGPoint loc = [key CGPointValue];
-    return [self colorWithLoc:CGPointMake((int)(-_origin.x + _size + loc.y) % _size, (int)(-_origin.y + _size + loc.x) % _size)];
+    return [self colorWithLoc:CGPointMake((int)(-_origin.x + _size + loc.x) % _size, (int)(-_origin.y + _size + loc.y) % _size)];
 }
 
 
 - (CGPoint)locWithKey:(NSValue*)key;
 {
     CGPoint loc = [key CGPointValue];
-    return CGPointMake((int)(-_origin.x + _size + loc.y) % _size, (int)(-_origin.y + _size + loc.x) % _size);
+    return CGPointMake((int)(-_origin.x + _size + loc.x) % _size, (int)(-_origin.y + _size + loc.y) % _size);
 }
 
 
 - (void)replaceAtLoc:(CGPoint)loc Withcolor:(UIColor*)color;
 {
+    if(loc.x > _size -1 ||
+       loc.x < 0 ||
+       loc.y > _size -1 ||
+       loc.y < 0 ){
+        return;
+    }
     NSValue *key = [self keyForLoc:loc];
     
     [_dict setObject:color forKey:key];
@@ -156,22 +162,22 @@
     switch (move) {
         case MOVE_UP:
         {
-            _origin = CGPointMake((int)(_origin.x + 1 + _size) % _size, (int)(_origin.y + _size) % _size);
+            _origin = CGPointMake((int)(_origin.x + _size) % _size, (int)(_origin.y + 1 + _size) % _size);
         }
             break;
         case MOVE_DOWN:
         {
-            _origin = CGPointMake((int)(_origin.x - 1 + _size) % _size, (int)(_origin.y + _size) % _size);
+            _origin = CGPointMake((int)(_origin.x + _size) % _size, (int)(_origin.y - 1 + _size) % _size);
         }
             break;
         case MOVE_RIGHT:
         {
-            _origin = CGPointMake((int)(_origin.x + _size) % _size, (int)(_origin.y - 1 + _size) % _size);
+            _origin = CGPointMake((int)(_origin.x - 1 + _size) % _size, (int)(_origin.y + _size) % _size);
         }
             break;
         case MOVE_LEFT:
         {
-            _origin = CGPointMake((int)(_origin.x + _size) % _size, (int)(_origin.y + 1 + _size) % _size);
+            _origin = CGPointMake((int)(_origin.x + 1 + _size) % _size, (int)(_origin.y + _size) % _size);
         }
             break;
         default:
@@ -179,19 +185,19 @@
     }
     return YES;
 }
+
 - (void)removeAtLoc:(CGPoint)loc
 {
     [_dict removeObjectForKey:[self keyForLoc:loc]];
 }
 
-
 - (NSString*)getStringData
 {
     NSString *s = [NSString stringWithFormat:@"%ld",_size];
     
-    for (int row=0; row < _size;  row++) {
-        for (int col=0; col < _size;  col++) {
-            CGPoint loc = CGPointMake(row, col);
+    for (int y=0; y < _size;  y++) {
+        for (int x=0; x < _size;  x++) {
+            CGPoint loc = CGPointMake(x, y);
             UIColor *color = [self colorWithLoc:loc];
             NSInteger data;
             if (color) {

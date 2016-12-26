@@ -10,4 +10,6 @@
 
 @interface AYBaseViewController : UIViewController
 
+
+-(void)showToastWithMessage:(NSString*)text andDelay:(CGFloat)delay;
 @end

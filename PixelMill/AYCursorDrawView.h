@@ -13,8 +13,6 @@
 
 @optional
 //画板内容有变化时调用;
--(void)cursorDrawHasRefreshContent;
-
 @end
 
 @interface AYCursorDrawView : AYDrawView

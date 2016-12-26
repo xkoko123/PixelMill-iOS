@@ -14,4 +14,5 @@
 
 - (instancetype)initWithButtons:(NSArray *)btns;
 
+- (NSArray*)allViews;
 @end

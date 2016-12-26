@@ -62,13 +62,13 @@
         _editingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.contentView addSubview:_editingBtn];
         [_editingBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(_canvas).offset(-2);
-            make.left.equalTo(_canvas).offset(2);
-            make.size.mas_equalTo(CGSizeMake(30, 30));
+            make.bottom.equalTo(_canvas).offset(-8);
+            make.left.equalTo(_canvas).offset(8);
+            make.size.mas_equalTo(CGSizeMake(20, 20));
         }];
+        
         _editingBtn.userInteractionEnabled = NO;
-        [_editingBtn setBackgroundImage:[UIImage imageNamed:@"back1"] forState:UIControlStateNormal];
-        [_editingBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateSelected ];
+        [_editingBtn setBackgroundImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
 //        [_editingBtn addTarget:self action:@selector(didClickEditingBtn) forControlEvents:UIControlEventTouchUpInside];
         
         

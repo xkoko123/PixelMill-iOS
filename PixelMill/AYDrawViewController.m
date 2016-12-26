@@ -257,7 +257,7 @@
     
     
     UIButton *penBtn = [[UIButton alloc] init];
-    [penBtn setImage:[[UIImage imageNamed:@"eraser"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [penBtn setImage:[[UIImage imageNamed:@"pen"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [penBtn addTarget:self action:@selector(didClickPenBtn) forControlEvents:UIControlEventTouchUpInside];
 
     //
@@ -277,12 +277,12 @@
     
     //
     UIButton *gridBtn = [[UIButton alloc] init];
-    [gridBtn setImage:[[UIImage imageNamed:@"tab1"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [gridBtn setImage:[[UIImage imageNamed:@"grid"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [gridBtn addTarget:self action:@selector(didClickGridBtn) forControlEvents:UIControlEventTouchUpInside];
     
     //
     UIButton *aligmentLineBtn = [[UIButton alloc] init];
-    [aligmentLineBtn setImage:[[UIImage imageNamed:@"tab1"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [aligmentLineBtn setImage:[[UIImage imageNamed:@"center"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [aligmentLineBtn addTarget:self action:@selector(didClickAligmentLineBtn) forControlEvents:UIControlEventTouchUpInside];
 
     
@@ -293,21 +293,54 @@
     
     //
     UIButton *lineBtn = [[UIButton alloc] init];
-    [lineBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [lineBtn setImage:[[UIImage imageNamed:@"line"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [lineBtn addTarget:self action:@selector(didClickLineBtn) forControlEvents:UIControlEventTouchUpInside];
     //
     UIButton *circleBtn = [[UIButton alloc] init];
-    [circleBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [circleBtn setImage:[[UIImage imageNamed:@"circle"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     [circleBtn addTarget:self action:@selector(didClickCircleBtn) forControlEvents:UIControlEventTouchUpInside];
 
 
     //
     UIButton *fingerBtn = [[UIButton alloc] init];
-    [fingerBtn setImage:[[UIImage imageNamed:@"clear"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [fingerBtn setImage:[[UIImage imageNamed:@"finger_mode"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [fingerBtn setImage:[[UIImage imageNamed:@"finger_mode"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
     [fingerBtn addTarget:self action:@selector(didClickFingerBtn:) forControlEvents:UIControlEventTouchUpInside];
 
+    //
+    UIButton *flipHBtn = [[UIButton alloc] init];
+    [flipHBtn setImage:[[UIImage imageNamed:@"flipH"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [flipHBtn addTarget:self action:@selector(didClickflipHBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *flipVBtn = [[UIButton alloc] init];
+    [flipVBtn setImage:[[UIImage imageNamed:@"flipV"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [flipVBtn addTarget:self action:@selector(didClickflipVBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *rotateBtn = [[UIButton alloc] init];
+    [rotateBtn setImage:[[UIImage imageNamed:@"rotate"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [rotateBtn addTarget:self action:@selector(didClickRotateBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *mirrorBtn = [[UIButton alloc] init];
+    [mirrorBtn setImage:[[UIImage imageNamed:@"mirror"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [mirrorBtn setImage:[[UIImage imageNamed:@"mirror"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+
+    [mirrorBtn addTarget:self action:@selector(didClickMirrorBtn:) forControlEvents:UIControlEventTouchUpInside];
+
     
-    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, moveBtn, lineBtn, circleBtn, gridBtn, aligmentLineBtn, clearBtn,fingerBtn] mutableCopy];
+    //
+    UIButton *pasteBtn = [[UIButton alloc] init];
+    [pasteBtn setImage:[[UIImage imageNamed:@"paste"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    
+    [pasteBtn addTarget:self action:@selector(didClickPasteBtn) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *copyBtn = [[UIButton alloc] init];
+    [copyBtn setImage:[[UIImage imageNamed:@"copy"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    
+    [copyBtn addTarget:self action:@selector(didClickCopyBtn) forControlEvents:UIControlEventTouchUpInside];
+
+
+    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, moveBtn, lineBtn, circleBtn,fingerBtn,copyBtn, pasteBtn, flipHBtn, flipVBtn, rotateBtn,mirrorBtn, clearBtn,gridBtn, aligmentLineBtn] mutableCopy];
+    
 }
 
 
@@ -336,6 +369,8 @@
         btn.tag = i;
         btn.layer.masksToBounds = YES;
         btn.layer.cornerRadius = 5;
+        btn.layer.borderColor = [UIColor blackColor].CGColor;
+
         
         [btn setBackgroundColor:color];
         [btn addTarget:self action:@selector(didSlectedColor:) forControlEvents:UIControlEventTouchUpInside];
@@ -349,7 +384,7 @@
     
     _colorBar = [[AYSwipeToolBarView alloc] init];
     _colorBar.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:_colorBar];
+    [self.view insertSubview:_colorBar belowSubview:_toolsBar];
     
     [_colorBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(49);
@@ -359,6 +394,10 @@
     }];
     
     _colorBar.btns = arrM;
+    
+    //选中第一个颜色
+    [self didSlectedColor:[arrM objectAtIndex:0]];
+
 }
 
 
@@ -475,6 +514,7 @@
 -(void)didClickBackBtn
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 -(void)didClickSaveBtn
@@ -613,8 +653,10 @@
 
 -(void)didSlectedColor:(UIView*)sender
 {
+    [self unSelectAllColor];
     UIColor *color = self.colors[sender.tag];
     self.drawView.slectedColor = color;
+    sender.layer.borderWidth = 2;
     //TODO: ssss
 }
 
@@ -632,22 +674,42 @@
         self.movePanel.alpha = 0;
     }];
     _isMovePanelExpanded = NO;
+    
+    if (self.drawView.isInPaste) {
+        [self.drawView pasteShape];
+    }
 }
 
 -(void)didClickMove:(UIControl*)c
 {
     switch (c.tag) {
         case 0:
-            [self.drawView move:MOVE_UP];
+            if (self.drawView.isInPaste) {
+                [self.drawView moveSlectedPixels:MOVE_UP];
+            }else{
+                [self.drawView move:MOVE_UP];
+            }
             break;
         case 1:
-            [self.drawView move:MOVE_DOWN];
+            if (self.drawView.isInPaste) {
+                [self.drawView moveSlectedPixels:MOVE_DOWN];
+            }else{
+                [self.drawView move:MOVE_DOWN];
+            }
             break;
         case 2:
-            [self.drawView move:MOVE_LEFT];
+            if (self.drawView.isInPaste) {
+                [self.drawView moveSlectedPixels:MOVE_LEFT];
+            }else{
+                [self.drawView move:MOVE_LEFT];
+            }
             break;
         case 3:
-            [self.drawView move:MOVE_RIGHT];
+            if (self.drawView.isInPaste) {
+                [self.drawView moveSlectedPixels:MOVE_RIGHT];
+            }else{
+                [self.drawView move:MOVE_RIGHT];
+            }
             break;
         default:
             break;
@@ -677,7 +739,7 @@
 }
 
 //delegate
--(void)cursorDrawHasRefreshContent
+-(void)drawViewHasRefreshContent
 {
     [self refreshPreviewView];
 }
@@ -686,6 +748,41 @@
 {
     _drawView.slectedColor = color;
 }
+
+-(void)didClickRotateBtn:(UIButton*)sender
+{
+    [self.drawView rotate90];
+    [self refreshPreviewView];
+
+}
+
+
+-(void)didClickflipHBtn:(UIButton*)sender
+{
+    [self.drawView flipHorizontal];
+    [self refreshPreviewView];
+
+}
+
+
+-(void)didClickflipVBtn:(UIButton*)sender
+{
+    [self.drawView flipVertical];
+    [self refreshPreviewView];
+
+}
+
+-(void)didClickMirrorBtn:(UIButton*)sender
+{
+    [self.drawView setMirrorMode:!self.drawView.mirrorMode];
+    if (self.drawView.mirrorMode) {
+        [sender setSelected:YES];
+    }else{
+        [sender setSelected:NO];
+    }
+
+}
+
 /*
 #pragma mark - Navigation
 
@@ -702,10 +799,12 @@
     [self.previewView.layer display];
 }
 
--(void)testtest
+-(void)unSelectAllColor
 {
-
-
+    
+    for (UIView *v in [_colorBar allViews]) {
+        v.layer.borderWidth = 0;
+    }
 }
 
 -(void)willEnterColorPicker:(UIGestureRecognizer*)gr
@@ -719,8 +818,15 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
+-(void)pasteSlectPixels
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        self.movePanel.alpha = 0.7;
+    }];
+    _isMovePanelExpanded = YES;
+    self.drawView.isInPaste = YES;
 
-
+}
 
 -(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
@@ -731,6 +837,32 @@
 {
     return [_drawView superview];
 }
+
+-(void)didClickPasteBtn
+{
+    if (self.drawView.isInPaste) {
+        return;
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        self.movePanel.alpha = 0.7;
+    }];
+    _isMovePanelExpanded = YES;
+    self.drawView.isInPaste = YES;
+    [self.drawView setNeedsDisplay];
+    
+    [self showToastWithMessage:@"移动复制的内容" andDelay:1];
+
+}
+
+-(void)didClickCopyBtn
+{
+    if (self.drawView.currentType == COPY) {
+        return;
+    }
+    self.drawView.currentType = COPY;
+    [self showToastWithMessage:@"涂画要复制的内容" andDelay:1];
+}
+
 
 -(BOOL)prefersStatusBarHidden
 {

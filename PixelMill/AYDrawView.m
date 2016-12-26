@@ -44,10 +44,12 @@
         //TODO : sfsf
         _slectedColor = [UIColor blackColor];
         _drawingPixels = [[NSMutableArray alloc] init];
-        
+        self.lineWidth = 1;
+        self.mirrorMode = NO;
+        _slectedPixels= [[NSMutableDictionary alloc] init];
+        self.isInPaste = NO;
     }
     return self;
-
 }
 
 -(void)drawRect:(CGRect)rect
@@ -56,71 +58,112 @@
     
     if ([_drawingPixels count] != 0) {//画正在画的点...
         CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSetAllowsAntialiasing(ctx, NO);
         [self.slectedColor setFill];
         for (NSValue *value in _drawingPixels ) {
             CGPoint loc = [value CGPointValue];
-            CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
-                                          loc.x * _pixelWidth,
-                                          _pixelWidth,
-                                          _pixelWidth);
+            CGRect pixelRect;
+            
+            if (self.lineWidth == 2) {
+                pixelRect = CGRectMake((loc.x-1) * _pixelWidth,
+                                                (loc.y-1) * _pixelWidth,
+                                                _pixelWidth *3,
+                                                _pixelWidth *3);
+            }else{
+                pixelRect = CGRectMake(loc.x * _pixelWidth,
+                                       loc.y * _pixelWidth,
+                                       _pixelWidth,
+                                       _pixelWidth);
+            }
+
             CGContextAddRect(ctx, pixelRect);
             CGContextFillPath(ctx);
         }
+    }else if(
+             (self.currentType == COPY || self.isInPaste)
+             &&
+             [_slectedPixels count] != 0
+             ){
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSetAllowsAntialiasing(ctx, NO);
+        
+        [[UIColor redColor] setFill];
+
+        for (NSValue *value in _slectedPixels ) {
+            CGPoint loc = [value CGPointValue];
+            CGRect pixelRect;
+            //粘贴时显示的是复制的颜色
+            if (self.isInPaste) {
+                UIColor *color = [self.slectedPixels objectForKey:value];
+                [color setFill];
+            }
+            
+            if (self.lineWidth == 2) {
+                pixelRect = CGRectMake((loc.x-1) * _pixelWidth,
+                                       (loc.y-1) * _pixelWidth,
+                                       _pixelWidth *3,
+                                       _pixelWidth *3);
+            }else{
+                pixelRect = CGRectMake(loc.x * _pixelWidth,
+                                       loc.y * _pixelWidth,
+                                       _pixelWidth,
+                                       _pixelWidth);
+            }
+            
+            CGContextAddRect(ctx, pixelRect);
+            CGContextFillPath(ctx);
+        }
+        
     }
 }
+
 
 -(CGPoint)locationWithPoint:(CGPoint)point
 {
-    int row = point.y / _pixelWidth;
-    int col = point.x / _pixelWidth;
-    return CGPointMake(col, row);
+    int y = point.y / _pixelWidth;
+    int x = point.x / _pixelWidth;
+    return CGPointMake(x, y);
 }
+
 
 -(void)drawPixelAtLoc:(CGPoint)loc
 {
-    //不知道为什么Touch事件有很小的几率坐标会超出View
-    if(loc.x > _size -1 ||
-       loc.x < 0 ||
-       loc.y > _size -1 ||
-       loc.y < 0 ){
-        return;
+    
+    [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
+    if (self.lineWidth == 2) {
+        [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y+1) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y+1) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y-1) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y+1) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y-1) Withcolor:self.slectedColor];
     }
     
-    [self.adapter replaceAtLoc:CGPointMake(loc.y, loc.x) Withcolor:self.slectedColor];
+    if (self.mirrorMode) {
+        loc = CGPointMake(self.size-1-loc.x, loc.y);
+        [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
+        if (self.lineWidth == 2) {
+            [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y+1) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y+1) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y-1) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y+1) Withcolor:self.slectedColor];
+            [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y-1) Withcolor:self.slectedColor];
+        }
+
+    }
+
 }
+
 
 //改为Bresenham算法
 -(void)addLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
-//    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
-//    
-//    if(distance<=1){
-//        [self drawPixelAtLoc:locB];
-//        return;
-//    }
-//    
-//    if(locA.x > locB.x){
-//        CGPoint temp = locA;
-//        locA = locB;
-//        locB = temp;
-//    }
-//    
-//    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
-//    
-//    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
-//    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
-//        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
-//            int y = k * ( x - locA.x) + locA.y;
-//            [self drawPixelAtLoc:CGPointMake(x, y)];
-//            
-//        }
-//    }else{
-//        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
-//            int x = locA.x + (y - locA.y) / k;
-//            [self drawPixelAtLoc:CGPointMake(x, y)];
-//        }
-//    }
     int x0 = locA.x;
     int y0 = locA.y;
     int x1 = locB.x;
@@ -178,34 +221,6 @@
 -(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
-//    CGFloat distance = sqrt((locA.x - locB.x)*(locA.x - locB.x) + (locA.y - locB.y) * (locA.y - locB.y));
-//    
-//    if(distance<1){
-//        [self erasePixelAtLoc:locB];
-//        return;
-//    }
-//    
-//    if(locA.x > locB.x){
-//        CGPoint temp = locA;
-//        locA = locB;
-//        locB = temp;
-//    }
-//    
-//    CGFloat k = (locB.y - locA.y) / (locB.x - locA.x);
-//    
-//    //如果纵向比横向断点多，就沿x轴扫描确定y坐标
-//    if(fabs(locA.x-locB.x) > fabs(locA.y-locB.y)){
-//        for (int x=MIN(locA.x, locB.x); x<MAX(locA.x, locB.x); x++) {
-//            int y = k * ( x - locA.x) + locA.y;
-//            [self erasePixelAtLoc:CGPointMake(x, y)];
-//            
-//        }
-//    }else{
-//        for (int y=MIN(locA.y, locB.y); y<MAX(locB.y,locA.y); y++) {
-//            int x = locA.x + (y - locA.y) / k;
-//            [self erasePixelAtLoc:CGPointMake(x, y)];
-//        }
-//    }
     int x0 = locA.x;
     int y0 = locA.y;
     int x1 = locB.x;
@@ -307,9 +322,9 @@
     }
     for (x=x0; x <= x1; x++) {
         if (steep) {
-            [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
+            [self addToDrawingPixelsAtX:y andY:x];
         }else{
-            [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(y, x)]];
+            [self addToDrawingPixelsAtX:x andY:y];
         }
         error += deltaY;
         if ((error << 1) >= deltaX ){
@@ -318,6 +333,73 @@
         }
     }
 }
+
+
+//添加到那个里面。。。。
+-(void)slectLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
+{
+    [_drawingPixels removeAllObjects];
+    int x0 = locA.x;
+    int y0 = locA.y;
+    int x1 = locB.x;
+    int y1 = locB.y;
+    BOOL steep;
+    short t, deltaX, deltaY, error;
+    CGFloat x,y,ystep;
+    
+    steep = (ABS(y1 - y0)  >  ABS(x1 - x0));
+    if (steep) {
+        t = x0;
+        x0 = y0;
+        y0 = t;
+        
+        t = x1;
+        x1 = y1;
+        y1 = t;
+    }
+    
+    if (x0 > x1) {
+        t = x0;
+        x0 = x1;
+        x1 = t;
+        
+        t = y0;
+        y0 = y1;
+        y1 = t;
+    }
+    
+    deltaX = x1 - x0;
+    deltaY = ABS(y1 - y0);
+    error = 0;
+    y = y0;
+    
+    if (y0 < y1) {
+        ystep = 1;
+    }else{
+        ystep = -1;
+    }
+    for (x=x0; x <= x1; x++) {
+        if (steep) {
+            NSValue *key = [NSValue valueWithCGPoint:CGPointMake(y, x)];
+            UIColor *color = [self.adapter colorWithKey:key];
+            if (color) {
+                [_slectedPixels setObject: color forKey: key];
+            }
+        }else{
+            NSValue *key = [NSValue valueWithCGPoint:CGPointMake(x, y)];
+            UIColor *color = [self.adapter colorWithKey:key];
+            if (color) {
+                [_slectedPixels setObject: color forKey: key];
+            }
+        }
+        error += deltaY;
+        if ((error << 1) >= deltaX ){
+            y += ystep;
+            error -= deltaX;
+        }
+    }
+}
+
 
 // 以a为圆心，过b点画圆
 -(void)drawCircleAtLoc:(CGPoint)a toLoc:(CGPoint)b
@@ -339,15 +421,15 @@
     int d = 1 - r;
     
     while (x<=y) {
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+y,mx+x)]];
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+x,mx+y)]];
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+y,mx-x)]];
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my+x,mx-y)]];
+        [self addToDrawingPixelsAtX:mx+x andY:my+y];
+        [self addToDrawingPixelsAtX:mx+y andY:my+x];
+        [self addToDrawingPixelsAtX:mx-x andY:my+y];
+        [self addToDrawingPixelsAtX:mx-y andY:my+x];
         
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-y,mx-x)]];
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-x,mx-y)]];
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-y,mx+x)]];
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(my-x,mx+y)]];
+        [self addToDrawingPixelsAtX:mx-x andY:my-y];
+        [self addToDrawingPixelsAtX:mx-y andY:my-x];
+        [self addToDrawingPixelsAtX:mx+x andY:my-y];
+        [self addToDrawingPixelsAtX:mx+y andY:my-x];
         if(d < 0){
             d = d+2*x+3;
         }else{
@@ -359,13 +441,14 @@
     
 }
 
+
 //将正在处理中的像素点保存到画布中
 -(void)submitDrawingPixels
 {
     if ([_drawingPixels count] != 0) {
         for (NSValue *value in _drawingPixels ) {
             CGPoint loc = [value CGPointValue];
-            [self drawPixelAtLoc:CGPointMake(loc.y, loc.x)];
+            [self drawPixelAtLoc:CGPointMake(loc.x, loc.y)];
         }
     }
     [_drawingPixels removeAllObjects];
@@ -406,7 +489,6 @@
     [self setNeedsDisplay];
 }
 
-
 - (void)move:(NSUInteger)move
 {
     [self pushToUndoQueue];
@@ -419,9 +501,9 @@
 
 -(void)fillUpWithLoc:(CGPoint)loc
 {
-    int row = loc.y;
-    int col = loc.x;
-    UIColor *c = [self.adapter colorWithLoc:CGPointMake(row, col)];
+    int y = loc.y;
+    int x = loc.x;
+    UIColor *c = [self.adapter colorWithLoc:CGPointMake(x, y)];
     if(!c){
         c = self.bgColor;
     }
@@ -429,7 +511,7 @@
         return;
     }
     
-    [self fillUp:row andCol:col andColor:c];
+    [self fillUpX:x andY:y andColor:c];
     [self setNeedsDisplay];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //        //填充所有颜色和选中方块一样的
@@ -440,30 +522,31 @@
 //    });
 }
 
--(void)fillUp:(int)row andCol:(int)col andColor:(UIColor*)color;
+-(void)fillUpX:(int)x andY:(int)y andColor:(UIColor*)color;
 {
     //    NSLog(@"++++%d %d",row,col);
     //越界不搜索
-    if (col<0 || row<0 || col>=_size || row >=_size) {
+    if (x<0 || y<0 || x>=_size || y >=_size) {
         return;
     }
     
-    UIColor *c = [self.adapter colorWithLoc:CGPointMake(row, col)];
+    UIColor *c = [self.adapter colorWithLoc:CGPointMake(x, y)];
     if(!c){
         c = self.bgColor;
     }
     
     //和选中的颜色一样,填充成画笔颜色
     if (CGColorEqualToColor(c.CGColor, color.CGColor)) {
-        [self.adapter replaceAtLoc:CGPointMake(row, col) Withcolor:self.slectedColor];
+        [self.adapter replaceAtLoc:CGPointMake(x, y) Withcolor:self.slectedColor];
     }else{
         return;
     }
     
-    [self fillUp:row-1 andCol:col andColor:c];//up
-    [self fillUp:row+1 andCol:col andColor:c];//down
-    [self fillUp:row andCol:col+1 andColor:c];//right
-    [self fillUp:row andCol:col-1 andColor:c];//left
+    
+    [self fillUpX:x-1 andY:y andColor:c];
+    [self fillUpX:x+1 andY:y andColor:c];
+    [self fillUpX:x andY:y-1 andColor:c];
+    [self fillUpX:x andY:y+1 andColor:c];
     
     return;
 }
@@ -471,18 +554,85 @@
 
 -(void)erasePixelAtLoc:(CGPoint)loc
 {
-    [self.adapter removeAtLoc:CGPointMake(loc.y, loc.x)];
+    [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y)];
+    if (self.lineWidth == 2) {
+        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y-1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y+1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y+1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y-1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y+1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y-1)];
+    }
 }
 
 // TODO: 翻转
 -(void)flipHorizontal
 {
+    [self pushToUndoQueue];
+    NSMutableDictionary *tempD = [[NSMutableDictionary alloc] init];
+
+    for (NSValue *key in [self.adapter.dict allKeys]) {
+
+        CGPoint loc = [self.adapter locWithKey:key];
+        UIColor *color = [self.adapter colorWithLoc:CGPointMake(loc.x, loc.y)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y)];
+        [tempD setObject:color forKey:[NSValue valueWithCGPoint:CGPointMake(self.size - 1 - loc.x, loc.y)]];
+    }
     
+    for (NSValue *key in tempD) {
+        CGPoint loc = [key CGPointValue];
+        UIColor *color = [tempD objectForKey:key];
+        [self.adapter replaceAtLoc:loc Withcolor:color];
+    }
+    
+    [self setNeedsDisplay];
 }
 
 -(void)flipVertical
 {
+    [self pushToUndoQueue];
+    NSMutableDictionary *tempD = [[NSMutableDictionary alloc] init];
     
+    for (NSValue *key in [self.adapter.dict allKeys]) {
+        
+        CGPoint loc = [self.adapter locWithKey:key];
+        UIColor *color = [self.adapter colorWithLoc:CGPointMake(loc.x, loc.y)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y)];
+        [tempD setObject:color forKey:[NSValue valueWithCGPoint:CGPointMake(loc.x, self.size - 1 - loc.y)]];
+    }
+    
+    for (NSValue *key in tempD) {
+        CGPoint loc = [key CGPointValue];
+        UIColor *color = [tempD objectForKey:key];
+        [self.adapter replaceAtLoc:loc Withcolor:color];
+    }
+    
+    [self setNeedsDisplay];
+}
+
+-(void)rotate90
+{
+    [self pushToUndoQueue];
+    NSMutableDictionary *tempD = [[NSMutableDictionary alloc] init];
+    
+    for (NSValue *key in [self.adapter.dict allKeys]) {
+        
+        CGPoint loc = [self.adapter locWithKey:key];
+        UIColor *color = [self.adapter colorWithLoc:CGPointMake(loc.x, loc.y)];
+        [tempD setObject:color forKey:[NSValue valueWithCGPoint:CGPointMake(loc.y, self.size - 1 - loc.x)]];
+    }
+    [self.adapter.dict removeAllObjects];
+    
+    for (NSValue *key in tempD) {
+        CGPoint loc = [key CGPointValue];
+        UIColor *color = [tempD objectForKey:key];
+        [self.adapter replaceAtLoc:loc Withcolor:color];
+    }
+    
+    [self setNeedsDisplay];
+
 }
 
 
@@ -496,6 +646,70 @@
 
 }
 
+//用这个向待处理序列加对象，因为处理了镜像模式
+-(void)addToDrawingPixelsAtX:(NSInteger)x andY:(NSInteger)y
+{
+    [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
+    
+    if (self.mirrorMode) {
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(self.size-1-x, y)]];
 
+    }
+}
+
+-(void)moveSlectedPixels:(MOVE)move
+{
+    CGPoint offset = CGPointZero;
+    switch (move) {
+        case MOVE_UP:
+            offset = CGPointMake(0,-1);
+            break;
+        case MOVE_DOWN:
+            offset = CGPointMake(0,1);
+            break;
+        case MOVE_LEFT:
+            offset = CGPointMake(-1,0);
+            break;
+        case MOVE_RIGHT:
+            offset = CGPointMake(1,0);
+            break;
+        default:
+            break;
+    }
+    NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
+    for (NSValue *value in [self.slectedPixels allKeys]) {
+        CGPoint p = [value CGPointValue];
+        NSValue *key =  [NSValue valueWithCGPoint:CGPointMake(p.x + offset.x, p.y + offset.y)];
+        [tempDict setObject:[self.slectedPixels objectForKey:value] forKey:key];
+    }
+    self.slectedPixels = tempDict;
+    [self setNeedsDisplay];
+}
+
+
+//将所选择区域粘贴到移动的位置
+-(void)pasteShape
+{
+    //成功粘贴再用这个
+    for (NSValue *v in [self.slectedPixels allKeys]) {
+        CGPoint loc = [v CGPointValue];
+        UIColor *color = [self.slectedPixels objectForKey:v];
+        [self.adapter replaceAtLoc:loc Withcolor:color];
+    }
+    
+    
+    self.isInPaste = NO;
+    [self setNeedsDisplay];
+    if ([self.delegate respondsToSelector:@selector(drawViewHasRefreshContent)]) {
+        [self.delegate drawViewHasRefreshContent];
+    }
+}
+
+-(void)setCurrentType:(AYCursorDrawType)currentType
+{
+    _lastType = _currentType;
+    _currentType = currentType;
+    
+}
 
 @end

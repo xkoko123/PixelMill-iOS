@@ -89,4 +89,9 @@
 }
 
 
+- (NSArray*)allViews
+{
+    return [_btns copy];
+}
+
 @end

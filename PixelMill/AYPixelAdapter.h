@@ -29,8 +29,6 @@
 
 - (void)resetOrigin;
 
-- (BOOL)validateOrigin:(CGPoint)origin;
-
 - (BOOL)move:(MOVE)move;
 
 - (NSString*)getStringData;

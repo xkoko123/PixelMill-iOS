@@ -26,6 +26,8 @@
     }
     return self;
 }
+
+
 -(instancetype)initWithSize:(NSInteger)size
 {
     self = [super init];
@@ -52,17 +54,18 @@
     
     _adapter = adapter;
     _size = adapter.size;
-    _pixelWidth = self.frame.size.width / _size;
+    self.pixelWidth = self.frame.size.width / _size;
     [self setNeedsDisplay];
 }
 
 -(void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
-    _pixelWidth = frame.size.width / _size;
+    self.pixelWidth = frame.size.width / _size;
     [self resetGridLayer];
     [self setNeedsDisplay];
 }
+
 
 -(void) resetGridLayer
 {
@@ -105,6 +108,7 @@
 -(void)drawContent
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetAllowsAntialiasing(ctx, NO);
 //    for (int row=0; row<_size; row++) {
 //        for (int col=0; col<_size; col++) {
 //            UIColor *color = [self.adapter colorWithLoc:CGPointMake(row, col)];
@@ -133,10 +137,10 @@
             }else{
                 [self.bgColor setFill];
             }
-            //loc.y =>col
-            //loc.x =>row
-            CGRect pixelRect = CGRectMake(loc.y * _pixelWidth,
-                                          loc.x * _pixelWidth,
+
+            
+            CGRect pixelRect = CGRectMake(loc.x * _pixelWidth,
+                                          loc.y * _pixelWidth,
                                           _pixelWidth,
                                           _pixelWidth);
             CGContextAddRect(ctx, pixelRect);
@@ -145,8 +149,8 @@
     }else{
 
 
-        for (int row=0; row<_size; row++) {
-            for (int col=0; col<_size; col++) {
+        for (int y=0; y<_size; y++) {
+            for (int x=0; x<_size; x++) {
                 UIColor *topColor = nil;
                 //从顶层向下扫
                 for (NSInteger i=0; i<self.layerAdapters.count; i++) {
@@ -155,7 +159,7 @@
                         continue;
                     }
                     
-                    UIColor *color = [adapter colorWithLoc:CGPointMake(row, col)];//最上面的数据
+                    UIColor *color = [adapter colorWithLoc:CGPointMake(x, y)];//最上面的数据
                     
                     if (color == nil) {
                         continue;
@@ -182,8 +186,8 @@
                     [self.bgColor setFill];
                 }
                 
-                CGRect pixelRect = CGRectMake(col * _pixelWidth,
-                                              row * _pixelWidth,
+                CGRect pixelRect = CGRectMake(x * _pixelWidth,
+                                              y * _pixelWidth,
                                               _pixelWidth,
                                               _pixelWidth);
                 CGContextAddRect(ctx, pixelRect);
@@ -237,10 +241,15 @@
 -(void)layoutIfNeeded
 {
     [super layoutIfNeeded];
-    _pixelWidth = self.frame.size.width / _size;
+    self.pixelWidth = self.frame.size.width / _size;
     [self resetGridLayer];
     [self setNeedsDisplay];
 
 }
+
+//-(void)setPixelWidth:(CGFloat)pixelWidth
+//{
+//    _pixelWidth = ceil(pixelWidth);
+//}
 
 @end

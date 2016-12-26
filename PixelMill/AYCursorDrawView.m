@@ -8,7 +8,7 @@
 
 #import "AYCursorDrawView.h"
 #import "AYPublicHeader.h"
-
+#import "AYPixelAdapter.h"
 @interface AYCursorDrawView()
 
 
@@ -54,7 +54,7 @@
         _curcorWidth = 15;
         _isPress = NO;
         _fingerMode = NO;
-        _currentType = PEN;
+        self.currentType = PEN;
         _lastFigerPosition = CGPointZero;
     }
     return self;
@@ -72,15 +72,20 @@
 #pragma mark - 指针样式在这里修改
 - (void)drawCursor
 {
-    UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(_cursorLoc.x *_pixelWidth,
-                                                                     _cursorLoc.y *_pixelWidth,
-                                                                     _pixelWidth,
-                                                                     _pixelWidth)];
-    [path moveToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth)];
-    [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth ,_cursorLoc.y *_pixelWidth)];
-    [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
-    [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
-    [path closePath];
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    if (self.lineWidth == 1) {
+        [path moveToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth)];
+        [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth ,_cursorLoc.y *_pixelWidth)];
+        [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
+        [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
+        [path closePath];
+    }else{
+        [path moveToPoint:CGPointMake((_cursorLoc.x-1) *_pixelWidth,(_cursorLoc.y-1) *_pixelWidth)];
+        [path addLineToPoint:CGPointMake((_cursorLoc.x+2) *_pixelWidth ,(_cursorLoc.y-1) *_pixelWidth)];
+        [path addLineToPoint:CGPointMake((_cursorLoc.x+2) *_pixelWidth ,(_cursorLoc.y+2) *_pixelWidth)];
+        [path addLineToPoint:CGPointMake((_cursorLoc.x-1) *_pixelWidth ,(_cursorLoc.y+2) *_pixelWidth)];
+        [path closePath];
+    }
     [path setLineWidth:1];
     [[UIColor redColor] setStroke];
     [path stroke];
@@ -88,6 +93,7 @@
     switch (self.currentType) {
         case PEN:
         case LINE:
+        case COPY:
         case CIRCLE:
         {
             path = [UIBezierPath bezierPath];
@@ -212,6 +218,7 @@
                 _beginLoc = _cursorLoc;
             }
         }
+            
             break;
         case ERASER:
         {
@@ -237,6 +244,16 @@
             }
             
         }
+            break;
+        case COPY:
+        {
+            if (_isPress || _fingerMode) {
+                [self slectLineBetweenLoc:_beginLoc and:_cursorLoc];
+                _beginLoc = _cursorLoc;
+            }
+
+        }
+            break;
         default:
             break;
     }
@@ -287,6 +304,16 @@
             [self erasePixelAtLoc:_cursorLoc];
         }
             break;
+        case COPY:
+        {
+            NSValue *key = [NSValue valueWithCGPoint:_cursorLoc];
+            UIColor *color = [self.adapter colorWithKey:key];
+            if (color) {
+                [self.slectedPixels setObject:color forKey:key];
+            }
+            
+        }
+            break;
         default:
             break;
     }
@@ -307,13 +334,18 @@
             [self submitDrawingPixels];
         }
             break;
+        case COPY:
+        {
+            self.currentType = self.lastType;
+        }
+            break;
         default:
             break;
     }
     [self setNeedsDisplay];
     //刷新previewView
-    if ([self.delegate respondsToSelector:@selector(cursorDrawHasRefreshContent)]) {
-        [self.delegate cursorDrawHasRefreshContent];
+    if ([self.delegate respondsToSelector:@selector(drawViewHasRefreshContent)]) {
+        [self.delegate drawViewHasRefreshContent];
     }
 }
 
@@ -329,10 +361,11 @@
 //选择工具过后 指针应该变
 -(void)setCurrentType:(AYCursorDrawType)currentType
 {
-    _currentType = currentType;
+    [super setCurrentType:currentType];
+    if (currentType == COPY) {
+        [self.slectedPixels removeAllObjects];
+    }
     [self setNeedsDisplay];
 }
-
-
 
 @end

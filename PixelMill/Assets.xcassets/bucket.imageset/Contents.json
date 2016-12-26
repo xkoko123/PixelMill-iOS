@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "bucket_32x32.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "bucket@2x.png",
       "scale" : "2x"
     },
     {

@@ -7,7 +7,7 @@
 //
 
 #import "AYCanvas.h"
-
+#import "AYPublicHeader.h"
 @class AYPixelAdapter;
 
 @protocol AYDrawViewDelegate <NSObject>
@@ -16,15 +16,24 @@
 
 -(void)drawViewChangeAdapter:(AYPixelAdapter*)adapter;
 -(void)drawViewChangeAdapters:(NSMutableArray*)adapters;
+-(void)drawViewHasRefreshContent;
+-(void)pasteSlectPixels;
+
 
 @end
 
 @interface AYDrawView : AYCanvas
 
-
+@property (nonatomic, assign) BOOL mirrorMode;
 @property (nonatomic, assign) int maxUndoQueueCount;
 @property (nonatomic, strong) UIColor *slectedColor;
+@property (nonatomic, assign) NSInteger lineWidth;
+@property (nonatomic, strong) NSMutableDictionary *slectedPixels;
 
+@property (nonatomic, assign) AYCursorDrawType currentType;
+@property (nonatomic, assign) AYCursorDrawType lastType;
+
+@property (nonatomic, assign) BOOL isInPaste;
 
 @property (nonatomic,assign)id delegate;
 
@@ -44,6 +53,8 @@
 -(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB;
 
 -(void)drawLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB;
+
+-(void)slectLineBetweenLoc:(CGPoint)locA and:(CGPoint)loc;
 
 -(void)move:(NSUInteger)move;
 
@@ -67,4 +78,14 @@
 
 -(void)drawCircleAtLoc:(CGPoint)point withR:(int)r;
 
+-(void)flipHorizontal;
+
+-(void)flipVertical;
+
+-(void)rotate90;
+
+-(void)moveSlectedPixels:(MOVE)move;
+
+
+-(void)pasteShape;
 @end
