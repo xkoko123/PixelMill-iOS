@@ -51,7 +51,7 @@
     self = [super initWithSize:size];
     if (self) {
         _cursorPosition = CGPointMake(0, 0);
-        _curcorWidth = 15;
+        _curcorWidth = 22;
         _isPress = NO;
         _fingerMode = NO;
         self.currentType = PEN;

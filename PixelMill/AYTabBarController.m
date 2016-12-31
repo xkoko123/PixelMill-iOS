@@ -93,8 +93,32 @@
 {
 
     if ([tabBarController.viewControllers indexOfObject:viewController] == 1) {
-        AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
-        [self presentViewController:dvc animated:YES completion:nil];
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"size" message:@"choice canvas size" preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        [vc addAction:[UIAlertAction actionWithTitle:@"8X8" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
+            dvc.size = 8;
+            [self presentViewController:dvc animated:YES completion:nil];
+        }]];
+
+        [vc addAction:[UIAlertAction actionWithTitle:@"16X16" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
+            dvc.size = 16;
+            [self presentViewController:dvc animated:YES completion:nil];
+        }]];
+        [vc addAction:[UIAlertAction actionWithTitle:@"32X32" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
+            dvc.size = 32;
+            [self presentViewController:dvc animated:YES completion:nil];
+        }]];
+        [vc addAction:[UIAlertAction actionWithTitle:@"64X64" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
+            dvc.size = 64;
+            [self presentViewController:dvc animated:YES completion:nil];
+        }]];
+
+        [self presentViewController:vc animated:YES completion:nil];
+        
         return NO;
     }
     return YES;

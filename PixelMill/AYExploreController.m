@@ -8,80 +8,128 @@
 
 #import "AYExploreController.h"
 #import "AYLoginViewController.h"
-
+#import "AYPaint.h"
 #import "AYPixelAdapter.h"
 #import "AYCanvas.h"
 #import "UIColor+colorWithInt.h"
+#import "AYNetManager.h"
+#import "AYPaintCollectionViewCell.h"
+#import "MJRefresh.h"
+#import "AYNetManager.h"
+#import "AYNetworkHelper.h"
+#import "AYPaintDetailViewController.h"
 
-@interface AYExploreController ()
+@interface AYExploreController ()<UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@property (nonatomic,strong)UICollectionView *collectionView;
+@property (strong, nonatomic)NSMutableArray *paints;
 
 @end
 
 @implementation AYExploreController
+{
+    CGFloat _cellWidth;
+    NSInteger _currentPage;
+    NSInteger _maxPage;
+    BOOL _net;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    UIButton *btn =[[UIButton alloc] initWithFrame:CGRectMake(30, 50, 80, 30)];
-    [btn setBackgroundImage:[UIImage imageNamed:@"btn_orange_bg"] forState:UIControlStateNormal];
-    [btn setTitle:@"fsdfsdf" forState:UIControlStateNormal];
-    
-    [self.view addSubview:btn];
-    
-//    UIColor *c1 = [UIColor colorWithInt:data];
-//    NSLog(@"===%@",c);
-//    NSLog(@"===%@",c1);
-    
-    
-//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-//    [view setBackgroundColor:[UIColor redColor]];
-//    [self.view addSubview:view];
-//    CALayer *layer = view.layer;
-//    
-//    layer.backgroundColor = [UIColor orangeColor].CGColor;
-//    layer.cornerRadius = 5.0;
-//    layer.frame = CGRectInset(layer.frame, 20, 20);
-//    
-//    CALayer *subL = [CALayer layer];
-//    subL.shadowOffset = CGSizeMake(0, 3);
-//    subL.shadowRadius = 5.0;
-//    subL.shadowColor = [[UIColor blackColor] CGColor];
-//    subL.shadowOpacity = 0.8;
-//    subL.frame = CGRectMake(30, 30, 128, 192);
-//    
-//    subL.contents = (id)[[UIImage imageNamed:@"bucket"] CGImage];
-//    subL.borderColor = [[UIColor blackColor] CGColor];
-//    subL.borderWidth = 2.0;
-//    
-//    [layer addSublayer:subL];
-//    
-//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timetime) userInfo:nil repeats:YES];
-
-//    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"rinima" message:@"gunnima" preferredStyle:UIAlertControllerStyleAlert];
-//    [self presentViewController:alert animated:YES completion:nil];
-//    self.view.frame.origin
-//    for (id xx in [alert.view subviews]) {
-//        
-//        for (id x in [xx subviews]) {
-//            for (id c in [x subviews]) {
-//                [x setBackgroundColor:[UIColor orangeColor]];
-//                NSLog(@"===%@", [NSString stringWithUTF8String:object_getClassName(c)]);
-//                if ([[NSString stringWithUTF8String:object_getClassName(c)] isEqualToString: @"_UIDimmingKnockoutBackdropView"]) {
-//                    [c setBackgroundColor:[UIColor redColor]];
-//                    UIView *v = c;
-//                    v.layer.cornerRadius = 50;
-//                    v.layer.contents = (id)[[UIImage imageNamed:@"bucket"] CGImage];
-//                }
-//            };
-//
-//        };
-//
-//    };
-
-
+    [self initView];
+    self.view.backgroundColor = [UIColor whiteColor];
+    _paints = [[NSMutableArray alloc] init];
+    _cellWidth = (self.view.frame.size.width-20)/2;
+    _currentPage = 1;
+    [self refreshData];
 }
 
+-(void)initView
+{
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 0) collectionViewLayout:layout];
+    _collectionView.dataSource = self;
+    _collectionView.delegate = self;
+    _collectionView.backgroundColor = [UIColor whiteColor];
+    [_collectionView registerClass:[AYPaintCollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+    [self.view addSubview:_collectionView];
 
+    
+    //下拉
+    _collectionView.mj_header= [MJRefreshNormalHeader   headerWithRefreshingBlock:^{
+        [self.collectionView.mj_header  beginRefreshing];
+        [self refreshNet];
+        [[AYNetManager shareManager] getPaintTimeLineAtPage:1
+                                                    success:^(id responseObject){
+                                                        if (_net) {
+                                                            _currentPage = 1;
+                                                            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                            NSArray *array = [responseObject objectForKey:@"paints"];
+                                                            self.paints = [AYPaint paintsWithArray:array];
+                                                            [self.collectionView reloadData];
+                                                            [self.collectionView.mj_header   endRefreshing];
+
+                                                        }
+                                                    }
+                                                    failure:^(NSError *error) {
+                                                        [self.collectionView.mj_header   endRefreshing];
+                                                    }responseCache:^(id responseObject) {
+                                                        if (!_net) {
+                                                            _currentPage = 1;
+                                                            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                            NSArray *array = [responseObject objectForKey:@"paints"];
+                                                            self.paints = [AYPaint paintsWithArray:array];
+                                                            [self.collectionView reloadData];
+                                                            [self.collectionView.mj_header   endRefreshing];
+                                                        }
+                                                    }
+         ];
+        
+        
+    }];
+    
+    
+    //上拉
+    _collectionView.mj_footer = [MJRefreshAutoNormalFooter  footerWithRefreshingBlock:^{
+        [self.collectionView.mj_footer  beginRefreshing];
+        
+        [self refreshNet];
+        if (_currentPage < _maxPage) {
+            [[AYNetManager shareManager] getPaintTimeLineAtPage:_currentPage+1
+                                                        success:^(id responseObject){
+                                                            if (_net) {
+                                                                _currentPage += 1;
+                                                                _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                                NSArray *array = [responseObject objectForKey:@"paints"];
+                                                                [self.paints addObjectsFromArray:[AYPaint paintsWithArray:array]];
+                                                                [self.collectionView reloadData];
+                                                                [self.collectionView.mj_footer  endRefreshing];
+                                                            }
+                                                        }
+                                                        failure:^(NSError *error) {
+                                                            [self.collectionView.mj_footer  endRefreshing];
+                                                        }responseCache:^(id responseObject) {
+                                                            if (!_net) {
+                                                                _currentPage +=1;
+                                                                _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                                NSArray *array = [responseObject objectForKey:@"paints"];
+                                                                [self.paints addObjectsFromArray:[AYPaint paintsWithArray:array]];
+                                                                [self.collectionView reloadData];
+                                                                [self.collectionView.mj_footer  endRefreshing];
+                                                                
+                                                            }
+                                                        }
+             ];
+        }else{
+            [self.collectionView.mj_footer  endRefreshing];
+        }
+
+        
+        
+    }];
+    
+}
 
 
 - (void)didReceiveMemoryWarning {
@@ -90,22 +138,106 @@
 
 }
 
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    AYLoginViewController *vc = [[AYLoginViewController alloc] init];
-    [self.navigationController presentViewController:vc animated:YES completion:nil];
+    return ceil(self.paints.count / 2.0f);
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    if (self.paints.count % 2 == 0) {
+        return 2;
+    }else{
+        if (section == ceil(self.paints.count / 2.0f)-1) {
+            return 1;
+        }else{
+            return 2;
+        }
+    }
 }
-*/
+
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    AYPaintCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    
+    AYPaint *paint = [self.paints objectAtIndex:(indexPath.section * 2 + indexPath.row)];
+    cell.paintModel = paint;
+    return cell;
+}
+
+
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    return CGSizeMake(_cellWidth, _cellWidth + 64);
+}
+
+-(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(5, 5, 0, 5);
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    AYPaint *paint = [self.paints objectAtIndex:(indexPath.section * 2 + indexPath.row)];
+    AYPaintDetailViewController *vc = [[AYPaintDetailViewController alloc] initWithPaintModel:paint];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
+-(void)refreshData
+{
+    [self refreshNet];
+    [[AYNetManager shareManager] getPaintTimeLineAtPage:1
+                                                success:^(id responseObject){
+                                                    if (_net) {
+                                                        _currentPage =1;
+                                                        _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                        NSArray *array = [responseObject objectForKey:@"paints"];
+                                                        self.paints = [AYPaint paintsWithArray:array];
+                                                        [self.collectionView reloadData];
+                                                    }
+                                                }
+                                                failure:^(NSError *error) {
+                                                } responseCache:^(id responseObject) {
+                                                    if (!_net) {
+                                                        _currentPage =1;
+                                                        _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                        NSArray *array = [responseObject objectForKey:@"paints"];
+                                                        self.paints = [AYPaint paintsWithArray:array];
+                                                        [self.collectionView reloadData];
+                                                    }
+                                                }
+     ];
+
+    
+    
+    
+}
+
+-(void)refreshNet
+{
+    [AYNetworkHelper networkStatusWithBlock:^(AYNetworkStatus networkStatus) {
+        
+        switch (networkStatus) {
+            case AYNetworkStatusUnknown:
+            case AYNetworkStatusNotReachable: {
+                _net = NO;
+                break;
+            }
+                
+            case AYNetworkStatusReachableViaWWAN:
+            case AYNetworkStatusReachableViaWiFi: {
+                _net = YES;
+                break;
+            }
+        }
+        
+    }];
+    
+
+}
+
 
 
 

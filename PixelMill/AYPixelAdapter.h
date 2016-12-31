@@ -45,4 +45,6 @@
 
 -(void)pushToRedoQueue;
 
++(AYPixelAdapter*)getBlendAdapter:(NSArray*)arrays withSize:(NSInteger)size;
+
 @end

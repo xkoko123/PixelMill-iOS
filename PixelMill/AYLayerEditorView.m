@@ -10,10 +10,11 @@
 #import "AYCanvas.h"
 #import "AYPixelAdapter.h"
 #import "AYLayerTableViewCell.h"
+#import "AYDragableTableView.h"
 #import <Masonry.h>
 
 
-@interface AYLayerEditorView()<UITableViewDelegate, UITableViewDataSource, LayerTableViewCellDelegate>
+@interface AYLayerEditorView()<UITableViewDelegate, UITableViewDataSource, LayerTableViewCellDelegate,AYDragableTableViewDelegate>
 
 @property (nonatomic, strong) UIControl *dismissController;
 @property (nonatomic, strong) NSMutableArray *touchPoints;
@@ -37,7 +38,7 @@
         
         _editIndex = index;
         _layerAdapters = adapters;
-        _tableView = [[UITableView alloc] init];
+        _tableView = [[AYDragableTableView alloc] init];
         _tableView.rowHeight = 150;
         _tableView.clipsToBounds = NO; 
         _tableView.delegate = self;
@@ -51,15 +52,10 @@
             make.left.equalTo(self.mas_left);
         }];
         
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
-        [self.tableView addGestureRecognizer:longPress];
-
         _tableView.layer.shadowColor = [UIColor blackColor].CGColor;
         _tableView.layer.shadowOffset = CGSizeMake(2, 2);
         _tableView.layer.shadowOpacity = 0.3;
         _tableView.layer.shadowRadius = 4;
-        
-        
         
         _toolBar = [[UIView alloc] init];
         _toolBar.backgroundColor = [UIColor whiteColor];
@@ -130,14 +126,23 @@
 -(void)didClickAddLayer
 {
     AYPixelAdapter *adapter = [[AYPixelAdapter alloc] initWithSize:self.size];
-    [self.layerAdapters addObject:adapter];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.layerAdapters.count-1 inSection:0];
+    [self.layerAdapters insertObject:adapter atIndex:0];
+    
+    //添加图层默认改成编辑状态，所以旧的图层要刷新
+    NSInteger oldEditIndex = self.editIndex;
+    self.editIndex = 0;
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:YES];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    //因为一直删除只剩一行时会隐藏删除按钮，所以添加行后刷新第一行
-    if (self.layerAdapters.count == 2) {
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
-    }
+    
+    [self.tableView reloadRowsAtIndexPaths: @[[NSIndexPath indexPathForRow:oldEditIndex+1 inSection:0],] withRowAnimation:NO];
+
+    
+//    //因为只剩一行时会隐藏删除按钮，所以添加行后刷新第二行
+//    if (self.layerAdapters.count == 2) {
+//        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:NO];
+//    }
     [self notifySuperViewReload];
 }
 
@@ -207,142 +212,29 @@
 }
 
 
-#pragma mark - TableView 长按拖拽
--(void)longPressed:(UILongPressGestureRecognizer*)sender
+-(void)dragableTableViewDidMoveAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    UILongPressGestureRecognizer *longPress = (UILongPressGestureRecognizer *)sender;
-    UIGestureRecognizerState state = longPress.state;
-    CGPoint location = [longPress locationInView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
-    static UIView       *snapshot = nil;
-    static NSIndexPath  *sourceIndexPath = nil;
+    // 更新数组中的内容
     
-    switch (state) {
-            // 已经开始按下
-        case UIGestureRecognizerStateBegan: {
-            // 判断是不是按在了cell上面
-            if (indexPath) {
-                sourceIndexPath = indexPath;
-                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                // 为拖动的cell添加一个快照
-                snapshot = [self customSnapshoFromView:cell];
-                // 添加快照至tableView中
-                __block CGPoint center = cell.center;
-                snapshot.center = center;
-                snapshot.alpha = 0.0;
-                [self.tableView addSubview:snapshot];
-                // 按下的瞬间执行动画
-                [UIView animateWithDuration:0.25 animations:^{
-                    center.y = location.y;
-                    snapshot.center = center;
-                    snapshot.transform = CGAffineTransformMakeScale(1.05, 1.05);
-                    snapshot.alpha = 0.98;
-                    cell.alpha = 0.0;
-                    
-                } completion:^(BOOL finished) {
-                    
-                    cell.hidden = YES;
-                    
-                }];
-            }
-            break;
-        }
-            // 移动过程中
-        case UIGestureRecognizerStateChanged: {
-            // 这里保持数组里面只有最新的两次触摸点的坐标
-            [self.touchPoints addObject:[NSValue valueWithCGPoint:location]];
-            if (self.touchPoints.count > 2) {
-                [self.touchPoints removeObjectAtIndex:0];
-            }
-            CGPoint center = snapshot.center;
-            // 快照随触摸点y值移动（当然也可以根据触摸点的y轴移动量来移动）
-            center.y = location.y;
-            // 快照随触摸点x值改变量移动
-            CGPoint Ppoint = [[self.touchPoints firstObject] CGPointValue];
-            CGPoint Npoint = [[self.touchPoints lastObject] CGPointValue];
-            CGFloat moveX = Npoint.x - Ppoint.x;
-            center.x += moveX;
-            snapshot.center = center;
-//            NSLog(@"%@---%f----%@", self.touchPoints, moveX, NSStringFromCGPoint(center));
-//            NSLog(@"%@", NSStringFromCGRect(snapshot.frame));
-            // 是否移动了
-            if (indexPath && ![indexPath isEqual:sourceIndexPath]) {
-                
-                // 更新数组中的内容
-                [self.layerAdapters exchangeObjectAtIndex:
-                 indexPath.row withObjectAtIndex:sourceIndexPath.row];
-                
-                // 把cell移动至指定行
-                [self.tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:indexPath];
-                
-                
-                // 自己看
-                if (sourceIndexPath.row == self.editIndex ) {
-                    self.editIndex = indexPath.row;
-                }else if (sourceIndexPath.row < self.editIndex && indexPath.row >= self.editIndex){
-                    self.editIndex -= 1;
-                }else if (sourceIndexPath.row > self.editIndex && indexPath.row <= self.editIndex){
-                    self.editIndex += 1;
-                }else if(indexPath.row == self.editIndex && sourceIndexPath.row >= self.editIndex){
-                    self.editIndex += 1;
-                }else if(indexPath.row == self.editIndex && sourceIndexPath.row <= self.editIndex){
-                    self.editIndex = indexPath.row;
-                }
-                
-                // 存储改变后indexPath的值，以便下次比较
-                sourceIndexPath = indexPath;
-                
-                
-                [self notifySuperViewReload];
-//                [self.tableView reloadData];
-
-            }
-            break;
-        }
-            // 长按手势取消状态
-        default: {
-            // 清除操作
-            // 清空数组，非常重要，不然会发生坐标突变！
-            [self.touchPoints removeAllObjects];
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:sourceIndexPath];
-            cell.hidden = NO;
-            cell.alpha = 0.0;
-            // 将快照恢复到初始状态
-            [UIView animateWithDuration:0.25 animations:^{
-                snapshot.center = cell.center;
-                snapshot.transform = CGAffineTransformIdentity;
-                snapshot.alpha = 0.0;
-                cell.alpha = 1.0;
-                
-            } completion:^(BOOL finished) {
-                
-                sourceIndexPath = nil;
-                [snapshot removeFromSuperview];
-                snapshot = nil;
-                
-            }];
-            
-            break;
-        }
+    [self.layerAdapters exchangeObjectAtIndex:
+     sourceIndexPath.row withObjectAtIndex:toIndexPath.row];
+    
+    // 自己看
+    if (sourceIndexPath.row == self.editIndex ) {
+        self.editIndex = toIndexPath.row;
+    }else if (sourceIndexPath.row < self.editIndex && toIndexPath.row >= self.editIndex){
+        self.editIndex -= 1;
+    }else if (sourceIndexPath.row > self.editIndex && toIndexPath.row <= self.editIndex){
+        self.editIndex += 1;
+    }else if(toIndexPath.row == self.editIndex && sourceIndexPath.row >= self.editIndex){
+        self.editIndex += 1;
+    }else if(toIndexPath.row == self.editIndex && sourceIndexPath.row <= self.editIndex){
+        self.editIndex = toIndexPath.row;
     }
+    [self notifySuperViewReload];
 
 }
 
--(UIView *)customSnapshoFromView:(UIView *)view {
-    // 用cell的图层生成UIImage，方便一会显示
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    // 自定义这个快照的样子（下面的一些参数可以自己随意设置）
-    UIView *snapshot = [[UIImageView alloc] initWithImage:image];
-    snapshot.layer.masksToBounds = NO;
-    snapshot.layer.cornerRadius = 0.0;
-    snapshot.layer.shadowOffset = CGSizeMake(-5.0, 0.0);
-    snapshot.layer.shadowRadius = 5.0;
-//    snapshot.layer.shadowOpacity = 0.4;
-    return snapshot;
-}
 
 
 #pragma mark - 自定义代理
@@ -383,6 +275,12 @@
     [self.tableView reloadData];
     
     [self notifySuperViewReload];
+}
+
+
+-(BOOL)dragableTableViewShouldDragAtIndexPath:(NSIndexPath *)indexpath
+{
+    return YES;
 }
 
 @end

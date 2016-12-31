@@ -34,7 +34,7 @@
     if (self) {
         self.layer.drawsAsynchronously = YES;
         self.layerBlendMode = NO;
-        _bgColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+        _bgColor = [UIColor whiteColor];
         self.adapter = [[AYPixelAdapter alloc] initWithSize:size];
         
         _showGrid = NO;
@@ -49,9 +49,18 @@
     return self;
 }
 
+-(instancetype)initWithFrame:(CGRect)fram andAdapter:(AYPixelAdapter*)adapter
+{
+    self= [self initWithSize:adapter.size];
+    if (self) {
+        self.frame = fram;
+        self.adapter = adapter;
+    }
+    return self;
+}
+
 -(void)setAdapter:(AYPixelAdapter *)adapter
 {
-    
     _adapter = adapter;
     _size = adapter.size;
     self.pixelWidth = self.frame.size.width / _size;
@@ -67,6 +76,7 @@
 }
 
 
+
 -(void) resetGridLayer
 {
     _gridLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);
@@ -76,21 +86,21 @@
     UIBezierPath *path = [UIBezierPath bezierPath];
     if (self.showGrid) {
         for (int i=0; i<=_size; i++) {
-            [path moveToPoint:CGPointMake(0, _pixelWidth * i)];
-            [path addLineToPoint:CGPointMake(self.frame.size.width, _pixelWidth * i)];
+            [path moveToPoint:CGPointMake(0, self.pixelWidth * i)];
+            [path addLineToPoint:CGPointMake(self.frame.size.width, self.pixelWidth * i)];
         }
         
         for (int i=0; i<=_size; i++) {
-            [path moveToPoint:CGPointMake(_pixelWidth * i, 0)];
-            [path addLineToPoint:CGPointMake(_pixelWidth * i, self.frame.size.width)];
+            [path moveToPoint:CGPointMake(self.pixelWidth * i, 0)];
+            [path addLineToPoint:CGPointMake(self.pixelWidth * i, self.frame.size.width)];
         }
     }
     
     if (self.showAlignmentLine) {
-        [path moveToPoint:CGPointMake(_size/2 * _pixelWidth, 0)];
-        [path addLineToPoint:CGPointMake(_size/2 * _pixelWidth, self.frame.size.width)];
-        [path moveToPoint:CGPointMake(0, _size/2 * _pixelWidth)];
-        [path addLineToPoint:CGPointMake(self.frame.size.width, _size/2 * _pixelWidth)];
+        [path moveToPoint:CGPointMake(_size/2 * self.pixelWidth, 0)];
+        [path addLineToPoint:CGPointMake(_size/2 * self.pixelWidth, self.frame.size.width)];
+        [path moveToPoint:CGPointMake(0, _size/2 * self.pixelWidth)];
+        [path addLineToPoint:CGPointMake(self.frame.size.width, _size/2 * self.pixelWidth)];
     }
     
     _gridLayer.path = [path CGPath];
@@ -109,43 +119,42 @@
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetAllowsAntialiasing(ctx, NO);
-//    for (int row=0; row<_size; row++) {
-//        for (int col=0; col<_size; col++) {
-//            UIColor *color = [self.adapter colorWithLoc:CGPointMake(row, col)];
+    
+    if (!self.layerBlendMode) {
+//        for (NSValue *key in [self.adapter.dict allKeys] ) {
+//            UIColor *color = [self.adapter colorWithKey:key];
+//            CGPoint loc = [self.adapter locWithKey:key];
+//            
 //            if (color) {
-//                NSLog(@"sadsa");
 //                [color setFill];
 //            }else{
 //                [self.bgColor setFill];
 //            }
-//            CGRect pixelRect = CGRectMake(col * _pixelWidth,
-//                                          row * _pixelWidth,
-//                                          _pixelWidth+0.5,
-//                                          _pixelWidth+0.5);
+//            int x = loc.x;
+//            int y = loc.y;
+//            CGRect pixelRect = CGRectMake(x * self.pixelWidth,
+//                                          y * self.pixelWidth,
+//                                          self.pixelWidth,
+//                                          self.pixelWidth);
 //            CGContextAddRect(ctx, pixelRect);
 //            CGContextFillPath(ctx);
 //        }
-//    }
-    
-    if (!self.layerBlendMode) {
-        for (NSValue *key in [self.adapter.dict allKeys] ) {
-            UIColor *color = [self.adapter colorWithKey:key];
-            CGPoint loc = [self.adapter locWithKey:key];
-            
-            if (color) {
-                [color setFill];
-            }else{
-                [self.bgColor setFill];
-            }
+        for (int y=0; y<_size; y++) {
+            for (int x=0; x<_size; x++) {
+                UIColor *color = [self.adapter colorWithLoc:CGPointMake(x, y)];
+                if (color) {
+                    [color setFill];
+                    CGRect pixelRect = CGRectMake(x * self.pixelWidth,
+                                                  y * self.pixelWidth,
+                                                  self.pixelWidth,
+                                                  self.pixelWidth);
+                    CGContextAddRect(ctx, pixelRect);
+                    CGContextFillPath(ctx);
 
-            
-            CGRect pixelRect = CGRectMake(loc.x * _pixelWidth,
-                                          loc.y * _pixelWidth,
-                                          _pixelWidth,
-                                          _pixelWidth);
-            CGContextAddRect(ctx, pixelRect);
-            CGContextFillPath(ctx);
+                }
+            }
         }
+        
     }else{
 
 
@@ -186,10 +195,10 @@
                     [self.bgColor setFill];
                 }
                 
-                CGRect pixelRect = CGRectMake(x * _pixelWidth,
-                                              y * _pixelWidth,
-                                              _pixelWidth,
-                                              _pixelWidth);
+                CGRect pixelRect = CGRectMake(x * self.pixelWidth,
+                                              y * self.pixelWidth,
+                                              self.pixelWidth,
+                                              self.pixelWidth);
                 CGContextAddRect(ctx, pixelRect);
                 CGContextFillPath(ctx);
             }
@@ -247,9 +256,6 @@
 
 }
 
-//-(void)setPixelWidth:(CGFloat)pixelWidth
-//{
-//    _pixelWidth = ceil(pixelWidth);
-//}
+
 
 @end

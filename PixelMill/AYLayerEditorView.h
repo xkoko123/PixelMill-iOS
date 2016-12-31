@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+@class AYDragableTableView;
+
 
 @protocol LayerEditorViewDelegate<NSObject>
 
@@ -25,7 +27,7 @@
 @property (nonatomic, weak) id delegate;
 
 @property (nonatomic,weak) NSMutableArray *layerAdapters;
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) AYDragableTableView *tableView;
 @property (nonatomic,assign)NSInteger editIndex;
 
 

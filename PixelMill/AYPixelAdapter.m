@@ -260,5 +260,40 @@
     }
 }
 
++(AYPixelAdapter *)getBlendAdapter:(NSArray *)arrays withSize:(NSInteger)size
+{
+    AYPixelAdapter *adapter = [[AYPixelAdapter alloc] initWithSize:size];
+    for (int y=0; y<size; y++) {
+        for (int x=0; x<size; x++) {
+            UIColor *topColor = nil;
+            //从顶层向下扫
+            for (NSInteger i=0; i<arrays.count; i++) {
+                AYPixelAdapter *adapter = [arrays objectAtIndex:i];
+                if (adapter.visible == NO){
+                    continue;
+                }
+                UIColor *color = [adapter colorWithLoc:CGPointMake(x, y)];//最上面的数据
+                
+                if (color == nil) {
+                    continue;
+                }
+                
+                if (topColor == nil) {
+                    topColor = color;
+                }else{
+                    topColor = [UIColor blendBgColor:color andFrontColor:topColor];
+                }
+                
+                if ([color getAlpha] ==  1) {//遇到不透明的颜色后，，它下面的就不用混和了
+                    break;
+                }
+            }
+            if (topColor){
+                [adapter replaceAtLoc:CGPointMake(x, y) Withcolor:topColor];
+            }
+        }
+    }
+    return adapter;
+}
 
 @end

@@ -22,6 +22,7 @@
 - (instancetype)initWithFrame:(CGRect)frame andSize:(int)size;
 
 -(instancetype)initWithSize:(NSInteger)size;
+-(instancetype)initWithFrame:(CGRect)fram andAdapter:(AYPixelAdapter*)adapter;
 //- (instancetype)initWithFrame:(CGRect)frame andPixelsManage:(AYPixelsManage*)pm;
 
 @property (nonatomic,strong) AYPixelAdapter *adapter;
@@ -35,6 +36,9 @@
 
 @property (nonatomic, assign) BOOL layerBlendMode;
 @property (nonatomic, weak) NSMutableArray *layerAdapters;
+
++(CGFloat)getAdjustedWidthWithWidth:(CGFloat)width andSize:(NSInteger)size;
+
 
 - (UIImage*)exportImage;
 @end

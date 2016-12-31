@@ -10,6 +10,7 @@
 #import "AYTabBarController.h"
 
 #import "UIColor+colorWithInt.h"
+#import "AYNetManager.h"
 @interface AppDelegate ()
 
 @end
@@ -33,8 +34,19 @@
                                                            NSFontAttributeName:[UIFont fontWithName:@"Pixel" size:17]}];
     [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
     
+    
+    
+    [[AYNetManager shareManager] loginWithUser:@"gogo" password:@"nishengri7" success:^(id responseObject) {
+        
+    } failure:^(NSError *error) {
+        
+    }];
+    
     [self.window setRootViewController:tabVc];
     [self.window makeKeyAndVisible];
+    
+    
+    
     return YES;
 }
 

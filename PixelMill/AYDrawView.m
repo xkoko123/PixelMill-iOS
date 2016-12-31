@@ -690,6 +690,7 @@
 //将所选择区域粘贴到移动的位置
 -(void)pasteShape
 {
+    [self pushToUndoQueue];
     //成功粘贴再用这个
     for (NSValue *v in [self.slectedPixels allKeys]) {
         CGPoint loc = [v CGPointValue];

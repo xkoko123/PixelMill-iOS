@@ -20,8 +20,11 @@
 #import "AYLayerEditorView.h"
 #import "AYLayerTableViewCell.h"
 #import "AYColorPickerViewController.h"
+#import "AYGifFramesView.h"
+#import "AYDragableTableView.h"
+#import "AYUploadViewController.h"
 
-@interface AYDrawViewController () <LayerEditorViewDelegate, AYDrawViewDelegate, UIScrollViewDelegate, AYCursorDrawViewDelegate, AYColorPickerViewDelegate>
+@interface AYDrawViewController () <LayerEditorViewDelegate, AYDrawViewDelegate, UIScrollViewDelegate, AYCursorDrawViewDelegate, AYColorPickerViewDelegate,AYGifFramesViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *layerAdapters;
 
@@ -33,8 +36,6 @@
 
 @property (nonatomic,strong) UIControl *previewView;
 
-
-
 @property (nonatomic, strong) UIView *topBar;
 @property (nonatomic, strong) UIButton *tapButton;
 @property (nonatomic, strong) AYSwipeToolBarView *colorBar;
@@ -42,6 +43,8 @@
 
 
 @property (nonatomic, weak) AYLayerEditorView *layerEditor;
+
+@property (nonatomic,strong) NSMutableArray *girFrames;
 
 
 @end
@@ -57,10 +60,10 @@
     // Do any additional setup after loading the view.
     _isMovePanelExpanded = NO;
     _layerAdapters = [[NSMutableArray alloc] init];
+    _girFrames = [[NSMutableArray alloc] init];
 
     _editIndex = 0;
     self.view.backgroundColor = [UIColor whiteColor];
-    self.size = 32;
     [self initTopBar];
     [self initDrawBoard];
     [self initTapButton];
@@ -154,7 +157,7 @@
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);
         make.height.equalTo(border.mas_width);
-        make.top.equalTo(_topBar.mas_bottom).offset(20);
+        make.top.equalTo(_topBar.mas_bottom).offset(5);
         make.left.equalTo(self.view.mas_left);
     }];
     
@@ -346,6 +349,20 @@
 
 -(void)initColorBar
 {
+    
+    UIButton *gifBtn = [[UIButton alloc] init];
+    [gifBtn setImage:[[UIImage imageNamed:@"gif"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [gifBtn addTarget:self action:@selector(didClickGifBtn) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:gifBtn];
+    [gifBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.width.mas_equalTo(49);
+        make.left.equalTo(self.view.mas_left);
+        make.bottom.mas_equalTo(_toolsBar.mas_top);
+    }];
+
+    
+    
     _colors = [[NSMutableArray alloc] init];
     NSMutableArray *arrM = [[NSMutableArray alloc] init];
     for (NSInteger i=0; i<16; i++) {
@@ -384,11 +401,11 @@
     
     _colorBar = [[AYSwipeToolBarView alloc] init];
     _colorBar.backgroundColor = [UIColor whiteColor];
-    [self.view insertSubview:_colorBar belowSubview:_toolsBar];
+    [self.view addSubview:_colorBar];
     
     [_colorBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(49);
-        make.left.equalTo(self.view.mas_left);
+        make.left.equalTo(gifBtn.mas_right);
         make.right.equalTo(self.view.mas_right);
         make.bottom.mas_equalTo(_toolsBar.mas_top);
     }];
@@ -519,9 +536,27 @@
 
 -(void)didClickSaveBtn
 {
-    UIImage *image = [self.drawView exportImage];
-    UIActivityViewController *ac = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
-    [self presentViewController:ac animated:YES completion:NULL];
+    if ([self.girFrames count] <= 1) {
+        UIImage *image = [self.drawView exportImage];
+        AYUploadViewController *vc = [[AYUploadViewController alloc] initWithImage:image andType:@"png"];
+        [self presentViewController:vc animated:YES completion:NULL];
+
+    }else{
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"heihei" message:@"sav" preferredStyle:UIAlertControllerStyleAlert];
+        [vc addAction:[UIAlertAction actionWithTitle:@"gif" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIImage *image = [AYGifFramesView getImageWithFrames:self.girFrames Duration:0.3 reverse:NO];
+            AYUploadViewController *vc = [[AYUploadViewController alloc] initWithImage:image andType:@"gif"];
+            [self presentViewController:vc animated:YES completion:NULL];
+
+            
+        }]];
+        [vc addAction:[UIAlertAction actionWithTitle:@"picture" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIImage *image = [self.drawView exportImage];
+            AYUploadViewController *vc = [[AYUploadViewController alloc] initWithImage:image andType:@"png"];
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
+        [self presentViewController:vc animated:NO completion:nil];
+    }
 }
 
 -(void)didClickUndoBtn
@@ -783,6 +818,28 @@
 
 }
 
+
+-(void)didClickGifBtn
+{
+    
+    if ([self.girFrames count] == 0) {
+        [self showToastWithMessage:@"点击添加按钮把画布内容添加为动画的一祯" andDelay:2];
+    }
+    
+    AYGifFramesView *gifView = [[AYGifFramesView alloc] initWithFrame:self.view.frame Frames:self.girFrames andBottomOffset:self.view.frame.size.height - _tapButton.frame.origin.y Height:_tapButton.frame.origin.y - self.colorBar.frame.origin.y];
+    gifView.delegate = self;
+    
+    gifView.alpha = 0.4;
+
+    [self.view addSubview:gifView];
+    [gifView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    [UIView animateWithDuration:0.3 animations:^{
+        gifView.alpha = 1;
+    }];
+}
+
 /*
 #pragma mark - Navigation
 
@@ -849,9 +906,7 @@
     _isMovePanelExpanded = YES;
     self.drawView.isInPaste = YES;
     [self.drawView setNeedsDisplay];
-    
     [self showToastWithMessage:@"移动复制的内容" andDelay:1];
-
 }
 
 -(void)didClickCopyBtn
@@ -864,9 +919,22 @@
 }
 
 
+-(void)gifFrameViewDidClickAddBtn:(AYGifFramesView *)frameView
+{
+    AYPixelAdapter *adapter = [AYPixelAdapter getBlendAdapter:self.layerAdapters withSize:self.size];
+    [self.girFrames addObject:adapter];
+    [frameView didAddedFrames];
+    [frameView reloadAndScrollToRight];
+}
+
 -(BOOL)prefersStatusBarHidden
 {
     return YES;
+}
+
+-(void)testtest
+{
+    
 }
 
 @end

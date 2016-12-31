@@ -30,7 +30,6 @@
     if (self) {
         self.backgroundColor = [UIColor lightGrayColor];
         
-        
         _canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 148, 148) andSize:size];
         [self.contentView addSubview:_canvas];
         _canvas.backgroundColor = [UIColor whiteColor];
