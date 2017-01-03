@@ -8,6 +8,8 @@
 
 #import "AYPixelAdapter.h"
 #import "UIColor+colorWithInt.h"
+#import <YYImage.h>
+#import "AYImageUtils.h"
 @interface AYPixelAdapter()<NSCopying>
 
 
@@ -22,6 +24,51 @@
 
     
 }
+
+//返回像素化图片adapter
++(AYPixelAdapter*)adapterWithUIImage:(UIImage*)image size:(NSInteger)size
+{
+    AYPixelAdapter *adapter = [[AYPixelAdapter alloc] initWithSize:size];
+    
+    UIImage *pixelImage = [AYImageUtils pixelImageWithUIImage:image andSize:size];
+    
+    CGImageRef imageRef = [pixelImage CGImage];
+    NSUInteger width = CGImageGetWidth(imageRef);
+    NSUInteger height = CGImageGetHeight(imageRef);
+    NSLog(@"%ud  %ud",width, height);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
+                                                 bitsPerComponent, bytesPerRow, colorSpace,
+                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+    
+    NSUInteger offset = width/size/2;
+    NSUInteger perPixel = width / size;
+    for (int y=0; y<size; y++) {
+        for (int x=0; x<size; x++) {
+            NSUInteger byteIndex = (bytesPerRow * (y * perPixel + offset)) + (x * perPixel + offset) * bytesPerPixel;
+            CGFloat alpha = ((CGFloat) rawData[byteIndex + 3] ) / 255.0f;
+            CGFloat red   = ((CGFloat) rawData[byteIndex]     ) / alpha;
+            CGFloat green = ((CGFloat) rawData[byteIndex + 1] ) / alpha;
+            CGFloat blue  = ((CGFloat) rawData[byteIndex + 2] ) / alpha;
+            UIColor *acolor = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:alpha];
+            [adapter replaceAtLoc:CGPointMake(x, y) Withcolor:acolor];
+        }
+    }
+    free(rawData);
+    
+    return adapter;
+}
+
+
+
 
 -(instancetype)initWithSize:(NSInteger)size
 {
@@ -295,5 +342,71 @@
     }
     return adapter;
 }
+
+- (UIImage*)exportImageWithSize:(CGFloat)imageSize
+{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(imageSize, imageSize), NO, [UIScreen mainScreen].scale);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    CGFloat pixel_width = imageSize / self.size;
+    
+    //背景色
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(ctx, CGRectMake(0, 0, imageSize, imageSize));
+    
+    //绘制像素
+    for (int y=0; y<_size; y++) {
+        for (int x=0; x<_size; x++) {
+            UIColor *color = [self colorWithLoc:CGPointMake(x, y)];
+            if (color) {
+                [color setFill];
+                CGRect pixelRect = CGRectMake(x * pixel_width,
+                                              y * pixel_width,
+                                              pixel_width,
+                                              pixel_width);
+                CGContextAddRect(ctx, pixelRect);
+                CGContextFillPath(ctx);
+            }
+        }
+    }
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
++(UIImage*)getGifImageWithAdapters:(NSMutableArray*)adapters Duration:(double)duration reverse:(BOOL)reverse andSize:(CGFloat)imageSize;
+{
+    
+    YYImageEncoder *gifencoder = [[YYImageEncoder alloc]initWithType:YYImageTypeGIF];
+    gifencoder.loopCount = 0;
+    for (AYPixelAdapter *adapter in adapters) {
+        UIImage *img = [adapter exportImageWithSize:imageSize];
+        [gifencoder addImage:img duration:duration];
+    }
+    
+    if (reverse) {
+        for (NSInteger i=adapters.count-1; i>=0; i--) {
+            AYPixelAdapter *adapter = [adapters objectAtIndex:i];
+            UIImage *img = [adapter exportImageWithSize:imageSize];
+            [gifencoder addImage:img duration:duration];
+        }
+    }
+    
+    NSData *gifData = [gifencoder encode];
+    
+    UIImage *image = [YYImage imageWithData:gifData];
+    
+    return image;
+}
+
+
+
+
+
+
+
+
 
 @end

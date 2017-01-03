@@ -36,7 +36,7 @@
         
         self.placeholderLabel= placeholderLabel; //赋值保存
         
-        self.myPlaceholderColor= [UIColor lightGrayColor]; //设置占位文字默认颜色
+        self.myPlaceholderColor= [UIColor colorWithRed:84/255.0 green:91/255.0 blue:102/255.0 alpha:1]; //设置占位文字默认颜色
         
         self.font= [UIFont systemFontOfSize:15]; //设置默认的字体
         

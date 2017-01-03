@@ -11,6 +11,7 @@
 #import <YYImage.h>
 #import <Masonry.h>
 #import "AYNetManager.h"
+#import <MBProgressHUD.h>
 @interface AYUploadViewController ()<UITextViewDelegate>
 
 @end
@@ -61,18 +62,18 @@
     
     //上传
     UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [saveBtn setTitle:@"save" forState:UIControlStateNormal];
+    [saveBtn setTitle:@"发布" forState:UIControlStateNormal];
     [saveBtn addTarget:self action:@selector(didClickSaveBtn) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:saveBtn];
-    saveBtn.frame = CGRectMake(self.view.frame.size.width - 42, 2, 40, 40);
+    saveBtn.frame = CGRectMake(self.view.frame.size.width - 62, 2, 60, 40);
     [saveBtn setTintColor:[UIColor blackColor]];
     
     //导出
     UIButton *exportBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [exportBtn setTitle:@"export" forState:UIControlStateNormal];
+    [exportBtn setTitle:@"保存到本地" forState:UIControlStateNormal];
     [exportBtn addTarget:self action:@selector(didClickExportBtn) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:exportBtn];
-    exportBtn.frame = CGRectMake(self.view.frame.size.width - 84, 2, 40, 40);
+    exportBtn.frame = CGRectMake(self.view.frame.size.width - 167, 2, 100, 40);
     [exportBtn setTintColor:[UIColor blackColor]];
     
 }
@@ -91,7 +92,7 @@
     [_imageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(self.view).offset(5);
         make.width.height.mas_equalTo(150);
-        make.top.equalTo(self.view).offset(54);
+        make.top.equalTo(self.view).offset(64);
     }];
     _imageView.backgroundColor = [UIColor grayColor];
     [_imageView setImage: _image];
@@ -108,7 +109,7 @@
         make.leading.equalTo(_imageView.mas_trailing).offset(10);
         make.trailing.equalTo(self.view).offset(-5);
         make.height.mas_equalTo(150);
-        make.top.equalTo(self.view).offset(54);
+        make.top.equalTo(self.view).offset(64);
     }];
     [_textView becomeFirstResponder];
     _textView.delegate = self;
@@ -145,15 +146,26 @@
 
 -(void)didClickSaveBtn
 {
-    
-    [[AYNetManager shareManager] postPaint:_image describe:_textView.text mimeType:_imageType Success:^(id responseObject) {
-        [self showToastWithMessage:@"上传成功" andDelay:1];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeAnnularDeterminate;
+    hud.label.text = @"正在发送";
+    [[AYNetManager shareManager] postPaint:_image describe:_textView.text mimeType:_imageType progress:^(NSProgress *progress) {
+        CGFloat stauts = 100.f * progress.completedUnitCount/progress.totalUnitCount;
+        hud.progress = stauts;
+    } Success:^(id responseObject) {
+        [hud hideAnimated:YES];
+        [self showToastWithMessage:@"发送成功" andDelay:1 andView:nil];
         [self dismissViewControllerAnimated:YES completion:nil];
+        
     } failure:^(NSError *error) {
-        [self showToastWithMessage:@"上传失败" andDelay:1];
+        [self showToastWithMessage:@"发送失败" andDelay:1 andView:nil];
     }];
     
 }
 
+-(BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
 
 @end

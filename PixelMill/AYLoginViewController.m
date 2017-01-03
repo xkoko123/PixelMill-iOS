@@ -9,8 +9,10 @@
 #import "AYLoginViewController.h"
 #import "AYPopupWindow.h"
 #import "AYUnderLineTextField.h"
-
-@interface AYLoginViewController ()
+#import "AYTabBarController.h"
+#import "AYNetManager.h"
+#import <MBProgressHUD.h>
+@interface AYLoginViewController ()<AYPopupWindowDelegate>
 @property (nonatomic, strong)UIImageView *logoImg;
 @property (nonatomic, strong)UIButton *loginBtn;
 @property (nonatomic, strong)UIButton *registBtn;
@@ -19,12 +21,15 @@
 @end
 
 @implementation AYLoginViewController
-
+{
+    BOOL isLogin;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    self.view.backgroundColor = [UIColor colorWithRed:17 / 255.0 green:17 / 255.0 blue:17 / 255.0 alpha:1];
     // Do any additional setup after loading the view.
     [self initView];
+    isLogin = YES;
 }
 
 -(void) initView
@@ -45,7 +50,7 @@
     [_registBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_registBtn.titleLabel setFont:[UIFont fontWithName:@"Pixel" size:15]];
     [_registBtn setBackgroundImage:[UIImage imageNamed:@"btn_orange_bg"] forState:UIControlStateNormal];
-    
+    [_registBtn addTarget:self action:@selector(didSignupBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_registBtn];
     
     
@@ -73,6 +78,7 @@
                                                                    self.view.frame.size.width,
                                                                    self.view.frame.size.height)];
         _popView.hidden = YES;
+        _popView.delegate = self;
         [self.view addSubview:_popView];
     }
     return _popView;
@@ -81,6 +87,8 @@
 -(void)didLoginBtnClicked
 {
     self.popView.hidden = NO;
+    self.popView.titleLabel.text = @"登陆";
+    isLogin = YES;
     [self.popView.userField becomeFirstResponder];
     [UIView animateWithDuration:0.2 animations:^{
         self.popView.frame = CGRectMake(0,
@@ -89,6 +97,22 @@
                                         self.view.frame.size.height);
     }];
 }
+
+-(void)didSignupBtnClicked
+{
+    self.popView.hidden = NO;
+    self.popView.titleLabel.text = @"注册";
+    isLogin = NO;
+    [self.popView.userField becomeFirstResponder];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.popView.frame = CGRectMake(0,
+                                        0,
+                                        self.view.frame.size.width,
+                                        self.view.frame.size.height);
+    }];
+
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -105,6 +129,49 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+
+-(void)popupWindowClickOkWithUserName:(NSString *)username password:(NSString *)password
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    if (isLogin) {
+        //登陆
+        [[AYNetManager shareManager] loginWithUser:username password:password success:^(id responseObject) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if ([responseObject[@"status"] integerValue] == 1) {
+                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                [ud setObject:username forKey:@"username"];
+                [ud setObject:password forKey:@"password"];
+                [ud synchronize];
+                AYTabBarController *vc = [[AYTabBarController alloc] init];
+                self.view.window.rootViewController = vc;
+                [self.view.window makeKeyAndVisible];
+            }else{
+                [self showToastWithMessage:@"失败啊" andDelay:1 andView:nil];
+            }
+            
+        } failure:^(NSError *error) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [self showToastWithMessage:@"失败啊" andDelay:1 andView:nil];
+        }];
+
+    }else{
+        //注册
+        [[AYNetManager shareManager] registWithName:username password:password  success:^(id responseObject) {
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if ([responseObject[@"status"] integerValue] == 1) {
+                [self showToastWithMessage:@"注册成功" andDelay:1 andView:nil];
+
+            }else{
+                [self showToastWithMessage:@"失败啊" andDelay:1 andView:nil];
+            }
+            
+        } failure:^(NSError *error) {
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [self showToastWithMessage:@"失败啊" andDelay:1 andView:nil];
+        }];
+
+    }
+}
 /*
 #pragma mark - Navigation
 

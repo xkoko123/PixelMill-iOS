@@ -27,7 +27,6 @@
 -(instancetype)initWithFrame:(CGRect)frame Frames:(NSMutableArray*)frames andBottomOffset:(CGFloat)bottomOffset Height:(CGFloat)height;
 
 -(void)reloadAndScrollToRight;
-+(UIImage*)getImageWithFrames:(NSMutableArray*)frames Duration:(double)duration reverse:(BOOL)reverse;
 
 -(void)removeFramesAtIndex:(NSInteger)index;
 

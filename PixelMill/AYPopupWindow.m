@@ -90,6 +90,8 @@
     [_cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     _cancelBtn.layer.borderWidth = 0.3;
     _cancelBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [_okBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+
     [_panel addSubview:_cancelBtn];
     
     _okBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/2,
@@ -100,6 +102,7 @@
     [_panel addSubview:_okBtn];
     _okBtn.layer.borderWidth = 0.3;
     _okBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [_okBtn addTarget:self action:@selector(ok) forControlEvents:UIControlEventTouchUpInside];
 
     
 }
@@ -121,6 +124,19 @@
         [view resignFirstResponder];
     }
 }
+
+-(void)ok
+{
+    NSString *username = self.userField.text;
+    NSString *password = self.passwordField.text;
+    if (username.length == 0 || password.length == 0) {
+        return;
+    }
+    if ([self.delegate respondsToSelector:@selector(popupWindowClickOkWithUserName:password:)]) {
+        [self.delegate popupWindowClickOkWithUserName:username password:password];
+    }
+}
+
 
 
 @end

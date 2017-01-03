@@ -8,6 +8,16 @@
 //从上面掉下来的登陆界面
 
 #import <UIKit/UIKit.h>
+
+
+@protocol AYPopupWindowDelegate <NSObject>
+
+@optional
+-(void)popupWindowClickOkWithUserName:(NSString*)username password:(NSString*)password;
+
+@end
+
+
 @class AYUnderLineTextField;
 
 @interface AYPopupWindow : UIView
@@ -16,5 +26,7 @@
 @property (strong, nonatomic)  UIButton *okBtn;
 @property (strong, nonatomic)  AYUnderLineTextField *userField;
 @property (strong, nonatomic)  AYUnderLineTextField *passwordField;
+
+@property (nonatomic, assign)id delegate;
 
 @end

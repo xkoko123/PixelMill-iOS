@@ -121,24 +121,6 @@
     CGContextSetAllowsAntialiasing(ctx, NO);
     
     if (!self.layerBlendMode) {
-//        for (NSValue *key in [self.adapter.dict allKeys] ) {
-//            UIColor *color = [self.adapter colorWithKey:key];
-//            CGPoint loc = [self.adapter locWithKey:key];
-//            
-//            if (color) {
-//                [color setFill];
-//            }else{
-//                [self.bgColor setFill];
-//            }
-//            int x = loc.x;
-//            int y = loc.y;
-//            CGRect pixelRect = CGRectMake(x * self.pixelWidth,
-//                                          y * self.pixelWidth,
-//                                          self.pixelWidth,
-//                                          self.pixelWidth);
-//            CGContextAddRect(ctx, pixelRect);
-//            CGContextFillPath(ctx);
-//        }
         for (int y=0; y<_size; y++) {
             for (int x=0; x<_size; x++) {
                 UIColor *color = [self.adapter colorWithLoc:CGPointMake(x, y)];
@@ -169,7 +151,6 @@
                     }
                     
                     UIColor *color = [adapter colorWithLoc:CGPointMake(x, y)];//最上面的数据
-                    
                     if (color == nil) {
                         continue;
                     }
@@ -239,7 +220,7 @@
     return image;
 }
 
--(void)setShowExtendedContent:(BOOL)showExtendedContent
+- (void)setShowExtendedContent:(BOOL)showExtendedContent
 {
     _showExtendedContent = showExtendedContent;
     _gridLayer.hidden = !showExtendedContent;
@@ -247,7 +228,7 @@
 }
 
 
--(void)layoutIfNeeded
+- (void)layoutIfNeeded
 {
     [super layoutIfNeeded];
     self.pixelWidth = self.frame.size.width / _size;

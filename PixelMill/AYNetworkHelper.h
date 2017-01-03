@@ -280,5 +280,7 @@ typedef void(^NetworkStatus)(AYNetworkStatus status);
  */
 + (void)openNetworkActivityIndicator:(BOOL)open;
 
+
++ (void)cancelAllRequest;
 @end
 

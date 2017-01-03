@@ -21,5 +21,9 @@
 @property (nonatomic, strong)NSString *image;
 @property (nonatomic, strong)NSString *describe;
 @property (nonatomic, strong)NSString *author;
+@property (nonatomic, assign)NSInteger author_id;
+@property (nonatomic, assign)BOOL liked;
+@property (nonatomic, assign)NSInteger like_count;
+@property (nonatomic, assign)BOOL followed;
 
 @end

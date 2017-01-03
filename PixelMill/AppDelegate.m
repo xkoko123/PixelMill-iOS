@@ -11,6 +11,12 @@
 
 #import "UIColor+colorWithInt.h"
 #import "AYNetManager.h"
+#import "AYLoginViewController.h"
+
+
+
+#import "AYPixelAdapter.h"
+
 @interface AppDelegate ()
 
 @end
@@ -25,29 +31,79 @@
     [UIColor colorWithInt:0xf86924];
     
     AYTabBarController *tabVc = [[AYTabBarController alloc] init];
+    AYLoginViewController *logVc = [[AYLoginViewController alloc] init];
     
-//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:56 / 255.0 green:65 / 255.0 blue:80 / 255.0 alpha:1]];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
-//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:56 / 255.0 green:72 / 255.0 blue:97 / 255.0 alpha:1]];
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSString *username = [ud stringForKey:@"username"];
+    NSString *password = [ud stringForKey:@"password"];
+    NSLog(@"%@  %@  hhahahah",username, password);
+    if (username!=nil && password!=nil) {
+        [self.window setRootViewController:tabVc];
+    }else{
+        [self.window setRootViewController:logVc];
+    }
     
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor],
-                                                           NSFontAttributeName:[UIFont fontWithName:@"Pixel" size:17]}];
-    [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
-    
-    
-    
-    [[AYNetManager shareManager] loginWithUser:@"gogo" password:@"nishengri7" success:^(id responseObject) {
-        
-    } failure:^(NSError *error) {
-        
-    }];
-    
+    //发布时注释掉啊
     [self.window setRootViewController:tabVc];
+    
+    
+    [[UITabBar appearance] setBackgroundColor:[UIColor whiteColor]];
+    [[UITabBar appearance] setTintColor:[UIColor blackColor]];
+    
+    
+//    [self.window setRootViewController:tabVc];
     [self.window makeKeyAndVisible];
     
     
     
+//    NSArray *array = [self getRGBAsFromImage:image atX:0 andY:0 count:image.size.width];
+//    NSLog(@"==%@", array);
+
+    
+    
     return YES;
+}
+
+
+
+- (NSArray*)getRGBAsFromImage:(UIImage*)image atX:(int)x andY:(int)y count:(int)count
+{
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:count];
+    
+    // First get the image into your data buffer
+    CGImageRef imageRef = [image CGImage];
+    NSUInteger width = CGImageGetWidth(imageRef);
+    NSUInteger height = CGImageGetHeight(imageRef);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
+                                                 bitsPerComponent, bytesPerRow, colorSpace,
+                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+    
+    // Now your rawData contains the image data in the RGBA8888 pixel format.
+    NSUInteger byteIndex = (bytesPerRow * y) + x * bytesPerPixel;
+    for (int i = 0 ; i < count ; ++i)
+    {
+        CGFloat alpha = ((CGFloat) rawData[byteIndex + 3] ) / 255.0f;
+        CGFloat red   = ((CGFloat) rawData[byteIndex]     ) / alpha;
+        CGFloat green = ((CGFloat) rawData[byteIndex + 1] ) / alpha;
+        CGFloat blue  = ((CGFloat) rawData[byteIndex + 2] ) / alpha;
+        byteIndex += bytesPerPixel;
+        
+        UIColor *acolor = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+        [result addObject:acolor];
+    }
+    
+    free(rawData);
+    
+    return result;
 }
 
 

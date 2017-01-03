@@ -45,28 +45,28 @@
     self.tabBarController.delegate = self;
     
     AYExploreController *expVc = [[AYExploreController alloc] init];
-    expVc.title = @"EXPLORE";
-    [expVc.tabBarItem setImage:[[UIImage imageNamed:@"tab1"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];//    expVc.tabBarItem.image
-    expVc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
-    expVc.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, 20);
+    expVc.title = @"首页";
+    [expVc.tabBarItem setImage:[[UIImage imageNamed:@"tab_home"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];//    expVc.tabBarItem.image
+//    expVc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
+//    expVc.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, 20);
 
     AYNavigationController *expNvc = [[AYNavigationController alloc] initWithRootViewController:expVc];
     
     AYMeController *meVc = [[AYMeController alloc] init];
-    meVc.title = @"ME";
+    meVc.title = @"我的";
     
-    [meVc.tabBarItem setImage:[[UIImage imageNamed:@"tab1"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
-    meVc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
-    meVc.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, 20);
+    [meVc.tabBarItem setImage:[[UIImage imageNamed:@"tab_me"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+//    meVc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
+//    meVc.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, 20);
+    
     AYNavigationController *meNvc = [[AYNavigationController alloc] initWithRootViewController:meVc];
     
     UIViewController *newVc = [[UIViewController alloc] init];
-    newVc.title = @"NEW";
-//    newVc.tabBarItem.titlePositionAdjustment
-    newVc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
-    newVc.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, 20);
+    newVc.title = @"创作";
+//    newVc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
+//    newVc.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, 20);
 
-    [newVc.tabBarItem setImage:[[UIImage imageNamed:@"tab1"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    [newVc.tabBarItem setImage:[[UIImage imageNamed:@"tab_add"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
     
     [self setViewControllers:@[expNvc, newVc, meNvc]];
@@ -93,7 +93,7 @@
 {
 
     if ([tabBarController.viewControllers indexOfObject:viewController] == 1) {
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"size" message:@"choice canvas size" preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:@"选择画布尺寸" preferredStyle:UIAlertControllerStyleActionSheet];
         
         [vc addAction:[UIAlertAction actionWithTitle:@"8X8" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             AYDrawViewController *dvc = [[AYDrawViewController alloc] init];
@@ -116,6 +116,7 @@
             dvc.size = 64;
             [self presentViewController:dvc animated:YES completion:nil];
         }]];
+        [vc addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
 
         [self presentViewController:vc animated:YES completion:nil];
         

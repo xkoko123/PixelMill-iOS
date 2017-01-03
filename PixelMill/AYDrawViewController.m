@@ -24,6 +24,7 @@
 #import "AYDragableTableView.h"
 #import "AYUploadViewController.h"
 
+
 @interface AYDrawViewController () <LayerEditorViewDelegate, AYDrawViewDelegate, UIScrollViewDelegate, AYCursorDrawViewDelegate, AYColorPickerViewDelegate,AYGifFramesViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *layerAdapters;
@@ -41,6 +42,7 @@
 @property (nonatomic, strong) AYSwipeToolBarView *colorBar;
 @property (nonatomic, strong) AYSwipeToolBarView *toolsBar;
 
+@property (nonatomic, strong)NSMutableArray *toolsBtns;
 
 @property (nonatomic, weak) AYLayerEditorView *layerEditor;
 
@@ -69,6 +71,7 @@
     [self initTapButton];
     [self initToolsBar];
     [self initColorBar];
+    [self initToolsBar2];
     [self initMovePanel];
     
 }
@@ -85,6 +88,7 @@
         make.right.equalTo(self.view);
         make.left.equalTo(self.view);
         make.height.mas_equalTo(44);
+        make.top.equalTo(self.view);
     }];
     
     
@@ -157,7 +161,7 @@
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);
         make.height.equalTo(border.mas_width);
-        make.top.equalTo(_topBar.mas_bottom).offset(5);
+        make.top.equalTo(_topBar.mas_bottom);
         make.left.equalTo(self.view.mas_left);
     }];
     
@@ -165,13 +169,14 @@
     _drawBoard.backgroundColor = [UIColor whiteColor];
     _drawBoard.clipsToBounds = YES;
     [border addSubview:_drawBoard];
-    CGFloat borderWidth = 2;
+    CGFloat borderWidth = 1;
     [_drawBoard mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(border.mas_width).offset(-borderWidth*2);
         make.height.equalTo(_drawBoard.mas_width);
         make.top.equalTo(border).offset(borderWidth);
         make.left.equalTo(border.mas_left).offset(borderWidth);
     }];
+    
     _drawBoard.panGestureRecognizer.minimumNumberOfTouches = 2;
     _drawBoard.delaysContentTouches = NO;
     _drawBoard.bounces = NO;
@@ -249,45 +254,38 @@
     
     _toolsBar = [[AYSwipeToolBarView alloc] init];
     _toolsBar.backgroundColor = [UIColor whiteColor];
+    _toolsBar.edgeInset = UIEdgeInsetsMake(5, 8, 5, 0);
+
     [self.view addSubview:_toolsBar];
     
     [_toolsBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(49);
+        make.height.mas_equalTo(44);
         make.left.equalTo(layerBtn.mas_right);
         make.right.equalTo(self.view.mas_right);
         make.bottom.mas_equalTo(self.tapButton.mas_top);
     }];
     
-    
+    //
     UIButton *penBtn = [[UIButton alloc] init];
     [penBtn setImage:[[UIImage imageNamed:@"pen"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [penBtn addTarget:self action:@selector(didClickPenBtn) forControlEvents:UIControlEventTouchUpInside];
-
+    [penBtn setImage:[[UIImage imageNamed:@"pen"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+    [penBtn addTarget:self action:@selector(didClickPenBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [penBtn setSelected:YES];
+    
+    
     //
     UIButton *eraserBtn = [[UIButton alloc] init];
     [eraserBtn setImage:[[UIImage imageNamed:@"eraser"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [eraserBtn addTarget:self action:@selector(didClickEraserBtn) forControlEvents:UIControlEventTouchUpInside];
+    [eraserBtn setImage:[[UIImage imageNamed:@"eraser"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+
+    [eraserBtn addTarget:self action:@selector(didClickEraserBtn:) forControlEvents:UIControlEventTouchUpInside];
     
     //
     UIButton *fillBtn = [[UIButton alloc] init];
+    [fillBtn setImage:[[UIImage imageNamed:@"bucket"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
     [fillBtn setImage:[[UIImage imageNamed:@"bucket"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [fillBtn addTarget:self action:@selector(didClickBucketBtn) forControlEvents:UIControlEventTouchUpInside];
+    [fillBtn addTarget:self action:@selector(didClickBucketBtn:) forControlEvents:UIControlEventTouchUpInside];
     
-    //
-    UIButton *moveBtn = [[UIButton alloc] init];
-    [moveBtn setImage:[[UIImage imageNamed:@"move"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [moveBtn addTarget:self action:@selector(didClickMoveBtn) forControlEvents:UIControlEventTouchUpInside];
-    
-    //
-    UIButton *gridBtn = [[UIButton alloc] init];
-    [gridBtn setImage:[[UIImage imageNamed:@"grid"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [gridBtn addTarget:self action:@selector(didClickGridBtn) forControlEvents:UIControlEventTouchUpInside];
-    
-    //
-    UIButton *aligmentLineBtn = [[UIButton alloc] init];
-    [aligmentLineBtn setImage:[[UIImage imageNamed:@"center"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [aligmentLineBtn addTarget:self action:@selector(didClickAligmentLineBtn) forControlEvents:UIControlEventTouchUpInside];
-
     
     //
     UIButton *clearBtn = [[UIButton alloc] init];
@@ -297,37 +295,15 @@
     //
     UIButton *lineBtn = [[UIButton alloc] init];
     [lineBtn setImage:[[UIImage imageNamed:@"line"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [lineBtn addTarget:self action:@selector(didClickLineBtn) forControlEvents:UIControlEventTouchUpInside];
+    [lineBtn setImage:[[UIImage imageNamed:@"line"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+
+    [lineBtn addTarget:self action:@selector(didClickLineBtn:) forControlEvents:UIControlEventTouchUpInside];
     //
     UIButton *circleBtn = [[UIButton alloc] init];
     [circleBtn setImage:[[UIImage imageNamed:@"circle"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [circleBtn addTarget:self action:@selector(didClickCircleBtn) forControlEvents:UIControlEventTouchUpInside];
+    [circleBtn setImage:[[UIImage imageNamed:@"circle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
 
-
-    //
-    UIButton *fingerBtn = [[UIButton alloc] init];
-    [fingerBtn setImage:[[UIImage imageNamed:@"finger_mode"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [fingerBtn setImage:[[UIImage imageNamed:@"finger_mode"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
-    [fingerBtn addTarget:self action:@selector(didClickFingerBtn:) forControlEvents:UIControlEventTouchUpInside];
-
-    //
-    UIButton *flipHBtn = [[UIButton alloc] init];
-    [flipHBtn setImage:[[UIImage imageNamed:@"flipH"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [flipHBtn addTarget:self action:@selector(didClickflipHBtn:) forControlEvents:UIControlEventTouchUpInside];
-    //
-    UIButton *flipVBtn = [[UIButton alloc] init];
-    [flipVBtn setImage:[[UIImage imageNamed:@"flipV"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [flipVBtn addTarget:self action:@selector(didClickflipVBtn:) forControlEvents:UIControlEventTouchUpInside];
-    //
-    UIButton *rotateBtn = [[UIButton alloc] init];
-    [rotateBtn setImage:[[UIImage imageNamed:@"rotate"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [rotateBtn addTarget:self action:@selector(didClickRotateBtn:) forControlEvents:UIControlEventTouchUpInside];
-    //
-    UIButton *mirrorBtn = [[UIButton alloc] init];
-    [mirrorBtn setImage:[[UIImage imageNamed:@"mirror"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [mirrorBtn setImage:[[UIImage imageNamed:@"mirror"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
-
-    [mirrorBtn addTarget:self action:@selector(didClickMirrorBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [circleBtn addTarget:self action:@selector(didClickCircleBtn:) forControlEvents:UIControlEventTouchUpInside];
 
     
     //
@@ -341,8 +317,7 @@
     
     [copyBtn addTarget:self action:@selector(didClickCopyBtn) forControlEvents:UIControlEventTouchUpInside];
 
-
-    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, moveBtn, lineBtn, circleBtn,fingerBtn,copyBtn, pasteBtn, flipHBtn, flipVBtn, rotateBtn,mirrorBtn, clearBtn,gridBtn, aligmentLineBtn] mutableCopy];
+    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, lineBtn, circleBtn,copyBtn, pasteBtn, clearBtn] mutableCopy];
     
 }
 
@@ -356,7 +331,7 @@
     
     [self.view addSubview:gifBtn];
     [gifBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(49);
+        make.height.width.mas_equalTo(40);
         make.left.equalTo(self.view.mas_left);
         make.bottom.mas_equalTo(_toolsBar.mas_top);
     }];
@@ -404,7 +379,7 @@
     [self.view addSubview:_colorBar];
     
     [_colorBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(49);
+        make.height.mas_equalTo(44);
         make.left.equalTo(gifBtn.mas_right);
         make.right.equalTo(self.view.mas_right);
         make.bottom.mas_equalTo(_toolsBar.mas_top);
@@ -417,6 +392,63 @@
 
 }
 
+-(void)initToolsBar2
+{
+    AYSwipeToolBarView *toolsBar2 = [[AYSwipeToolBarView alloc] init];
+    toolsBar2.edgeInset = UIEdgeInsetsMake(5, 8, 5, 0);
+    toolsBar2.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:toolsBar2];
+    
+    [toolsBar2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_drawBoard.mas_bottom).offset(2).priorityLow();
+        make.height.lessThanOrEqualTo(@44);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(_colorBar.mas_top);
+    }];
+    
+    //
+    UIButton *moveBtn = [[UIButton alloc] init];
+    [moveBtn setImage:[[UIImage imageNamed:@"move"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [moveBtn addTarget:self action:@selector(didClickMoveBtn) forControlEvents:UIControlEventTouchUpInside];
+
+    //
+    UIButton *gridBtn = [[UIButton alloc] init];
+    [gridBtn setImage:[[UIImage imageNamed:@"grid"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [gridBtn addTarget:self action:@selector(didClickGridBtn) forControlEvents:UIControlEventTouchUpInside];
+    
+    //
+    UIButton *aligmentLineBtn = [[UIButton alloc] init];
+    [aligmentLineBtn setImage:[[UIImage imageNamed:@"center"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [aligmentLineBtn addTarget:self action:@selector(didClickAligmentLineBtn) forControlEvents:UIControlEventTouchUpInside];
+
+    //
+    UIButton *fingerBtn = [[UIButton alloc] init];
+    [fingerBtn setImage:[[UIImage imageNamed:@"finger_mode"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [fingerBtn setImage:[[UIImage imageNamed:@"finger_mode"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+    [fingerBtn addTarget:self action:@selector(didClickFingerBtn:) forControlEvents:UIControlEventTouchUpInside];
+
+    //
+    UIButton *flipHBtn = [[UIButton alloc] init];
+    [flipHBtn setImage:[[UIImage imageNamed:@"flipH"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [flipHBtn addTarget:self action:@selector(didClickflipHBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *flipVBtn = [[UIButton alloc] init];
+    [flipVBtn setImage:[[UIImage imageNamed:@"flipV"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [flipVBtn addTarget:self action:@selector(didClickflipVBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *rotateBtn = [[UIButton alloc] init];
+    [rotateBtn setImage:[[UIImage imageNamed:@"rotate"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [rotateBtn addTarget:self action:@selector(didClickRotateBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    UIButton *mirrorBtn = [[UIButton alloc] init];
+    [mirrorBtn setImage:[[UIImage imageNamed:@"mirror"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [mirrorBtn setImage:[[UIImage imageNamed:@"mirror"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+    
+    [mirrorBtn addTarget:self action:@selector(didClickMirrorBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    toolsBar2.btns = [@[fingerBtn,mirrorBtn,moveBtn,flipHBtn,flipVBtn,rotateBtn,gridBtn, aligmentLineBtn] mutableCopy];
+
+}
 
 - (void)initMovePanel
 {
@@ -527,6 +559,12 @@
 }
 
 
+-(void)deSelectedAllBtn
+{
+    for (UIButton *v in _toolsBar.btns) {
+        [v setSelected:NO];
+    }
+}
 
 -(void)didClickBackBtn
 {
@@ -542,15 +580,15 @@
         [self presentViewController:vc animated:YES completion:NULL];
 
     }else{
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"heihei" message:@"sav" preferredStyle:UIAlertControllerStyleAlert];
-        [vc addAction:[UIAlertAction actionWithTitle:@"gif" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UIImage *image = [AYGifFramesView getImageWithFrames:self.girFrames Duration:0.3 reverse:NO];
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:@"要保存动画还是图片??" preferredStyle:UIAlertControllerStyleAlert];
+        [vc addAction:[UIAlertAction actionWithTitle:@"动画" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIImage *image = [AYPixelAdapter getGifImageWithAdapters:self.girFrames Duration:0.3 reverse:NO andSize:self.view.frame.size.width];
             AYUploadViewController *vc = [[AYUploadViewController alloc] initWithImage:image andType:@"gif"];
             [self presentViewController:vc animated:YES completion:NULL];
 
             
         }]];
-        [vc addAction:[UIAlertAction actionWithTitle:@"picture" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [vc addAction:[UIAlertAction actionWithTitle:@"图片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             UIImage *image = [self.drawView exportImage];
             AYUploadViewController *vc = [[AYUploadViewController alloc] initWithImage:image andType:@"png"];
             [self presentViewController:vc animated:YES completion:NULL];
@@ -563,23 +601,31 @@
 {
     [self.drawView undo];
     [self refreshPreviewView];
+    [self showToastWithMessage:@"撤销" andDelay:0.5 andView:nil];
 }
 
--(void)didClickPenBtn
+-(void)didClickPenBtn:(UIButton*)sender
 {
+    [self deSelectedAllBtn];
+    [sender setSelected:YES];
     self.drawView.currentType = PEN;
+    [self showToastWithMessage:@"铅笔" andDelay:0.5 andView:nil];
 }
 
--(void)didClickEraserBtn
+-(void)didClickEraserBtn:(UIButton*)sender
 {
-    //TODO: eraser
+    [self deSelectedAllBtn];
+    [sender setSelected:YES];
     self.drawView.currentType = ERASER;
+    [self showToastWithMessage:@"橡皮" andDelay:0.5 andView:nil];
+
 }
 
 -(void)didClickClearBtn
 {
     [self.drawView clearCanvas];
     [self refreshPreviewView];
+    [self showToastWithMessage:@"清空" andDelay:0.5 andView:nil];
 
 }
 
@@ -587,21 +633,36 @@
 {
     [self.drawView redo];
     [self refreshPreviewView];
+    [self showToastWithMessage:@"恢复" andDelay:0.5 andView:nil];
 }
 
--(void)didClickCircleBtn
+-(void)didClickCircleBtn:(UIButton*)sender
 {
+    [self deSelectedAllBtn];
+    [sender setSelected:YES];
     self.drawView.currentType = CIRCLE;
+    [self showToastWithMessage:@"圆形" andDelay:0.5 andView:nil];
+
 }
 
--(void)didClickBucketBtn
+-(void)didClickBucketBtn:(UIButton*)sender
 {
+    [self deSelectedAllBtn];
+    [sender setSelected:YES];
+
     [self.drawView setCurrentType:BUCKET];
+    [self showToastWithMessage:@"油漆桶" andDelay:0.5 andView:nil];
+
 }
 
--(void)didClickLineBtn
+-(void)didClickLineBtn:(UIButton*)sender
 {
+    [self deSelectedAllBtn];
+    [sender setSelected:YES];
+
     [self.drawView setCurrentType:LINE];
+    [self showToastWithMessage:@"直线" andDelay:0.5 andView:nil];
+
 }
 
 -(void)didTapButtonDown:(UIButton*)sender
@@ -649,18 +710,20 @@
         }];
         [self.layerEditor layoutIfNeeded];
     }];
-    
-    
+    [self showToastWithMessage:@"图层" andDelay:0.5 andView:nil];
 }
 
 -(void)didClickGridBtn
 {
     self.drawView.showGrid = !self.drawView.showGrid;
+    [self showToastWithMessage:@"网格" andDelay:0.5 andView:nil];
 }
 
 -(void)didClickAligmentLineBtn
 {
     self.drawView.showAlignmentLine = !self.drawView.showAlignmentLine;
+    [self showToastWithMessage:@"中线" andDelay:0.5 andView:nil];
+
 }
 
 -(void)didClickMoveBtn
@@ -673,6 +736,8 @@
         }];
         _isMovePanelExpanded = YES;
     }
+    [self showToastWithMessage:@"移动" andDelay:0.5 andView:nil];
+
 }
 
 -(void)didClickFingerBtn:(UIButton*)sender;
@@ -683,6 +748,7 @@
     }else{
         [sender setSelected:NO];
     }
+    [self showToastWithMessage:@"手指模式" andDelay:0.5 andView:nil];
 }
 
 
@@ -788,6 +854,7 @@
 {
     [self.drawView rotate90];
     [self refreshPreviewView];
+    [self showToastWithMessage:@"旋转" andDelay:0.5 andView:nil];
 
 }
 
@@ -796,6 +863,7 @@
 {
     [self.drawView flipHorizontal];
     [self refreshPreviewView];
+    [self showToastWithMessage:@"水平翻转" andDelay:0.5 andView:nil];
 
 }
 
@@ -804,6 +872,7 @@
 {
     [self.drawView flipVertical];
     [self refreshPreviewView];
+    [self showToastWithMessage:@"垂直翻转" andDelay:0.5 andView:nil];
 
 }
 
@@ -815,7 +884,7 @@
     }else{
         [sender setSelected:NO];
     }
-
+    [self showToastWithMessage:@"镜像模式" andDelay:0.5 andView:nil];
 }
 
 
@@ -823,7 +892,7 @@
 {
     
     if ([self.girFrames count] == 0) {
-        [self showToastWithMessage:@"点击添加按钮把画布内容添加为动画的一祯" andDelay:2];
+        [self showToastWithMessage:@"点击添加按钮把画布内容添加为动画的一祯" andDelay:1.5 andView:nil];
     }
     
     AYGifFramesView *gifView = [[AYGifFramesView alloc] initWithFrame:self.view.frame Frames:self.girFrames andBottomOffset:self.view.frame.size.height - _tapButton.frame.origin.y Height:_tapButton.frame.origin.y - self.colorBar.frame.origin.y];
@@ -858,7 +927,6 @@
 
 -(void)unSelectAllColor
 {
-    
     for (UIView *v in [_colorBar allViews]) {
         v.layer.borderWidth = 0;
     }
@@ -906,7 +974,7 @@
     _isMovePanelExpanded = YES;
     self.drawView.isInPaste = YES;
     [self.drawView setNeedsDisplay];
-    [self showToastWithMessage:@"移动复制的内容" andDelay:1];
+    [self showToastWithMessage:@"移动粘贴的内容" andDelay:0.7 andView:nil];
 }
 
 -(void)didClickCopyBtn
@@ -915,7 +983,7 @@
         return;
     }
     self.drawView.currentType = COPY;
-    [self showToastWithMessage:@"涂画要复制的内容" andDelay:1];
+    [self showToastWithMessage:@"涂画要复制的部分" andDelay:0.7 andView:nil];
 }
 
 
@@ -934,7 +1002,6 @@
 
 -(void)testtest
 {
-    
 }
 
 @end

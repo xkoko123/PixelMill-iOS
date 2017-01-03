@@ -17,10 +17,11 @@
     if (self) {
         self.pid = [dict[@"comment_id"] integerValue];
         self.from_user_id = [dict[@"from_user_id"] integerValue];
-        self.from_user_name = dict[@"from_user_name"];
+        self.from_user = dict[@"from_user"];
         self.to_user_id = [dict[@"to_user_id"] integerValue];
-        self.to_user_name = dict[@"to_user_name"];
+        self.to_user = dict[@"to_user"];
         self.text = dict[@"text"];
+        self.from_user_avatar = dict[@"from_user_avatar"];
     }
     return self;
 }

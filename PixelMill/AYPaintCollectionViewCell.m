@@ -63,6 +63,7 @@
             make.right.equalTo(infoBar.mas_right).offset(-6);
             make.bottom.equalTo(infoBar.mas_bottom).offset(-1);
         }];
+        
         _descLabel.numberOfLines = -1;
         _descLabel.textAlignment = NSTextAlignmentLeft;
         [_descLabel setFont:[UIFont systemFontOfSize:12]];

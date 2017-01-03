@@ -11,10 +11,12 @@
 #import "AYPixelAdapter.h"
 #import "AYLayerTableViewCell.h"
 #import "AYDragableTableView.h"
+#import "AYImageChoiceViewController.h"
+#import "AYDrawViewController.h"
 #import <Masonry.h>
 
 
-@interface AYLayerEditorView()<UITableViewDelegate, UITableViewDataSource, LayerTableViewCellDelegate,AYDragableTableViewDelegate>
+@interface AYLayerEditorView()<UITableViewDelegate, UITableViewDataSource, LayerTableViewCellDelegate,AYDragableTableViewDelegate,UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UIControl *dismissController;
 @property (nonatomic, strong) NSMutableArray *touchPoints;
@@ -143,12 +145,54 @@
 //    if (self.layerAdapters.count == 2) {
 //        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:NO];
 //    }
+
     [self notifySuperViewReload];
 }
 
 -(void)didClickImportLayer
 {
+    AYDrawViewController *superVc = [self getSuperViewController];
+    if (superVc) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
+        imagePicker.sourceType =UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.delegate = self;
+        imagePicker.allowsEditing =YES;
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"选择图片" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+                //UIImagePickerControllerSourceTypePhotoLibrary 照片库模式
+                imagePicker.sourceType =UIImagePickerControllerSourceTypePhotoLibrary;
+                [superVc presentViewController:imagePicker animated:NO completion:nil];
+            }
+            
+        }];
+        
+        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            // 调用系统摄像头，拍照
+            if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {               //UIImagePickerControllerSourceTypeCamera相机模式
+                imagePicker.sourceType =UIImagePickerControllerSourceTypeCamera;
+                [superVc presentViewController:imagePicker animated:NO completion:nil];
+            }else {
+                
+            }
+            
+        }];
+        
+        UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        
+        [alert addAction:action1];
+        [alert addAction:action2];
+        [alert addAction:action3];
+        [superVc presentViewController:alert animated:YES completion:nil];
+
+    }
     
+
+//    UIImage *image = [UIImage imageNamed:@"logo"];
+//    AYPixelAdapter *adapter = [AYPixelAdapter adapterWithUIImage:image size:self.size];
+//    [self.layerAdapters addObject:adapter];
+//    [self notifySuperViewReload];
 }
 
 #pragma mark - TableView代理
@@ -282,5 +326,32 @@
 {
     return YES;
 }
+
+
+-(UIViewController*)getSuperViewController
+{
+    for (UIView* next = [self superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[AYDrawViewController class]]) {
+            return nextResponder;
+        }
+    }
+    return nil;
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    UIImage *image = (UIImage *)(info[UIImagePickerControllerEditedImage]);
+    //    image = [_photoImagefixOrientation];
+    //    image = [image  scaleTo:CGSizeMake(120.0,120.0)];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    if (image) {
+        [self.layerAdapters addObject:[AYPixelAdapter adapterWithUIImage:image size:self.size]];
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.layerAdapters.count-1 inSection:0]] withRowAnimation:YES];
+        [self notifySuperViewReload];
+
+    }
+}
+
 
 @end

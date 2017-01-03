@@ -11,5 +11,5 @@
 @interface AYBaseViewController : UIViewController
 
 
--(void)showToastWithMessage:(NSString*)text andDelay:(CGFloat)delay;
+-(void)showToastWithMessage:(NSString*)text andDelay:(CGFloat)delay andView:(UIView*)view;
 @end

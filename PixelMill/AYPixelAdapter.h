@@ -16,6 +16,10 @@
 @property (nonatomic, assign)NSInteger maxUndoQueueCount;
 @property (nonatomic,assign) BOOL visible;
 
++(AYPixelAdapter*)adapterWithUIImage:(UIImage*)image size:(NSInteger)size;
+
+
+
 -(instancetype)initWithSize:(NSInteger)size;
 -(instancetype)initWithString:(NSString*)string;
 - (UIColor*)colorWithLoc:(CGPoint)loc;
@@ -46,5 +50,11 @@
 -(void)pushToRedoQueue;
 
 +(AYPixelAdapter*)getBlendAdapter:(NSArray*)arrays withSize:(NSInteger)size;
+
+
+- (UIImage*)exportImageWithSize:(CGFloat)imageSize;
+
++ (UIImage*)getGifImageWithAdapters:(NSMutableArray*)adapters Duration:(double)duration reverse:(BOOL)reverse andSize:(CGFloat)imageSize;
+
 
 @end

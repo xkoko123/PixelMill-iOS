@@ -24,6 +24,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationBar setHidden:YES];
+}
 /*
 #pragma mark - Navigation
 

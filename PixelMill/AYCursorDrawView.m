@@ -166,9 +166,9 @@
     CGFloat y = _cursorPosition.y + offsetY * 1.5;
     
     //避免画出去
-    x = MIN(x, self.frame.size.width - _curcorWidth / 3);
+    x = MIN(x, self.frame.size.width-5);
     x = MAX(x, 0);
-    y = MIN(y, self.frame.size.width - _curcorWidth / 3);
+    y = MIN(y, self.frame.size.width-5);
     y = MAX(y, 0);
     
     _cursorPosition = CGPointMake(x, y);

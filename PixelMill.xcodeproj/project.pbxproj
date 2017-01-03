@@ -14,6 +14,10 @@
 		D81C944D1E0D375D00D95616 /* AYColorPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D81C944C1E0D375D00D95616 /* AYColorPickerViewController.m */; };
 		D82173311E16B6DD006F4288 /* AYPaintDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D82173301E16B6DD006F4288 /* AYPaintDetailViewController.m */; };
 		D82173341E16C8E7006F4288 /* AYComment.m in Sources */ = {isa = PBXBuildFile; fileRef = D82173331E16C8E7006F4288 /* AYComment.m */; };
+		D82173371E17854C006F4288 /* AYCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D82173361E17854C006F4288 /* AYCommentTableViewCell.m */; };
+		D821733A1E179168006F4288 /* AYCommentBottomview.m in Sources */ = {isa = PBXBuildFile; fileRef = D82173391E179168006F4288 /* AYCommentBottomview.m */; };
+		D82862C91E1B7E4A00C7FA7B /* AYMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D82862C81E1B7E4A00C7FA7B /* AYMessageViewController.m */; };
+		D82862CC1E1B7F7000C7FA7B /* AYMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D82862CB1E1B7F7000C7FA7B /* AYMessage.m */; };
 		D829F7081E09526900622FDF /* AYDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F7071E09526900622FDF /* AYDrawViewController.m */; };
 		D83E80151E0830AC006B2B24 /* AYDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E800D1E0830AC006B2B24 /* AYDrawView.m */; };
 		D83E80161E0830AC006B2B24 /* AYPixelAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E800E1E0830AC006B2B24 /* AYPixelAdapter.m */; };
@@ -34,6 +38,10 @@
 		D8580DB11E02AB14009648ED /* AYExploreController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DB01E02AB14009648ED /* AYExploreController.m */; };
 		D8580DB41E02AB27009648ED /* AYMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DB31E02AB27009648ED /* AYMessageController.m */; };
 		D8580DB71E02AB34009648ED /* AYMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8580DB61E02AB34009648ED /* AYMeController.m */; };
+		D85D69271E1918920043A823 /* AYCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = D85D69261E1918920043A823 /* AYCarouselView.m */; };
+		D85D692A1E191CA10043A823 /* AYCollectionCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = D85D69291E191CA10043A823 /* AYCollectionCarouselView.m */; };
+		D88033481E1BB07100BA0B19 /* AYImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D88033471E1BB07100BA0B19 /* AYImageUtils.m */; };
+		D880334B1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D880334A1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m */; };
 		D88257131E0EDB7000586C8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D88257121E0EDB7000586C8E /* Assets.xcassets */; };
 		D88DC06E1E02E62000C32C81 /* AYLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */; };
 		D88DC0721E02EF7400C32C81 /* AYPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC0711E02EF7400C32C81 /* AYPopupWindow.m */; };
@@ -47,6 +55,8 @@
 		D8C374D21E16407700E57620 /* AYPaint.m in Sources */ = {isa = PBXBuildFile; fileRef = D8C374D11E16407700E57620 /* AYPaint.m */; };
 		D8CF08CB1E120B5C0070EFF8 /* AYGifFramesView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8CF08CA1E120B5C0070EFF8 /* AYGifFramesView.m */; };
 		D8CF08CE1E1227B20070EFF8 /* AYDragableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8CF08CD1E1227B20070EFF8 /* AYDragableTableView.m */; };
+		D8DAC1B71E17EC2A00639498 /* AYMeHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8DAC1B61E17EC2A00639498 /* AYMeHeaderView.m */; };
+		D8DAC1BA1E17F3C900639498 /* AYUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D8DAC1B91E17F3C900639498 /* AYUser.m */; };
 		D8E5EA6E1E0A45B600CF3CC5 /* AYLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8E5EA6D1E0A45B600CF3CC5 /* AYLayerViewController.m */; };
 		D8EC85FC1E0A5A6B0044AE57 /* AYLayerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EC85FB1E0A5A6B0044AE57 /* AYLayerTableViewCell.m */; };
 		D8EC85FF1E0A77FA0044AE57 /* AYLayerEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EC85FE1E0A77FA0044AE57 /* AYLayerEditorView.m */; };
@@ -90,6 +100,14 @@
 		D82173301E16B6DD006F4288 /* AYPaintDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYPaintDetailViewController.m; sourceTree = "<group>"; };
 		D82173321E16C8E7006F4288 /* AYComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYComment.h; sourceTree = "<group>"; };
 		D82173331E16C8E7006F4288 /* AYComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYComment.m; sourceTree = "<group>"; };
+		D82173351E17854C006F4288 /* AYCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCommentTableViewCell.h; sourceTree = "<group>"; };
+		D82173361E17854C006F4288 /* AYCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCommentTableViewCell.m; sourceTree = "<group>"; };
+		D82173381E179168006F4288 /* AYCommentBottomview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCommentBottomview.h; sourceTree = "<group>"; };
+		D82173391E179168006F4288 /* AYCommentBottomview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCommentBottomview.m; sourceTree = "<group>"; };
+		D82862C71E1B7E4A00C7FA7B /* AYMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYMessageViewController.h; sourceTree = "<group>"; };
+		D82862C81E1B7E4A00C7FA7B /* AYMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMessageViewController.m; sourceTree = "<group>"; };
+		D82862CA1E1B7F7000C7FA7B /* AYMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYMessage.h; sourceTree = "<group>"; };
+		D82862CB1E1B7F7000C7FA7B /* AYMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMessage.m; sourceTree = "<group>"; };
 		D829F7061E09526900622FDF /* AYDrawViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYDrawViewController.h; sourceTree = "<group>"; };
 		D829F7071E09526900622FDF /* AYDrawViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYDrawViewController.m; sourceTree = "<group>"; };
 		D83E800D1E0830AC006B2B24 /* AYDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYDrawView.m; sourceTree = "<group>"; };
@@ -130,6 +148,14 @@
 		D8580DB31E02AB27009648ED /* AYMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMessageController.m; sourceTree = "<group>"; };
 		D8580DB51E02AB34009648ED /* AYMeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYMeController.h; sourceTree = "<group>"; };
 		D8580DB61E02AB34009648ED /* AYMeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMeController.m; sourceTree = "<group>"; };
+		D85D69251E1918920043A823 /* AYCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCarouselView.h; sourceTree = "<group>"; };
+		D85D69261E1918920043A823 /* AYCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCarouselView.m; sourceTree = "<group>"; };
+		D85D69281E191CA10043A823 /* AYCollectionCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCollectionCarouselView.h; sourceTree = "<group>"; };
+		D85D69291E191CA10043A823 /* AYCollectionCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCollectionCarouselView.m; sourceTree = "<group>"; };
+		D88033461E1BB07100BA0B19 /* AYImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYImageUtils.h; sourceTree = "<group>"; };
+		D88033471E1BB07100BA0B19 /* AYImageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYImageUtils.m; sourceTree = "<group>"; };
+		D88033491E1BBE9B00BA0B19 /* AYImageChoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYImageChoiceViewController.h; sourceTree = "<group>"; };
+		D880334A1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYImageChoiceViewController.m; sourceTree = "<group>"; };
 		D88257121E0EDB7000586C8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D88DC06C1E02E62000C32C81 /* AYLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYLoginViewController.h; sourceTree = "<group>"; };
 		D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYLoginViewController.m; sourceTree = "<group>"; };
@@ -156,6 +182,10 @@
 		D8CF08CA1E120B5C0070EFF8 /* AYGifFramesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYGifFramesView.m; sourceTree = "<group>"; };
 		D8CF08CC1E1227B20070EFF8 /* AYDragableTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYDragableTableView.h; sourceTree = "<group>"; };
 		D8CF08CD1E1227B20070EFF8 /* AYDragableTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYDragableTableView.m; sourceTree = "<group>"; };
+		D8DAC1B51E17EC2A00639498 /* AYMeHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYMeHeaderView.h; sourceTree = "<group>"; };
+		D8DAC1B61E17EC2A00639498 /* AYMeHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYMeHeaderView.m; sourceTree = "<group>"; };
+		D8DAC1B81E17F3C900639498 /* AYUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYUser.h; sourceTree = "<group>"; };
+		D8DAC1B91E17F3C900639498 /* AYUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYUser.m; sourceTree = "<group>"; };
 		D8E5EA6C1E0A45B600CF3CC5 /* AYLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYLayerViewController.h; sourceTree = "<group>"; };
 		D8E5EA6D1E0A45B600CF3CC5 /* AYLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYLayerViewController.m; sourceTree = "<group>"; };
 		D8EC85FA1E0A5A6B0044AE57 /* AYLayerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYLayerTableViewCell.h; sourceTree = "<group>"; };
@@ -361,6 +391,10 @@
 			children = (
 				D8C374CD1E16405900E57620 /* AYPaintCollectionViewCell.h */,
 				D8C374CE1E16405900E57620 /* AYPaintCollectionViewCell.m */,
+				D82173351E17854C006F4288 /* AYCommentTableViewCell.h */,
+				D82173361E17854C006F4288 /* AYCommentTableViewCell.m */,
+				D85D69281E191CA10043A823 /* AYCollectionCarouselView.h */,
+				D85D69291E191CA10043A823 /* AYCollectionCarouselView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -379,6 +413,10 @@
 				D8C374D11E16407700E57620 /* AYPaint.m */,
 				D82173321E16C8E7006F4288 /* AYComment.h */,
 				D82173331E16C8E7006F4288 /* AYComment.m */,
+				D8DAC1B81E17F3C900639498 /* AYUser.h */,
+				D8DAC1B91E17F3C900639498 /* AYUser.m */,
+				D82862CA1E1B7F7000C7FA7B /* AYMessage.h */,
+				D82862CB1E1B7F7000C7FA7B /* AYMessage.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -397,6 +435,10 @@
 				D8CF08CD1E1227B20070EFF8 /* AYDragableTableView.m */,
 				D89BD5651E14B49900E59C33 /* AYTextView.h */,
 				D89BD5661E14B49900E59C33 /* AYTextView.m */,
+				D82173381E179168006F4288 /* AYCommentBottomview.h */,
+				D82173391E179168006F4288 /* AYCommentBottomview.m */,
+				D85D69251E1918920043A823 /* AYCarouselView.h */,
+				D85D69261E1918920043A823 /* AYCarouselView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -426,6 +468,8 @@
 		D8580DA01E02A044009648ED /* View */ = {
 			isa = PBXGroup;
 			children = (
+				D8DAC1B51E17EC2A00639498 /* AYMeHeaderView.h */,
+				D8DAC1B61E17EC2A00639498 /* AYMeHeaderView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -435,6 +479,8 @@
 			children = (
 				D8580DB51E02AB34009648ED /* AYMeController.h */,
 				D8580DB61E02AB34009648ED /* AYMeController.m */,
+				D82862C71E1B7E4A00C7FA7B /* AYMessageViewController.h */,
+				D82862C81E1B7E4A00C7FA7B /* AYMessageViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -492,6 +538,8 @@
 				D81C944C1E0D375D00D95616 /* AYColorPickerViewController.m */,
 				D8FA0E671E13FCBC003F8EA3 /* AYUploadViewController.h */,
 				D8FA0E681E13FCBC003F8EA3 /* AYUploadViewController.m */,
+				D88033491E1BBE9B00BA0B19 /* AYImageChoiceViewController.h */,
+				D880334A1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -505,6 +553,8 @@
 				D8C374CA1E15F94100E57620 /* AYNetworkCache.m */,
 				D8C374C41E15F93000E57620 /* AYNetManager.h */,
 				D8C374C51E15F93000E57620 /* AYNetManager.m */,
+				D88033461E1BB07100BA0B19 /* AYImageUtils.h */,
+				D88033471E1BB07100BA0B19 /* AYImageUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -814,35 +864,45 @@
 				D8580DA81E02A12E009648ED /* AYTabBarController.m in Sources */,
 				D8580DAB1E02A9FE009648ED /* AYNavigationController.m in Sources */,
 				D8FA0E691E13FCBC003F8EA3 /* AYUploadViewController.m in Sources */,
+				D8DAC1BA1E17F3C900639498 /* AYUser.m in Sources */,
 				D84825DB1E0125C9007FD9D3 /* ViewController.m in Sources */,
+				D821733A1E179168006F4288 /* AYCommentBottomview.m in Sources */,
 				D8580DAE1E02AAEB009648ED /* AYBaseViewController.m in Sources */,
 				D8EC85FF1E0A77FA0044AE57 /* AYLayerEditorView.m in Sources */,
 				D84825D81E0125C9007FD9D3 /* AppDelegate.m in Sources */,
 				D83E80171E0830AC006B2B24 /* AYCanvas.m in Sources */,
 				D83E80161E0830AC006B2B24 /* AYPixelAdapter.m in Sources */,
+				D85D69271E1918920043A823 /* AYCarouselView.m in Sources */,
 				D8468ED01E03A6AC0086F173 /* UIColor+colorWithInt.m in Sources */,
 				D8580DB71E02AB34009648ED /* AYMeController.m in Sources */,
 				D82173311E16B6DD006F4288 /* AYPaintDetailViewController.m in Sources */,
+				D88033481E1BB07100BA0B19 /* AYImageUtils.m in Sources */,
 				D88DC06E1E02E62000C32C81 /* AYLoginViewController.m in Sources */,
 				D8580DB11E02AB14009648ED /* AYExploreController.m in Sources */,
 				D8C374C61E15F93000E57620 /* AYNetManager.m in Sources */,
 				D829F7081E09526900622FDF /* AYDrawViewController.m in Sources */,
 				D8EC85FC1E0A5A6B0044AE57 /* AYLayerTableViewCell.m in Sources */,
 				D8C374D21E16407700E57620 /* AYPaint.m in Sources */,
+				D82862C91E1B7E4A00C7FA7B /* AYMessageViewController.m in Sources */,
 				D82173341E16C8E7006F4288 /* AYComment.m in Sources */,
+				D8DAC1B71E17EC2A00639498 /* AYMeHeaderView.m in Sources */,
 				D8CF08CE1E1227B20070EFF8 /* AYDragableTableView.m in Sources */,
 				D81C944D1E0D375D00D95616 /* AYColorPickerViewController.m in Sources */,
 				D88DC0771E0301A600C32C81 /* AYUnderLineTextField.m in Sources */,
+				D880334B1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m in Sources */,
 				D8CF08CB1E120B5C0070EFF8 /* AYGifFramesView.m in Sources */,
 				D8C374CB1E15F94100E57620 /* AYNetworkHelper.m in Sources */,
 				D845D2BB1E095DCF00754646 /* AYSwipeToolBarView.m in Sources */,
+				D82173371E17854C006F4288 /* AYCommentTableViewCell.m in Sources */,
 				D80681A71E124B640084EA47 /* AYGifFramesTableViewCell.m in Sources */,
 				D84825D51E0125C9007FD9D3 /* main.m in Sources */,
 				D8B2407F1E1365C600F39EC6 /* AYGifPlayView.m in Sources */,
 				D89BD5671E14B49900E59C33 /* AYTextView.m in Sources */,
 				D8E5EA6E1E0A45B600CF3CC5 /* AYLayerViewController.m in Sources */,
+				D82862CC1E1B7F7000C7FA7B /* AYMessage.m in Sources */,
 				D8C374CC1E15F94100E57620 /* AYNetworkCache.m in Sources */,
 				D88DC0721E02EF7400C32C81 /* AYPopupWindow.m in Sources */,
+				D85D692A1E191CA10043A823 /* AYCollectionCarouselView.m in Sources */,
 				D8C374CF1E16405900E57620 /* AYPaintCollectionViewCell.m in Sources */,
 				D8580DB41E02AB27009648ED /* AYMessageController.m in Sources */,
 				D83E80151E0830AC006B2B24 /* AYDrawView.m in Sources */,

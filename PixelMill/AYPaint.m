@@ -31,6 +31,20 @@
         self.image = dict[@"image"];
         self.describe = dict[@"describe"];
         self.author = dict[@"author"];
+        self.author_id = [dict[@"author_id"] integerValue];
+        self.like_count = [dict[@"like_count"] integerValue];
+        if ([dict[@"like"] integerValue] == 0) {
+            self.liked = NO;
+        }else{
+            self.liked = YES;
+        }
+        if ([dict[@"follow"] integerValue] == 0) {
+            NSLog(@"没关注");
+            self.followed = NO;
+        }else{
+            NSLog(@"关注");
+            self.followed = YES;
+        }
     }
     return self;
 }

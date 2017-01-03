@@ -202,50 +202,15 @@
 
 -(void)showGif
 {
-    UIImage *image = [AYGifFramesView getImageWithFrames:self.frames Duration:0.3 reverse:NO];
+    UIImage *image = [AYPixelAdapter getGifImageWithAdapters:self.frames Duration:0.3 reverse:NO andSize:self.frame.size.width];
     [_imageView setImage:image];
 }
 
 
-+(UIImage*)getImageWithFrames:(NSMutableArray*)frames Duration:(double)duration reverse:(BOOL)reverse
-{
-    
-    YYImageEncoder *gifencoder = [[YYImageEncoder alloc]initWithType:YYImageTypeGIF];
-    gifencoder.loopCount = 0;
-    for (AYPixelAdapter *adapter in frames) {
-        AYCanvas *canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 320, 320) andAdapter:adapter];
-        canvas.backgroundColor = [UIColor whiteColor];
-        [canvas setNeedsDisplay];
-        UIImage *img = [canvas exportImage];
-        [gifencoder addImage:img duration:duration];
-    }
-    
-    if (reverse) {
-        for (NSInteger i=frames.count-1; i>=0; i--) {
-            AYPixelAdapter *adapter = [frames objectAtIndex:i];
-            AYCanvas *canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 320, 320) andAdapter:adapter];
-            canvas.backgroundColor = [UIColor whiteColor];
-            [canvas setNeedsDisplay];
-            UIImage *img = [canvas exportImage];
-            [gifencoder addImage:img duration:duration];
-        }
-    }
-    
-    
-    NSData *gifData = [gifencoder encode];
-    
-    UIImage *image = [YYImage imageWithData:gifData];
-    
-    return image;
-}
-
 -(void)initImgaes
 {
     for (AYPixelAdapter *adapter in self.frames) {
-        AYCanvas *canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 100, 100) andAdapter:adapter];
-        canvas.backgroundColor = [UIColor whiteColor];
-        UIImage *image = [canvas exportImage];
-        
+        UIImage *image = [adapter exportImageWithSize:self.frame.size.width];
         [_images addObject:image];
     }
 }
@@ -261,10 +226,11 @@
 -(void)didAddedFrames
 {
     AYPixelAdapter *adapter = [self.frames lastObject];
-    AYCanvas *canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 100, 100) andAdapter:adapter];
-    canvas.backgroundColor = [UIColor whiteColor];
-    UIImage *image = [canvas exportImage];
     
+//    AYCanvas *canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 100, 100) andAdapter:adapter];
+//    canvas.backgroundColor = [UIColor whiteColor];
+//    UIImage *image = [canvas exportImage];
+    UIImage *image = [adapter exportImageWithSize:100];
     [_images addObject:image];
 }
 
