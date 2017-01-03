@@ -64,25 +64,26 @@
 {
     colorPicker = [[HRColorPickerView alloc] init];
     colorPicker.color = [UIColor redColor];
-    [colorPicker addTarget:self action: @selector(action:) forControlEvents:UIControlEventValueChanged];
+//    [colorPicker addTarget:self action: @selector(action:) forControlEvents:UIControlEventValueChanged];
     colorPicker.frame  = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44);
     colorPicker.color = [self.colors objectAtIndex:self.index];
     [self.view addSubview:colorPicker];
     [colorPicker.brightnessSlider setValue:@0.0 forKey:@"brightnessLowerLimit"];
+    [colorPicker.colorMapView setValue:@1.0 forKey:@"saturationUpperLimit"];
 
 }
 
 
--(void)action:(HRColorPickerView*)colorPicker
-{
-    self.view.backgroundColor = colorPicker.color;
-    CGFloat a,r,g,b;
-    [colorPicker.color getRed:&r green:&g blue:&b alpha:&a];
-    NSInteger alpha = (int)(a * 255);
-    NSInteger red = (int)(r * 255);
-    NSInteger green = (int)(g * 255);
-    NSInteger blue = (int)(b * 255);
-}
+//-(void)action:(HRColorPickerView*)colorPicker
+//{
+//    self.view.backgroundColor = colorPicker.color;
+//    CGFloat a,r,g,b;
+//    [colorPicker.color getRed:&r green:&g blue:&b alpha:&a];
+//    NSInteger alpha = (int)(a * 255);
+//    NSInteger red = (int)(r * 255);
+//    NSInteger green = (int)(g * 255);
+//    NSInteger blue = (int)(b * 255);
+//}
 
 -(void)didClickBackBtn
 {
