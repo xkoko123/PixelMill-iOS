@@ -42,6 +42,7 @@
 		D85D692A1E191CA10043A823 /* AYCollectionCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = D85D69291E191CA10043A823 /* AYCollectionCarouselView.m */; };
 		D88033481E1BB07100BA0B19 /* AYImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D88033471E1BB07100BA0B19 /* AYImageUtils.m */; };
 		D880334B1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D880334A1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m */; };
+		D880334E1E1BF56900BA0B19 /* AYCursorLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D880334D1E1BF56900BA0B19 /* AYCursorLayer.m */; };
 		D88257131E0EDB7000586C8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D88257121E0EDB7000586C8E /* Assets.xcassets */; };
 		D88DC06E1E02E62000C32C81 /* AYLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */; };
 		D88DC0721E02EF7400C32C81 /* AYPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D88DC0711E02EF7400C32C81 /* AYPopupWindow.m */; };
@@ -156,6 +157,8 @@
 		D88033471E1BB07100BA0B19 /* AYImageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYImageUtils.m; sourceTree = "<group>"; };
 		D88033491E1BBE9B00BA0B19 /* AYImageChoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYImageChoiceViewController.h; sourceTree = "<group>"; };
 		D880334A1E1BBE9B00BA0B19 /* AYImageChoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYImageChoiceViewController.m; sourceTree = "<group>"; };
+		D880334C1E1BF56900BA0B19 /* AYCursorLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYCursorLayer.h; sourceTree = "<group>"; };
+		D880334D1E1BF56900BA0B19 /* AYCursorLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYCursorLayer.m; sourceTree = "<group>"; };
 		D88257121E0EDB7000586C8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D88DC06C1E02E62000C32C81 /* AYLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AYLoginViewController.h; sourceTree = "<group>"; };
 		D88DC06D1E02E62000C32C81 /* AYLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AYLoginViewController.m; sourceTree = "<group>"; };
@@ -259,6 +262,8 @@
 				D83E800D1E0830AC006B2B24 /* AYDrawView.m */,
 				D8192ADE1E097CD8000CE4D1 /* AYCursorDrawView.h */,
 				D8192ADF1E097CD8000CE4D1 /* AYCursorDrawView.m */,
+				D880334C1E1BF56900BA0B19 /* AYCursorLayer.h */,
+				D880334D1E1BF56900BA0B19 /* AYCursorLayer.m */,
 			);
 			name = DrawBoard;
 			sourceTree = "<group>";
@@ -898,6 +903,7 @@
 				D84825D51E0125C9007FD9D3 /* main.m in Sources */,
 				D8B2407F1E1365C600F39EC6 /* AYGifPlayView.m in Sources */,
 				D89BD5671E14B49900E59C33 /* AYTextView.m in Sources */,
+				D880334E1E1BF56900BA0B19 /* AYCursorLayer.m in Sources */,
 				D8E5EA6E1E0A45B600CF3CC5 /* AYLayerViewController.m in Sources */,
 				D82862CC1E1B7F7000C7FA7B /* AYMessage.m in Sources */,
 				D8C374CC1E15F94100E57620 /* AYNetworkCache.m in Sources */,

@@ -9,6 +9,7 @@
 #import "AYCursorDrawView.h"
 #import "AYPublicHeader.h"
 #import "AYPixelAdapter.h"
+#import "AYCursorLayer.h"
 @interface AYCursorDrawView()
 
 
@@ -20,10 +21,10 @@
     CGPoint _cursorPosition;//鼠标的画布坐标
     CGPoint _cursorLoc;//鼠标的像素坐标
     CGPoint _lastLoc;//上次的像素坐标
-    CGFloat _curcorWidth;//鼠标宽度
     BOOL _isPress;
     CGPoint _beginLoc;//接触屏幕或者按下鼠标时的像素坐标
     CGPoint _lastFigerPosition;//最新的手指画布坐标
+    AYCursorLayer *_cursorLayer;//绘制指针的layer
 }
 
 
@@ -51,95 +52,20 @@
     self = [super initWithSize:size];
     if (self) {
         _cursorPosition = CGPointMake(0, 0);
-        _curcorWidth = 22;
         _isPress = NO;
         _fingerMode = NO;
         self.currentType = PEN;
         _lastFigerPosition = CGPointZero;
+        _cursorLayer = [[AYCursorLayer alloc] init];
+        
+        _cursorLayer.bounds = CGRectMake(0, 0, 20, 20);
+        _cursorLayer.position = CGPointMake(0, 0);
+        _cursorLayer.anchorPoint = CGPointMake(0, 0);
+        [self.layer addSublayer:_cursorLayer];
+        [_cursorLayer setNeedsDisplay];
+        
     }
     return self;
-}
-
-
-- (void)drawRect:(CGRect)rect
-{
-    [super drawRect:rect];
-    if (self.showExtendedContent) {
-        [self drawCursor];
-    }
-}
-
-#pragma mark - 指针样式在这里修改
-- (void)drawCursor
-{
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    if (self.lineWidth == 1) {
-        [path moveToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth)];
-        [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth ,_cursorLoc.y *_pixelWidth)];
-        [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth + _pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
-        [path addLineToPoint:CGPointMake(_cursorLoc.x *_pixelWidth,_cursorLoc.y *_pixelWidth + _pixelWidth)];
-        [path closePath];
-    }else{
-        [path moveToPoint:CGPointMake((_cursorLoc.x-1) *_pixelWidth,(_cursorLoc.y-1) *_pixelWidth)];
-        [path addLineToPoint:CGPointMake((_cursorLoc.x+2) *_pixelWidth ,(_cursorLoc.y-1) *_pixelWidth)];
-        [path addLineToPoint:CGPointMake((_cursorLoc.x+2) *_pixelWidth ,(_cursorLoc.y+2) *_pixelWidth)];
-        [path addLineToPoint:CGPointMake((_cursorLoc.x-1) *_pixelWidth ,(_cursorLoc.y+2) *_pixelWidth)];
-        [path closePath];
-    }
-    [path setLineWidth:1];
-    [[UIColor redColor] setStroke];
-    [path stroke];
-    
-    switch (self.currentType) {
-        case PEN:
-        case LINE:
-        case COPY:
-        case CIRCLE:
-        {
-            path = [UIBezierPath bezierPath];
-            
-            [path moveToPoint:CGPointMake(_cursorPosition.x, _cursorPosition.y)];
-            [path addLineToPoint:CGPointMake(_cursorPosition.x + _curcorWidth,
-                                             _cursorPosition.y +  _curcorWidth / 2.5)
-             ];
-            
-            [path addLineToPoint:CGPointMake(_cursorPosition.x  +  _curcorWidth / 2,
-                                             _cursorPosition.y + _curcorWidth / 2)];
-            
-            [path addLineToPoint:CGPointMake(_cursorPosition.x  +  _curcorWidth / 2.5,
-                                             _cursorPosition.y + _curcorWidth)
-             ];
-            
-            [path closePath];
-            
-            [self.slectedColor setFill];
-            [path fill];
-            path.lineWidth = 1;
-            [[UIColor blackColor] setStroke];
-            [path stroke];
-        }
-            break;
-        case BUCKET:
-        {
-            [[UIImage imageNamed:@"bucket"] drawInRect:CGRectMake(_cursorPosition.x,
-                                                                  _cursorPosition.y,
-                                                                  _curcorWidth,
-                                                                  _curcorWidth)
-             ];
-        }
-            break;
-        case ERASER:
-        {
-            [[UIImage imageNamed:@"eraser"] drawInRect:CGRectMake(_cursorPosition.x,
-                                                                  _cursorPosition.y,
-                                                                  _curcorWidth,
-                                                                  _curcorWidth)
-             ];
-        }
-            break;
-        default:
-            break;
-    }
 }
 
 
@@ -172,6 +98,11 @@
     y = MAX(y, 0);
     
     _cursorPosition = CGPointMake(x, y);
+    
+    [CATransaction setDisableActions:YES];
+    _cursorLayer.position = _cursorPosition;
+    [CATransaction commit];
+
     
     return [self locationWithPoint:_cursorPosition];
 }
@@ -259,7 +190,9 @@
     }
     
     _lastFigerPosition = [touch locationInView:self];
-    [self setNeedsDisplay];
+    if (_isPress || _fingerMode){
+        [self setNeedsDisplay];
+    }
 }
 
 
@@ -354,7 +287,7 @@
 -(void)setSlectedColor:(UIColor *)slectedColor
 {
     [super setSlectedColor:slectedColor];
-    [self setNeedsDisplay];
+    _cursorLayer.selectedColor = slectedColor;
 }
 
 
@@ -362,10 +295,20 @@
 -(void)setCurrentType:(AYCursorDrawType)currentType
 {
     [super setCurrentType:currentType];
+    
     if (currentType == COPY) {
         [self.slectedPixels removeAllObjects];
     }
-    [self setNeedsDisplay];
+    _cursorLayer.type = currentType;
+}
+
+-(void)setFingerMode:(AYCursorDrawType)fingerMode{
+    _fingerMode = fingerMode;
+    if (fingerMode) {
+        _cursorLayer.hidden = YES;
+    }else{
+        _cursorLayer.hidden = NO;
+    }
 }
 
 @end
