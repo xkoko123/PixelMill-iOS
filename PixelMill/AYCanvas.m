@@ -132,7 +132,6 @@
                                                   self.pixelWidth);
                     CGContextAddRect(ctx, pixelRect);
                     CGContextFillPath(ctx);
-
                 }
             }
         }

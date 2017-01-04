@@ -130,7 +130,7 @@
 {
     if (self.lineWidth == 1) {
         [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
-//        [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.x * _pixelWidth, _pixelWidth, _pixelWidth)];
+        [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
     }else{
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
@@ -140,13 +140,14 @@
         [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y-1) Withcolor:self.slectedColor];
         [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y+1) Withcolor:self.slectedColor];
         [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y-1) Withcolor:self.slectedColor];
+        //TODO :
     }
     
     if (self.mirrorMode) {
         loc = CGPointMake(self.size-1-loc.x, loc.y);
         if (self.lineWidth == 1) {
             [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
-            [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.x * _pixelWidth, _pixelWidth, _pixelWidth)];
+            [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
         }else{
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
@@ -157,19 +158,47 @@
             [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y+1) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y-1) Withcolor:self.slectedColor];
             
-//            [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.x * _pixelWidth, _pixelWidth, _pixelWidth)];
-
+            //TODO:
         }
 
     }
 
 }
 
+-(void)erasePixelAtLoc:(CGPoint)loc
+{
+    [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y)];
+    [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
+
+    if (self.lineWidth == 2) {
+        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y-1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y+1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y+1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y-1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y+1)];
+        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y-1)];
+        //TODO:
+    }
+}
+
+
+//用这个向待处理序列加对象，因为处理了镜像模式
+-(void)addToDrawingPixelsAtX:(NSInteger)x andY:(NSInteger)y
+{
+    [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
+    
+    if (self.mirrorMode) {
+        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(self.size-1-x, y)]];
+    }
+}
+
+
 
 //改为Bresenham算法
 -(void)addLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
-    
     int x0 = locA.x;
     int y0 = locA.y;
     int x1 = locB.x;
@@ -329,8 +358,10 @@
     for (x=x0; x <= x1; x++) {
         if (steep) {
             [self addToDrawingPixelsAtX:y andY:x];
+            
         }else{
             [self addToDrawingPixelsAtX:x andY:y];
+            
         }
         error += deltaY;
         if ((error << 1) >= deltaX ){
@@ -338,6 +369,7 @@
             error -= deltaX;
         }
     }
+    [self setNeedsDisplay];
 }
 
 
@@ -390,12 +422,15 @@
             UIColor *color = [self.adapter colorWithKey:key];
             if (color) {
                 [_slectedPixels setObject: color forKey: key];
+                [self setNeedsDisplayInRect:CGRectMake(y * _pixelWidth, x * _pixelWidth, _pixelWidth, _pixelWidth)];
             }
         }else{
             NSValue *key = [NSValue valueWithCGPoint:CGPointMake(x, y)];
             UIColor *color = [self.adapter colorWithKey:key];
             if (color) {
                 [_slectedPixels setObject: color forKey: key];
+                [self setNeedsDisplayInRect:CGRectMake(x * _pixelWidth, y * _pixelWidth, _pixelWidth, _pixelWidth)];
+
             }
         }
         error += deltaY;
@@ -414,6 +449,7 @@
     int distance = sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y) * (a.y - b.y));
     
     [self drawCircleAtLoc:a withR:distance];
+    [self setNeedsDisplay];
 }
 
 
@@ -518,14 +554,6 @@
     }
     
     [self fillUpX:x andY:y andColor:c];
-    [self setNeedsDisplay];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        //填充所有颜色和选中方块一样的
-//        [self fillUp:row andCol:col andColor:c];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self setNeedsDisplay];
-//        });
-//    });
 }
 
 -(void)fillUpX:(int)x andY:(int)y andColor:(UIColor*)color;
@@ -543,7 +571,9 @@
     
     //和选中的颜色一样,填充成画笔颜色
     if (CGColorEqualToColor(c.CGColor, color.CGColor)) {
-        [self.adapter replaceAtLoc:CGPointMake(x, y) Withcolor:self.slectedColor];
+//        [self.adapter replaceAtLoc: Withcolor:self.slectedColor];
+        [self drawPixelAtLoc:CGPointMake(x, y)];
+//        [self setNeedsDisplayInRect:CGRectMake(x * _pixelWidth, y * _pixelWidth, _pixelWidth, _pixelWidth)];
     }else{
         return;
     }
@@ -558,20 +588,7 @@
 }
 
 
--(void)erasePixelAtLoc:(CGPoint)loc
-{
-    [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y)];
-    if (self.lineWidth == 2) {
-        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y-1)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y+1)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y+1)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x-1, loc.y-1)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y+1)];
-        [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y-1)];
-    }
-}
+
 
 // TODO: 翻转
 -(void)flipHorizontal
@@ -652,16 +669,7 @@
 
 }
 
-//用这个向待处理序列加对象，因为处理了镜像模式
--(void)addToDrawingPixelsAtX:(NSInteger)x andY:(NSInteger)y
-{
-    [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
-    
-    if (self.mirrorMode) {
-        [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(self.size-1-x, y)]];
 
-    }
-}
 
 -(void)moveSlectedPixels:(MOVE)move
 {

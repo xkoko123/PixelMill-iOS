@@ -35,7 +35,7 @@
 @property (nonatomic, strong) UIScrollView *drawBoard;
 @property (nonatomic, strong) UIControl *movePanel;
 
-@property (nonatomic,strong) UIControl *previewView;
+@property (nonatomic,strong) UIImageView *previewView;
 
 @property (nonatomic, strong) UIView *topBar;
 @property (nonatomic, strong) UIButton *tapButton;
@@ -118,13 +118,13 @@
     
     
     //中间！
-    _previewView = [[UIControl alloc] init];
+    _previewView = [[UIImageView alloc] init];
     [_topBar addSubview:_previewView];
     [_previewView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(40, 40));
         make.center.equalTo(_topBar);
     }];
-    [_previewView addTarget:self action:@selector(testtest) forControlEvents:UIControlEventTouchUpInside];
+//    [_previewView addTarget:self action:@selector(testtest) forControlEvents:UIControlEventTouchUpInside];
     
     
     
@@ -938,8 +938,16 @@
 
 -(void)refreshPreviewView
 {
-    self.previewView.layer.contents = _drawView.layer.contents;
-    [self.previewView.layer display];
+    UIGraphicsBeginImageContext(self.drawView.bounds.size);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    [self.drawView.layer renderInContext:ctx];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    CALayer *layer = [CALayer layer];
+//    UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+//    [iv setImage:image];
+//    [self.view addSubview:iv];
+    [self.previewView setImage:image];
+    UIGraphicsEndImageContext();
 }
 
 -(void)unSelectAllColor

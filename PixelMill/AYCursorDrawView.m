@@ -168,7 +168,6 @@
             if (_isPress || _fingerMode) {
                 [self drawCircleAtLoc:_beginLoc toLoc:_cursorLoc];
             }
-            
         }
             break;
         case COPY:
@@ -185,9 +184,9 @@
     }
     
     _lastFigerPosition = [touch locationInView:self];
-    if (_isPress || _fingerMode){
-        [self setNeedsDisplay];
-    }
+//    if (_isPress || _fingerMode){
+//        [self setNeedsDisplay];
+//    }
 }
 
 
@@ -238,10 +237,11 @@
             UIColor *color = [self.adapter colorWithKey:key];
             if (color) {
                 [self.slectedPixels setObject:color forKey:key];
+                [self setNeedsDisplayInRect:CGRectMake(_cursorLoc.x * _pixelWidth, _cursorLoc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
+
             }
             
         }
-            
             break;
         case COLOR_PICKER:
         {
@@ -254,7 +254,6 @@
             break;
     }
     
-    [self setNeedsDisplay];
 }
 
 
@@ -278,7 +277,6 @@
         default:
             break;
     }
-    [self setNeedsDisplay];
     //刷新previewView
     if ([self.delegate respondsToSelector:@selector(drawViewHasRefreshContent)]) {
         [self.delegate drawViewHasRefreshContent];

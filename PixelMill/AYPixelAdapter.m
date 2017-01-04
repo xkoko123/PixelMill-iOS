@@ -345,11 +345,15 @@
 
 - (UIImage*)exportImageWithSize:(CGFloat)imageSize
 {
+    
+//    CGFloat pixel_width =  ceil( imageSize / self.size);
+//    CGFloat size = pixel_width *self.size;
+//    pixel_width = size / self.size;
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(imageSize, imageSize), NO, [UIScreen mainScreen].scale);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetShouldAntialias(ctx, NO);
     
     CGFloat pixel_width = imageSize / self.size;
-    
     //背景色
     [[UIColor whiteColor] setFill];
     CGContextFillRect(ctx, CGRectMake(0, 0, imageSize, imageSize));

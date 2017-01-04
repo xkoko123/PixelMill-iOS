@@ -67,7 +67,7 @@
         //画布位置
         _imageView = [[YYAnimatedImageView alloc] init];
         CGFloat width = self.frame.size.width;
-        _imageView.frame = CGRectMake(0, 49, width, width);
+        _imageView.frame = CGRectMake(0, 44, width, width);
         _imageView.layer.shadowColor = [UIColor blackColor].CGColor;
         _imageView.layer.shadowOffset = CGSizeMake(3, 3);
         _imageView.layer.shadowRadius = 3;
@@ -219,17 +219,12 @@
 {
     [self.frames removeObjectAtIndex:index];
     [_images removeObjectAtIndex:index];
-//    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView reloadData];
 }
 
 -(void)didAddedFrames
 {
     AYPixelAdapter *adapter = [self.frames lastObject];
-    
-//    AYCanvas *canvas = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, 100, 100) andAdapter:adapter];
-//    canvas.backgroundColor = [UIColor whiteColor];
-//    UIImage *image = [canvas exportImage];
     UIImage *image = [adapter exportImageWithSize:100];
     [_images addObject:image];
 }
