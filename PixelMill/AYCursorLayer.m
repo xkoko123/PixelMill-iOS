@@ -34,6 +34,7 @@
         case LINE:
         case COPY:
         case CIRCLE:
+        case COLOR_PICKER:
         {
             
             CGContextMoveToPoint(ctx, 0, 0);

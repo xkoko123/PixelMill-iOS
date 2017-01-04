@@ -317,7 +317,15 @@
     
     [copyBtn addTarget:self action:@selector(didClickCopyBtn) forControlEvents:UIControlEventTouchUpInside];
 
-    _toolsBar.btns = [@[penBtn, eraserBtn, fillBtn, lineBtn, circleBtn,copyBtn, pasteBtn, clearBtn] mutableCopy];
+    
+    UIButton *colorPickerBtn = [[UIButton alloc] init];
+    [colorPickerBtn setImage:[[UIImage imageNamed:@"colorpicker"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+    [colorPickerBtn setImage:[[UIImage imageNamed:@"colorpicker"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+
+    [colorPickerBtn addTarget:self action:@selector(didClickColorPickerBtn:) forControlEvents:UIControlEventTouchUpInside];
+
+    
+    _toolsBar.btns = [@[penBtn, eraserBtn, colorPickerBtn, fillBtn, lineBtn, circleBtn,copyBtn, pasteBtn, clearBtn] mutableCopy];
     
 }
 
@@ -603,6 +611,15 @@
     [self refreshPreviewView];
     [self showToastWithMessage:@"撤销" andDelay:0.5 andView:nil];
 }
+
+-(void)didClickColorPickerBtn:(UIButton*)sender
+{
+    [self deSelectedAllBtn];
+    [sender setSelected:YES];
+    self.drawView.currentType = COLOR_PICKER;
+    [self showToastWithMessage:@"取色器" andDelay:0.5 andView:nil];
+}
+
 
 -(void)didClickPenBtn:(UIButton*)sender
 {
@@ -1002,6 +1019,7 @@
 
 -(void)testtest
 {
+    self.drawView.currentType = COLOR_PICKER;
 }
 
 @end

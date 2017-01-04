@@ -10,15 +10,16 @@
 #import "AYPublicHeader.h"
 #import "AYPixelAdapter.h"
 #import "AYCursorLayer.h"
+#import "AYImageUtils.h"
 @interface AYCursorDrawView()
-
+@property (nonatomic,strong) UIImage *currentLayerContentImage;//getter时生成，切换画笔后丢弃
+@property (nonatomic,assign)CGPoint cursorPosition;//鼠标的画布坐标
 
 @end
 
 
 @implementation AYCursorDrawView
 {
-    CGPoint _cursorPosition;//鼠标的画布坐标
     CGPoint _cursorLoc;//鼠标的像素坐标
     CGPoint _lastLoc;//上次的像素坐标
     BOOL _isPress;
@@ -51,7 +52,7 @@
 {
     self = [super initWithSize:size];
     if (self) {
-        _cursorPosition = CGPointMake(0, 0);
+        self.cursorPosition = CGPointMake(0, 0);
         _isPress = NO;
         _fingerMode = NO;
         self.currentType = PEN;
@@ -74,8 +75,9 @@
     //当前手指在画布的真实坐标
     CGPoint point = [touch locationInView:self];
     if (_fingerMode) {
-        _cursorPosition = point;
-        return [self locationWithPoint:_cursorPosition];
+        self.cursorPosition = point;
+        
+        return [self locationWithPoint:self.cursorPosition];
     }
     
     //手指在画布的上一次真实坐标
@@ -88,8 +90,8 @@
     CGFloat offsetY = point.y - lastpoint.y;
     
     //计算指针的真实坐标
-    CGFloat x = _cursorPosition.x + offsetX * 1.5;
-    CGFloat y = _cursorPosition.y + offsetY * 1.5;
+    CGFloat x = self.cursorPosition.x + offsetX * 1.5;
+    CGFloat y = self.cursorPosition.y + offsetY * 1.5;
     
     //避免画出去
     x = MIN(x, self.frame.size.width-5);
@@ -97,14 +99,11 @@
     y = MIN(y, self.frame.size.width-5);
     y = MAX(y, 0);
     
-    _cursorPosition = CGPointMake(x, y);
+    self.cursorPosition = CGPointMake(x, y);
     
-    [CATransaction setDisableActions:YES];
-    _cursorLayer.position = _cursorPosition;
-    [CATransaction commit];
 
     
-    return [self locationWithPoint:_cursorPosition];
+    return [self locationWithPoint:self.cursorPosition];
 }
 
 
@@ -136,10 +135,6 @@
     _cursorLoc = [self locationWithTouch:touch];
     // TODO : 对坐标操作
     //当前操作类型
-
-//    if (_fingerMode) {
-//        _beginLoc = [self locationWithPoint: [touch previousLocationInView:self]];        
-//    }
     
     switch (self.currentType) {
         case PEN:
@@ -246,7 +241,15 @@
             }
             
         }
+            
             break;
+        case COLOR_PICKER:
+        {
+            if (self.currentLayerContentImage) {
+                UIColor *color = [AYImageUtils getRGBAsFromCGImage:self.currentLayerContentImage.CGImage atX:self.cursorPosition.x andY:self.cursorPosition.y];
+                self.slectedColor = color;
+            }
+        }
         default:
             break;
     }
@@ -290,24 +293,42 @@
     _cursorLayer.selectedColor = slectedColor;
 }
 
+-(UIImage*)currentLayerContentImage
+{
+    if (_currentLayerContentImage == nil) {
+        UIGraphicsBeginImageContext(self.bounds.size);
+        _cursorLayer.hidden = YES;
+        [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+        _cursorLayer.hidden = NO;
+        _currentLayerContentImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    return _currentLayerContentImage;
+}
+
+
+-(void)setCursorPosition:(CGPoint)cursorPosition
+{
+    _cursorPosition = cursorPosition;
+    [CATransaction setDisableActions:YES];
+    _cursorLayer.position = cursorPosition;
+    [CATransaction commit];
+}
 
 //选择工具过后 指针应该变
 -(void)setCurrentType:(AYCursorDrawType)currentType
 {
     [super setCurrentType:currentType];
     
+    
+    if (currentType == COLOR_PICKER) {
+        [self currentLayerContentImage];
+    }else{
+        self.currentLayerContentImage = nil;
+    }
+    
     if (currentType == COPY) {
         [self.slectedPixels removeAllObjects];
-    }
-    _cursorLayer.type = currentType;
-}
-
--(void)setFingerMode:(AYCursorDrawType)fingerMode{
-    _fingerMode = fingerMode;
-    if (fingerMode) {
-        _cursorLayer.hidden = YES;
-    }else{
-        _cursorLayer.hidden = NO;
     }
 }
 

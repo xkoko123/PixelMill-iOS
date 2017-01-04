@@ -128,9 +128,10 @@
 
 -(void)drawPixelAtLoc:(CGPoint)loc
 {
-    
-    [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
-    if (self.lineWidth == 2) {
+    if (self.lineWidth == 1) {
+        [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
+//        [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.x * _pixelWidth, _pixelWidth, _pixelWidth)];
+    }else{
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y+1) Withcolor:self.slectedColor];
@@ -143,8 +144,10 @@
     
     if (self.mirrorMode) {
         loc = CGPointMake(self.size-1-loc.x, loc.y);
-        [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
-        if (self.lineWidth == 2) {
+        if (self.lineWidth == 1) {
+            [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
+            [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.x * _pixelWidth, _pixelWidth, _pixelWidth)];
+        }else{
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y+1) Withcolor:self.slectedColor];
@@ -153,6 +156,9 @@
             [self.adapter replaceAtLoc:CGPointMake(loc.x-1, loc.y-1) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y+1) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y-1) Withcolor:self.slectedColor];
+            
+//            [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.x * _pixelWidth, _pixelWidth, _pixelWidth)];
+
         }
 
     }

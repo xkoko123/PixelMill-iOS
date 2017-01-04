@@ -81,7 +81,7 @@
 {
     _gridLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.width);
     _gridLayer.lineWidth = 0.5;
-    _gridLayer.strokeColor = [UIColor grayColor].CGColor;
+    _gridLayer.strokeColor = [UIColor colorWithRed:148/255.0 green:148/255.0 blue:148/255.0 alpha:1].CGColor;
     
     UIBezierPath *path = [UIBezierPath bezierPath];
     if (self.showGrid) {

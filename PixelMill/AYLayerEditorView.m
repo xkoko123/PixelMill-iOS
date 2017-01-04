@@ -49,7 +49,7 @@
         [self addSubview:_tableView];
         [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.mas_top);
-            make.bottom.equalTo(self.mas_bottom).offset(-44);
+            make.bottom.equalTo(self.mas_bottom).offset(40);
             make.width.mas_equalTo(150);
             make.left.equalTo(self.mas_left);
         }];
@@ -60,33 +60,34 @@
         _tableView.layer.shadowRadius = 4;
         
         _toolBar = [[UIView alloc] init];
-        _toolBar.backgroundColor = [UIColor whiteColor];
+        _toolBar.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1];
         [self addSubview: _toolBar];
         [_toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.mas_bottom);
             make.width.mas_equalTo(150);
             make.left.equalTo(self.mas_left);
-            make.height.mas_equalTo(44);
+            make.height.mas_equalTo(40);
         }];
         
         UIButton *addLayerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
 
-        [addLayerBtn setImage:[[UIImage imageNamed:@"add"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+        [addLayerBtn setImage:[[UIImage imageNamed:@"addLayer"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
         [_toolBar addSubview:addLayerBtn];
         [addLayerBtn addTarget:self action:@selector(didClickAddLayer) forControlEvents:UIControlEventTouchUpInside];
         [addLayerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(36, 36));
+            make.size.mas_equalTo(CGSizeMake(31, 31));
             make.right.equalTo(_toolBar.mas_right).offset(-2);
             make.centerY.equalTo(_toolBar.mas_centerY);
         }];
         
         UIButton *importImageBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         [_toolBar addSubview:importImageBtn];
-        importImageBtn.backgroundColor = [UIColor redColor];
+        [importImageBtn setImage:[[UIImage imageNamed:@"importimage"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+
         [importImageBtn addTarget:self action:@selector(didClickImportLayer) forControlEvents:UIControlEventTouchUpInside];
 
         [importImageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(40, 40));
+            make.size.mas_equalTo(CGSizeMake(31, 31));
             make.left.equalTo(_toolBar.mas_left).offset(2);
             make.centerY.equalTo(_toolBar.mas_centerY);
         }];

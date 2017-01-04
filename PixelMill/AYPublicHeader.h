@@ -25,5 +25,6 @@ typedef NS_ENUM(NSUInteger, AYCursorDrawType) {
     FINGER,
     CIRCLE,
     COPY,
+    COLOR_PICKER,
 };
 #endif /* AYPublicHeader_h */

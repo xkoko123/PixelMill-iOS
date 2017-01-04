@@ -12,6 +12,7 @@
 
 +(UIImage*)pixelImageWithUIImage:(UIImage*)image andSize:(NSInteger)size;
 
++(UIColor*)getRGBAsFromCGImage:(CGImageRef)imageRef atX:(int)x andY:(int)y;
 
 
 @end
