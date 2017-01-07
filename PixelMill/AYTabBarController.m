@@ -116,6 +116,7 @@
             dvc.size = 64;
             [self presentViewController:dvc animated:YES completion:nil];
         }]];
+
         [vc addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
 
         [self presentViewController:vc animated:YES completion:nil];

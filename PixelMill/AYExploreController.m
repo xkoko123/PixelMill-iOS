@@ -19,6 +19,7 @@
 #import "AYNetworkHelper.h"
 #import "AYPaintDetailViewController.h"
 #import "AYCollectionCarouselView.h"
+#import <MBProgressHUD.h>
 
 @interface AYExploreController ()<UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, AYCollectionCarouselViewDelegate>
 @property (nonatomic,strong)UICollectionView *collectionView;
@@ -32,7 +33,6 @@
     CGFloat _cellWidth;
     NSInteger _currentPage;
     NSInteger _maxPage;
-    BOOL _net;
 }
 
 
@@ -45,14 +45,14 @@
     _paints = [[NSMutableArray alloc] init];
     _cellWidth = (self.view.frame.size.width-20)/2;
     _currentPage = 1;
-    [self refreshData];
+    [self initData];
 }
 
 -(void)setCurrentType:(NetGetPaintType)currentType
 {
     _currentType = currentType;
     _currentPage = 1;
-    [self refreshData];
+    [self initData];
 }
 
 -(void)initView
@@ -78,33 +78,50 @@
     //下拉
     _collectionView.mj_header= [MJRefreshNormalHeader   headerWithRefreshingBlock:^{
         [self.collectionView.mj_header  beginRefreshing];
-        [self refreshNet];
-        [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType
-                                                    success:^(id responseObject){
-                                                        if (_net) {
-                                                            _currentPage = 1;
-                                                            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
-                                                            NSArray *array = [responseObject objectForKey:@"paints"];
-                                                            self.paints = [AYPaint paintsWithArray:array];
-                                                            [self.collectionView reloadData];
-                                                            [self.collectionView.mj_header   endRefreshing];
-
-                                                        }
-                                                    }
-                                                    failure:^(NSError *error) {
-                                                        [self.collectionView.mj_header   endRefreshing];
-                                                    }responseCache:^(id responseObject) {
-                                                        if (!_net) {
-                                                            _currentPage = 1;
-                                                            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
-                                                            NSArray *array = [responseObject objectForKey:@"paints"];
-                                                            self.paints = [AYPaint paintsWithArray:array];
-                                                            [self.collectionView reloadData];
-                                                            [self.collectionView.mj_header   endRefreshing];
-                                                        }
-                                                    }
-         ];
         
+        if([AYNetworkHelper isNetwork]){
+            NSLog(@"wanluo");
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.label.text = @"加载中";
+            [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType
+                                                        success:^(id responseObject){
+                                                            [hud hideAnimated:YES];
+                                                            [self.collectionView.mj_header  endRefreshing];
+                                                            
+                                                            _currentPage = 1;
+                                                            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                            NSArray *array = [responseObject objectForKey:@"paints"];
+                                                            self.paints = [AYPaint paintsWithArray:array];
+                                                            [self.collectionView reloadData];
+                                                        }
+                                                        failure:^(NSError *error) {
+                                                            [hud hideAnimated:YES];
+                                                            [self.collectionView.mj_header  endRefreshing];
+                                                        }responseCache:^(id responseObject) {
+                                                        }
+             ];
+
+        }else{
+            //从缓存加载
+            NSLog(@"huancun");
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.label.text = @"加载中";
+            [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType
+                                                        success:^(id responseObject){
+                                                        }
+                                                        failure:^(NSError *error) {
+                                                        }responseCache:^(id responseObject) {
+                                                            [self.collectionView.mj_header  endRefreshing];
+                                                            [hud hideAnimated:YES];
+                                                            _currentPage = 1;
+                                                            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+                                                            NSArray *array = [responseObject objectForKey:@"paints"];
+                                                            self.paints = [AYPaint paintsWithArray:array];
+                                                            [self.collectionView reloadData];
+                                                        }
+             ];
+
+        }
         
     }];
     
@@ -113,33 +130,52 @@
     _collectionView.mj_footer = [MJRefreshAutoNormalFooter  footerWithRefreshingBlock:^{
         [self.collectionView.mj_footer  beginRefreshing];
         
-        [self refreshNet];
         if (_currentPage < _maxPage) {
-            [[AYNetManager shareManager] getPaintTimeLineAtPage:_currentPage+1 type:_currentType
-                                                        success:^(id responseObject){
-                                                            if (_net) {
+            
+            
+            if ([AYNetworkHelper isNetwork]) {
+                //从网络
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                hud.label.text = @"加载中";
+                [[AYNetManager shareManager] getPaintTimeLineAtPage:_currentPage+1 type:_currentType
+                                                            success:^(id responseObject){
+                                                                [hud hideAnimated:YES];
+                                                                [self.collectionView.mj_footer  endRefreshing];
+                                                                
                                                                 _currentPage += 1;
                                                                 _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
                                                                 NSArray *array = [responseObject objectForKey:@"paints"];
                                                                 [self.paints addObjectsFromArray:[AYPaint paintsWithArray:array]];
                                                                 [self.collectionView reloadData];
-                                                                [self.collectionView.mj_footer  endRefreshing];
                                                             }
-                                                        }
-                                                        failure:^(NSError *error) {
-                                                            [self.collectionView.mj_footer  endRefreshing];
-                                                        }responseCache:^(id responseObject) {
-                                                            if (!_net) {
+                                                            failure:^(NSError *error) {
+                                                                [hud hideAnimated:YES];
+                                                                [self.collectionView.mj_footer  endRefreshing];
+                                                                
+                                                            }responseCache:^(id responseObject) {
+                                                            }
+                 ];
+
+            }else{
+                //从缓存加载
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                hud.label.text = @"加载中";
+                [[AYNetManager shareManager] getPaintTimeLineAtPage:_currentPage+1 type:_currentType
+                                                            success:^(id responseObject){
+                                                            }
+                                                            failure:^(NSError *error) {
+                                                            }responseCache:^(id responseObject) {
+                                                                [self.collectionView.mj_footer  endRefreshing];
+                                                                [hud hideAnimated:YES];
                                                                 _currentPage +=1;
                                                                 _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
                                                                 NSArray *array = [responseObject objectForKey:@"paints"];
                                                                 [self.paints addObjectsFromArray:[AYPaint paintsWithArray:array]];
                                                                 [self.collectionView reloadData];
-                                                                [self.collectionView.mj_footer  endRefreshing];
-                                                                
                                                             }
-                                                        }
-             ];
+                 ];
+
+            }
         }else{
             [self.collectionView.mj_footer  endRefreshing];
         }
@@ -214,59 +250,49 @@
     return CGSizeMake(self.view.frame.size.width, 338);
 }
 
-
-
--(void)refreshData
+-(void)initData
 {
-    [self refreshNet];
-    //这个刷新默认从缓存获得，如果服务器数据有变化才使用网络的数据，，
-    [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType
-                                                success:^(id responseObject){
-                                                    NSArray *array = [responseObject objectForKey:@"paints"];
-                                                    if (_net) {
+    [AYNetworkHelper networkStatusWithBlock:nil];
+    if([AYNetworkHelper isNetwork]){
+        //从网络
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.label.text = @"加载中";
+        [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType
+                                                    success:^(id responseObject){
+                                                        [hud hideAnimated:YES];
                                                         _currentPage =1;
+                                                        NSArray *array = [responseObject objectForKey:@"paints"];
                                                         _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
                                                         self.paints = [AYPaint paintsWithArray:array];
                                                         [self.collectionView reloadData];
                                                     }
-                                                }
-                                                failure:^(NSError *error) {
-                                                } responseCache:^(id responseObject) {
-                                                    _currentPage =1;
-                                                    _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
-                                                    NSArray *array = [responseObject objectForKey:@"paints"];
-                                                    self.paints = [AYPaint paintsWithArray:array];
-                                                    [self.collectionView reloadData];
-                                                }
-     ];
-
-    
-    
-    
+                                                    failure:^(NSError *error) {
+                                                        [hud hideAnimated:YES];
+                                                        [self showToastWithMessage:@"加载失败.." andDelay:2 andView:nil];
+                                                    } responseCache:^(id responseObject) {
+                                                    }
+         ];
+    }else{
+        //缓存
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.label.text = @"加载中";
+        [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType
+                                                    success:^(id responseObject){
+                                                    }
+                                                    failure:^(NSError *error) {
+                                                    } responseCache:^(id responseObject) {
+                                                        [hud hideAnimated:YES];
+                                                        _currentPage =1;
+                                                        _maxPage = [[responseObject objectForKey:@"num_pages"]integerValue];
+                                                        NSArray *array = [responseObject objectForKey:@"paints"];
+                                                        self.paints = [AYPaint paintsWithArray:array];
+                                                        [self.collectionView reloadData];
+                                                    }
+         ];
+    }
 }
 
--(void)refreshNet
-{
-    [AYNetworkHelper networkStatusWithBlock:^(AYNetworkStatus networkStatus) {
-        
-        switch (networkStatus) {
-            case AYNetworkStatusUnknown:
-            case AYNetworkStatusNotReachable: {
-                _net = NO;
-                break;
-            }
-                
-            case AYNetworkStatusReachableViaWWAN:
-            case AYNetworkStatusReachableViaWiFi: {
-                _net = YES;
-                break;
-            }
-        }
-        
-    }];
-    
 
-}
 
 
 

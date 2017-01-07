@@ -11,6 +11,7 @@
 #import <YYImage.h>
 #import <Masonry.h>
 #import "AYNetManager.h"
+#import "AYNetworkHelper.h"
 #import <MBProgressHUD.h>
 @interface AYUploadViewController ()<UITextViewDelegate>
 
@@ -146,20 +147,30 @@
 
 -(void)didClickSaveBtn
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeAnnularDeterminate;
-    hud.label.text = @"正在发送";
-    [[AYNetManager shareManager] postPaint:_image describe:_textView.text mimeType:_imageType progress:^(NSProgress *progress) {
-        CGFloat stauts = 100.f * progress.completedUnitCount/progress.totalUnitCount;
-        hud.progress = stauts;
-    } Success:^(id responseObject) {
-        [hud hideAnimated:YES];
-        [self showToastWithMessage:@"发送成功" andDelay:1 andView:nil];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        
-    } failure:^(NSError *error) {
-        [self showToastWithMessage:@"发送失败" andDelay:1 andView:nil];
-    }];
+    [_textView resignFirstResponder];
+    if ([AYNetworkHelper isNetwork]) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeAnnularDeterminate;
+        hud.label.text = @"正在发送";
+
+        [[AYNetManager shareManager] postPaint:_image describe:_textView.text mimeType:_imageType progress:^(NSProgress *progress) {
+            CGFloat stauts = 100.f * progress.completedUnitCount/progress.totalUnitCount;
+            hud.progress = stauts;
+        } Success:^(id responseObject) {
+            [hud hideAnimated:YES];
+            [self showToastWithMessage:@"发送成功" andDelay:1.5 andView:nil];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self dismissViewControllerAnimated:YES completion:nil];
+            });
+        } failure:^(NSError *error) {
+            [hud hideAnimated:YES];
+            [self showToastWithMessage:@"发送失败" andDelay:2 andView:nil];
+        }];
+
+    }else{
+        [self showToastWithMessage:@"没有网络" andDelay:2 andView:nil];
+
+    }
     
 }
 

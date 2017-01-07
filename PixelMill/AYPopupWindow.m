@@ -65,6 +65,9 @@
                                    30);
     _userField.textAlignment = NSTextAlignmentCenter;
     _userField.placeholder = @"账号";
+    _userField.keyboardType = UIKeyboardTypeAlphabet;
+    _userField.autocorrectionType = UITextAutocorrectionTypeNo;
+    _userField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _userField.font = [UIFont systemFontOfSize:17];
     _userField.underlineColor = [UIColor lightGrayColor];
     [_panel addSubview:_userField];
@@ -90,7 +93,7 @@
     [_cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     _cancelBtn.layer.borderWidth = 0.3;
     _cancelBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    [_okBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    [_cancelBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
 
     [_panel addSubview:_cancelBtn];
     
@@ -115,7 +118,6 @@
     }completion:^(BOOL finished) {
         self.hidden = YES;
     }];
-    
 }
 
 -(void)resignAllFirstResponder

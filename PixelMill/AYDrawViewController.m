@@ -528,45 +528,7 @@
         make.centerY.mas_equalTo(_drawBoard);
         make.right.equalTo(_drawBoard.mas_right).offset(-20);
     }];
-    
-    
-    
 }
-
--(void)resetLayer
-{
-    
-    
-    
-
-//    for (int i=0; i<self.layerAdapters.count; i++) {
-//        AYPixelAdapter *adapter = [self.layerAdapters objectAtIndex:i];
-//
-//        if (i == self.editIndex) {
-//            _drawView.adapter = adapter;
-//            _drawView.layerAdapters = self.layerAdapters;
-//            _drawView.layerBlendMode = YES;
-//        }else{
-//            if (adapter.visible == NO) {
-//                break;
-//            }
-//            AYCanvas *layer = [[AYCanvas alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width) andSize:32];
-//            layer.adapter = adapter;
-//            layer.backgroundColor = [UIColor clearColor];
-//            layer.showExtendedContent = NO;
-//            
-//            //上
-//            if (i > self.editIndex) {
-//                [_drawBoard insertSubview:layer atIndex:0];
-//                //下
-//            }else if(i < self.editIndex){
-//                [_drawView addSubview:layer];
-//            }
-//        }
-//    }
-
-}
-
 
 -(void)deSelectedAllBtn
 {

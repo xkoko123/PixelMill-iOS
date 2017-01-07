@@ -29,4 +29,6 @@
 
 @property (nonatomic, assign)id delegate;
 
+-(void)dismiss;
+
 @end

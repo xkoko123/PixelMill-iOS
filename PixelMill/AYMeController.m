@@ -9,6 +9,7 @@
 #import "AYMeController.h"
 #import "AYPaint.h"
 #import "AYMeHeaderView.h"
+#import "AYNetworkHelper.h"
 #import <YYImage.h>
 #import <YYWebImage.h>
 #import "AYNetManager.h"
@@ -185,42 +186,56 @@
 
 -(void)refreshData
 {
-    [AYNetManager cancelAllRequest];
-    [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType success:^(id responseObject) {
-        _currentPage =1;
-        _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
-        
-        NSArray *array = [responseObject objectForKey:@"paints"];
-        _collectionDataArray = [AYPaint paintsWithArray:array];
-
-        [_collectionView reloadData];
-        [_collectionView.mj_header endRefreshing];
-
-    } failure:^(NSError *error) {
-        
-    } responseCache:^(id responseObject) {
-        _currentPage =1;
-        _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
-        NSArray *array = [responseObject objectForKey:@"paints"];
-        _collectionDataArray = [AYPaint paintsWithArray:array];
-        [_collectionView reloadData];
-        [_collectionView.mj_header endRefreshing];
-    }];
+    if ([AYNetworkHelper isNetwork]) {
+        [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType success:^(id responseObject) {
+            _currentPage =1;
+            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+            
+            NSArray *array = [responseObject objectForKey:@"paints"];
+            _collectionDataArray = [AYPaint paintsWithArray:array];
+            
+            [_collectionView reloadData];
+            [_collectionView.mj_header endRefreshing];
+            
+        } failure:^(NSError *error) {
+            
+        } responseCache:^(id responseObject) {
+        }];
+    }else{
+        [[AYNetManager shareManager] getPaintTimeLineAtPage:1 type:_currentType success:^(id responseObject) {
+        } failure:^(NSError *error) {
+        } responseCache:^(id responseObject) {
+            _currentPage =1;
+            _maxPage = [[responseObject objectForKey:@"num_pages"] integerValue];
+            NSArray *array = [responseObject objectForKey:@"paints"];
+            _collectionDataArray = [AYPaint paintsWithArray:array];
+            [_collectionView reloadData];
+            [_collectionView.mj_header endRefreshing];
+        }];
+    };
 }
 
 -(void)refreshUserInfo
 {
 
-    [[AYNetManager shareManager] getMyIngoWhensuccess:^(id responseObject) {
-        _user = [[AYUser alloc] initWithDict:responseObject];
-        [_collectionView reloadData];
-    } failure:^(NSError *error) {
-        // TODO : ......
-    } responseCache:^(id responseObject) {
-        _user = [[AYUser alloc] initWithDict:responseObject];
-        [_collectionView reloadData];
+    if ([AYNetworkHelper isNetwork]) {
+        [[AYNetManager shareManager] getMyIngoWhensuccess:^(id responseObject) {
+            _user = [[AYUser alloc] initWithDict:responseObject];
+            [_collectionView reloadData];
+        } failure:^(NSError *error) {
+            // TODO : ......
+            [self showToastWithMessage:@"加载失败" andDelay:1 andView:nil];
+        } responseCache:^(id responseObject) {
+        }];
+    }else{
+        [[AYNetManager shareManager] getMyIngoWhensuccess:^(id responseObject) {
+        } failure:^(NSError *error) {
+        } responseCache:^(id responseObject) {
+            _user = [[AYUser alloc] initWithDict:responseObject];
+            [_collectionView reloadData];
+        }];
 
-    }];
+    }
 }
 
 
@@ -269,6 +284,10 @@
 //    image = [_photoImagefixOrientation];
 //    image = [image  scaleTo:CGSizeMake(120.0,120.0)];
     [picker dismissViewControllerAnimated:YES completion:nil];
+    if (![AYNetworkHelper isNetwork]) {
+        [self showToastWithMessage:@"没有网络连接" andDelay:2 andView:nil];
+        return;
+    }
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeAnnularDeterminate;
     hud.label.text = @"正在上传";
@@ -277,7 +296,6 @@
         hud.progress = stauts;
     }  Success:^(id responseObject) {
         [hud hideAnimated:YES];
-        
         [self refreshUserInfo];
     } failure:^(NSError *error) {
         [hud hideAnimated:YES];

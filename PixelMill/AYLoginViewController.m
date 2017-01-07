@@ -34,11 +34,45 @@
 
 -(void) initView
 {
-    UIColor *tintColor = [UIColor colorWithWhite:1 alpha:0.8];
     
-    _logoImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab4"]];
-    _logoImg.frame = CGRectMake(self.view.frame.size.width/2 - 100, 100, 200, 200);
+    _logoImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
+    _logoImg.frame = CGRectMake(self.view.frame.size.width/2 - 120, -60, 240, 240); // 60
     [self.view addSubview:_logoImg];
+    
+    UILabel *logoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -340, self.view.frame.size.width, 40)];  // 340
+    logoLabel.textAlignment = NSTextAlignmentCenter;
+    logoLabel.font = [UIFont fontWithName:@"Pixel" size:34];
+    logoLabel.textColor = [UIColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:1];
+    logoLabel.text = @"PIXEL MILL";
+    [self.view insertSubview:logoLabel belowSubview:_logoImg];
+    
+    logoLabel.alpha = 0;
+    _logoImg.alpha = 0;
+    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        _logoImg.frame = CGRectMake(self.view.frame.size.width/2 - 120, 60, 240, 240);
+        logoLabel.frame = CGRectMake(0, 340, self.view.frame.size.width, 40);
+        logoLabel.alpha = 1;
+        _logoImg.alpha = 1;
+    } completion:nil];
+    
+    
+    UIInterpolatingMotionEffect *motionEffect;
+    motionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    motionEffect.minimumRelativeValue = @(-25);
+    motionEffect.maximumRelativeValue = @(25);
+    
+    [_logoImg addMotionEffect:motionEffect];
+    [logoLabel addMotionEffect:motionEffect];
+
+    
+    motionEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    motionEffect.minimumRelativeValue = @(-25);
+    motionEffect.maximumRelativeValue = @(25);
+    
+    [_logoImg addMotionEffect:motionEffect];
+    [logoLabel addMotionEffect:motionEffect];
+
+    
     
     
     _registBtn = [[UIButton alloc] init];
@@ -69,6 +103,13 @@
     [self.view addSubview:_loginBtn];
 
     
+    _registBtn.alpha = 0;
+    _loginBtn.alpha = 0;
+    [UIView animateWithDuration:1.5 delay:0.8 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        _registBtn.alpha = 1;
+        _loginBtn.alpha = 1;
+    } completion:nil];
+    
 }
 -(AYPopupWindow *)popView
 {
@@ -88,28 +129,31 @@
 {
     self.popView.hidden = NO;
     self.popView.titleLabel.text = @"登陆";
+    [self.popView.okBtn setTitle:@"登陆" forState:UIControlStateNormal];
     isLogin = YES;
     [self.popView.userField becomeFirstResponder];
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.popView.frame = CGRectMake(0,
-                                   0,
-                                   self.view.frame.size.width,
+                                        0,
+                                        self.view.frame.size.width,
                                         self.view.frame.size.height);
-    }];
+    } completion:nil];
 }
 
 -(void)didSignupBtnClicked
 {
     self.popView.hidden = NO;
     self.popView.titleLabel.text = @"注册";
+    [self.popView.okBtn setTitle:@"注册" forState:UIControlStateNormal];
+
     isLogin = NO;
     [self.popView.userField becomeFirstResponder];
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.popView.frame = CGRectMake(0,
                                         0,
                                         self.view.frame.size.width,
                                         self.view.frame.size.height);
-    }];
+    } completion:nil];
 
 }
 
@@ -123,12 +167,6 @@
 {
     return YES;
 }
-// TODO: delete
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 
 -(void)popupWindowClickOkWithUserName:(NSString *)username password:(NSString *)password
 {
@@ -136,6 +174,7 @@
     if (isLogin) {
         //登陆
         [[AYNetManager shareManager] loginWithUser:username password:password success:^(id responseObject) {
+            [self.popView dismiss];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             if ([responseObject[@"status"] integerValue] == 1) {
                 NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
@@ -153,14 +192,14 @@
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             [self showToastWithMessage:@"失败啊" andDelay:1 andView:nil];
         }];
-
+        
     }else{
         //注册
         [[AYNetManager shareManager] registWithName:username password:password  success:^(id responseObject) {
              [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [self.popView dismiss];
             if ([responseObject[@"status"] integerValue] == 1) {
                 [self showToastWithMessage:@"注册成功" andDelay:1 andView:nil];
-
             }else{
                 [self showToastWithMessage:@"失败啊" andDelay:1 andView:nil];
             }

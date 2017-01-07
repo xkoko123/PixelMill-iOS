@@ -187,7 +187,7 @@
 }
 
 
-//用这个向待处理序列加对象，因为处理了镜像模式
+//用这个向待处理序列加对象，能自动处理镜像模式
 -(void)addToDrawingPixelsAtX:(NSInteger)x andY:(NSInteger)y
 {
     [_drawingPixels addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
@@ -255,7 +255,6 @@
     }
 }
 
-
 -(void)eraseLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
@@ -313,8 +312,7 @@
 
 }
 
-
-//添加到那个里面。。。。
+//添加到那个里面正在画的数组里面。。。。
 -(void)drawLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     
@@ -486,7 +484,7 @@
 }
 
 
-//将正在处理中的像素点保存到画布中
+//将正在处理中的像素点提交到到画布上
 -(void)submitDrawingPixels
 {
     if ([_drawingPixels count] != 0) {
@@ -501,7 +499,6 @@
 }
 #pragma mark - 撤回
 
-
 -(void)pushToUndoQueue
 {
     [self.adapter pushToUndoQueue];
@@ -513,12 +510,10 @@
     [self setNeedsDisplay];
 }
 
-
 -(void)pushToRedoQueue
 {
     [self.adapter pushToRedoQueue];
 }
-
 
 -(void)redo
 {
@@ -538,7 +533,6 @@
 - (void)move:(NSUInteger)move
 {
     [self pushToUndoQueue];
-    //todododods
     if([self.adapter move:move]){
         [self setNeedsDisplay];
     }
@@ -590,8 +584,6 @@
     
     return;
 }
-
-
 
 
 // TODO: 翻转
@@ -670,7 +662,6 @@
     if ([self.delegate respondsToSelector:@selector(drawViewChangeAdapter:)]) {
         [self.delegate  drawViewChangeAdapter:adapter];
     }
-
 }
 
 

@@ -239,18 +239,15 @@
     self.pixelWidth = self.frame.size.width / _size;
     [self resetGridLayer];
     [self setNeedsDisplay];
-
 }
 
-+(CGFloat)getAdjustedWidthWithWidth:(CGFloat)width andSize:(NSInteger)size
-{
-    CGFloat pixelWidth = [[NSString stringWithFormat:@"%.2f",width/size] floatValue];
-//    CGFloat pixelWidth = floor(width/size);
-    NSLog(@"---%f",pixelWidth);
-    CGFloat viewWidth = pixelWidth * size;
-    NSLog(@"---%f",viewWidth);
-    return viewWidth;
-}
+//+(CGFloat)getAdjustedWidthWithWidth:(CGFloat)width andSize:(NSInteger)size
+//{
+//    CGFloat pixelWidth = [[NSString stringWithFormat:@"%.2f",width/size] floatValue];
+////    CGFloat pixelWidth = floor(width/size);
+//    CGFloat viewWidth = pixelWidth * size;
+//    return viewWidth;
+//}
 
 
 @end
