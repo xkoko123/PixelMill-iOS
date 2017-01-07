@@ -144,7 +144,6 @@
                 _beginLoc = _cursorLoc;
             }
         }
-            
             break;
         case ERASER:
         {
@@ -154,7 +153,6 @@
             }
         }
             break;
-
         case LINE:
         {
             if (_isPress || _fingerMode) {
@@ -237,8 +235,7 @@
             UIColor *color = [self.adapter colorWithKey:key];
             if (color) {
                 [self.slectedPixels setObject:color forKey:key];
-                [self setNeedsDisplayInRect:CGRectMake(_cursorLoc.x * _pixelWidth, _cursorLoc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
-
+                [self setNeedsDisplayInLoc:_cursorLoc];
             }
             
         }
@@ -328,6 +325,16 @@
     if (currentType == COPY) {
         [self.slectedPixels removeAllObjects];
     }
+}
+
+-(void)setShowExtendedContent:(BOOL)showExtendedContent
+{
+    if (showExtendedContent) {
+        _cursorLayer.hidden = NO;
+    }else{
+        _cursorLayer.hidden = YES;
+    }
+    [self setNeedsDisplay];
 }
 
 @end

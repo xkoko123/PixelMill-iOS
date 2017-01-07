@@ -88,4 +88,7 @@
 
 
 -(void)pasteShape;
+
+-(void)setNeedsDisplayInLoc:(CGPoint)loc;
+
 @end

@@ -44,7 +44,7 @@
     }
     
     //发布时注释掉啊
-    [self.window setRootViewController:tabVc];
+//    [self.window setRootViewController:tabVc];
     
     
     [[UITabBar appearance] setBackgroundColor:[UIColor whiteColor]];

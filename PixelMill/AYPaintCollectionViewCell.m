@@ -78,7 +78,7 @@
 {
     _paintModel = paintModel;
 
-    NSString *urlString = [@"http://192.168.1.103:8000" stringByAppendingString:paintModel.image];
+    NSString *urlString = [@"http://182.92.84.1:8000" stringByAppendingString:paintModel.image];
     _imageView.yy_imageURL = [NSURL URLWithString:urlString];
     _nameLabel.text = [@"@" stringByAppendingString: paintModel.author];
     _descLabel.text = paintModel.describe;

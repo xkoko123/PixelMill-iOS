@@ -17,10 +17,14 @@
     if (self) {
         self.pid = [dict[@"user_id"] integerValue];
         self.username = dict[@"username"];
-        self.avatar = dict[@"avatar"];
         self.profile = dict[@"profile"];
         self.followCount = [dict[@"followCount"] integerValue];
         self.followerCount = [dict[@"followerCount"] integerValue];
+        
+        self.avatar = dict[@"avatar"];
+        if (!self.avatar) {
+            self.avatar = @"";
+        }
 
     }
     return self;

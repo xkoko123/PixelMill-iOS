@@ -123,4 +123,5 @@
     UIImage *image = [self getImageWithFrames:_frames Duration:_currentDuration reverse:reverseSwitch.on];
     [_imageView setImage:image];
 }
+
 @end

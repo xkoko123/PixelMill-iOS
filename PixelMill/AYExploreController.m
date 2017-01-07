@@ -198,7 +198,7 @@
     UICollectionReusableView *reuseView;
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         AYCollectionCarouselView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
-        [headerView setImageArr:@[@"http://192.168.1.103:8000/media/2016-12-312306370.gif",@"http://192.168.1.103:8000/media/2016-12-302315110.png"] AndImageClickBlock:^(NSInteger index) {
+        [headerView setImageArr:@[@"http:182.92.84.1:8000/media/2016-12-312306370.gif",@"http://182.92.84.1:8000/media/2016-12-302315110.png"] AndImageClickBlock:^(NSInteger index) {
             NSLog(@"clickAt %ld",index);
             [self showToastWithMessage:[NSString stringWithFormat:@"Click at %ld",index] andDelay:1 andView:nil];
         }];

@@ -123,7 +123,8 @@
 {
     _user = user;
     [_followLabel setText:[NSString stringWithFormat:@"Follow:%ld  Follower:%ld", user.followCount, user.followerCount]];
-    _imageView.yy_imageURL = [NSURL URLWithString:[@"http://192.168.1.103:8000" stringByAppendingString:user.avatar]];
+    
+    _imageView.yy_imageURL = [NSURL URLWithString:[@"http://182.92.84.1:8000" stringByAppendingString:user.avatar]];
 }
 
 

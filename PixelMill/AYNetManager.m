@@ -11,7 +11,7 @@
 #import "AYNetworkCache.h"
 #import <AFNetworking.h>
 
-static NSString *const rootUrl = @"http://192.168.1.103:8000/pm/";
+static NSString *const rootUrl = @"http://182.92.84.1:8000/pm/";
 
 @implementation AYNetManager
 {

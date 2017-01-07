@@ -158,6 +158,7 @@
     UIView *border = [[UIView alloc] init];
     border.backgroundColor = [UIColor blackColor];
     [self.view addSubview:border];
+    
     [border mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.view.mas_width);
         make.height.equalTo(border.mas_width);

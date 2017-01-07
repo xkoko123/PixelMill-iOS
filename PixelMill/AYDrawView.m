@@ -8,6 +8,7 @@
 
 #import "AYDrawView.h"
 #import "AYPixelAdapter.h"
+
 @implementation AYDrawView
 {
     @protected
@@ -130,7 +131,7 @@
 {
     if (self.lineWidth == 1) {
         [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
-        [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
+        [self setNeedsDisplayInLoc:loc];
     }else{
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
         [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
@@ -147,7 +148,8 @@
         loc = CGPointMake(self.size-1-loc.x, loc.y);
         if (self.lineWidth == 1) {
             [self.adapter replaceAtLoc:CGPointMake(loc.x, loc.y) Withcolor:self.slectedColor];
-            [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
+            [self setNeedsDisplayInLoc:loc];
+
         }else{
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y) Withcolor:self.slectedColor];
             [self.adapter replaceAtLoc:CGPointMake(loc.x+1, loc.y-1) Withcolor:self.slectedColor];
@@ -168,7 +170,8 @@
 -(void)erasePixelAtLoc:(CGPoint)loc
 {
     [self.adapter removeAtLoc:CGPointMake(loc.x, loc.y)];
-    [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
+    [self setNeedsDisplayInLoc:loc];
+
 
     if (self.lineWidth == 2) {
         [self.adapter removeAtLoc:CGPointMake(loc.x+1, loc.y)];
@@ -373,7 +376,7 @@
 }
 
 
-//添加到那个里面。。。。
+//添加到临时复制数组里面。。。。
 -(void)slectLineBetweenLoc:(CGPoint)locA and:(CGPoint)locB
 {
     [_drawingPixels removeAllObjects];
@@ -422,15 +425,14 @@
             UIColor *color = [self.adapter colorWithKey:key];
             if (color) {
                 [_slectedPixels setObject: color forKey: key];
-                [self setNeedsDisplayInRect:CGRectMake(y * _pixelWidth, x * _pixelWidth, _pixelWidth, _pixelWidth)];
+                [self setNeedsDisplayInLoc:CGPointMake(y, x)];
             }
         }else{
             NSValue *key = [NSValue valueWithCGPoint:CGPointMake(x, y)];
             UIColor *color = [self.adapter colorWithKey:key];
             if (color) {
                 [_slectedPixels setObject: color forKey: key];
-                [self setNeedsDisplayInRect:CGRectMake(x * _pixelWidth, y * _pixelWidth, _pixelWidth, _pixelWidth)];
-
+                [self setNeedsDisplayInLoc:CGPointMake(x, y)];
             }
         }
         error += deltaY;
@@ -494,6 +496,8 @@
         }
     }
     [_drawingPixels removeAllObjects];
+    [self setNeedsDisplay];
+    
 }
 #pragma mark - 撤回
 
@@ -726,5 +730,13 @@
     _currentType = currentType;
     
 }
+
+//只绘制刷新区域，只遍历刷新对象
+-(void)setNeedsDisplayInLoc:(CGPoint)loc
+{
+    [self setNeedsDisplayInRect:CGRectMake(loc.x * _pixelWidth, loc.y * _pixelWidth, _pixelWidth, _pixelWidth)];
+}
+
+
 
 @end

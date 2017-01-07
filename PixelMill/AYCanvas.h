@@ -37,9 +37,14 @@
 @property (nonatomic, assign) BOOL layerBlendMode;
 @property (nonatomic, weak) NSMutableArray *layerAdapters;
 
+
+
+
 +(CGFloat)getAdjustedWidthWithWidth:(CGFloat)width andSize:(NSInteger)size;
 
 
 - (UIImage*)exportImage;
+
+-(void)setNeedsDisplay;
 @end
 

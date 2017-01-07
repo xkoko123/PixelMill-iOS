@@ -141,7 +141,7 @@
         [cell.contentView addSubview:imageView];
     }
     
-    NSString *imageURL = [@"http://192.168.1.103:8000" stringByAppendingString:paint.image];
+    NSString *imageURL = [@"http://182.92.84.1:8000" stringByAppendingString:paint.image];
     imageView.yy_imageURL = [NSURL URLWithString:imageURL];
     
     return cell;

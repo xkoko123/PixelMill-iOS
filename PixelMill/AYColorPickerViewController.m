@@ -95,6 +95,7 @@
     [self.colors replaceObjectAtIndex:self.index withObject:colorPicker.color];
     [self.btn setBackgroundColor:colorPicker.color];
     if ([self.delegate respondsToSelector:@selector(colorPickerDidSlectedColor:)]) {
+        
         [self.delegate colorPickerDidSlectedColor:colorPicker.color];
     }
     

@@ -74,7 +74,7 @@
     _nameLabel.text = comment.from_user;
 //    _textLabel.text = comment.text;
     [self setTextxxx:comment.text];
-    _avatarImage.yy_imageURL = [NSURL URLWithString:[@"http:192.168.1.103:8000" stringByAppendingString:comment.from_user_avatar]];
+    _avatarImage.yy_imageURL = [NSURL URLWithString:[@"http://182.92.84.1:8000" stringByAppendingString:comment.from_user_avatar]];
 }
 
 

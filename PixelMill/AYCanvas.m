@@ -10,6 +10,11 @@
 #import "AYPixelAdapter.h"
 #import "UIColor+colorWithInt.h"
 
+@interface AYCanvas()
+
+
+@end
+
 @implementation AYCanvas
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -23,6 +28,7 @@
     self = [super init];
     if (self) {
         self.frame = frame;
+        
     }
     return self;
 }
@@ -44,7 +50,6 @@
         _gridLayer = [CAShapeLayer layer];
         [self.layer addSublayer:_gridLayer];
         [self resetGridLayer];
-
     }
     return self;
 }
@@ -108,17 +113,31 @@
 
 
 -(void)drawRect:(CGRect)rect
-{
-    [self drawContent];
+{   NSLog(@"%f %f",_pixelWidth,self.frame.size.width);
+    [self drawContentWithRect:rect];
     if (!self.showExtendedContent) {
         return;
     }
 }
 
--(void)drawContent
+-(void)pixelsWithRect:(CGRect)rect
+{
+    NSInteger originX = ceil(rect.origin.x / _pixelWidth);
+    NSInteger originY = ceil(rect.origin.y / _pixelWidth);
+    NSInteger col = ceil(rect.size.width / _pixelWidth);
+    NSInteger row = ceil(rect.size.height / _pixelWidth);
+}
+
+-(void)drawContentWithRect:(CGRect)rect
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetAllowsAntialiasing(ctx, NO);
+    
+    //从rect中计算出需要更新的像素区域
+    NSInteger originX = ceil(rect.origin.x / _pixelWidth);
+    NSInteger originY = ceil(rect.origin.y / _pixelWidth);
+    NSInteger col = floor(rect.size.width / _pixelWidth);
+    NSInteger row = floor(rect.size.height / _pixelWidth);
     
     if (!self.layerBlendMode) {
         for (int y=0; y<_size; y++) {
@@ -127,20 +146,18 @@
                 if (color) {
                     [color setFill];
                     CGRect pixelRect = CGRectMake(x * self.pixelWidth,
-                                                  y * self.pixelWidth,
-                                                  self.pixelWidth,
-                                                  self.pixelWidth);
+                                                    y * self.pixelWidth,
+                                                    self.pixelWidth,
+                                                    self.pixelWidth);
                     CGContextAddRect(ctx, pixelRect);
                     CGContextFillPath(ctx);
                 }
             }
         }
-        
-    }else{
-
-
-        for (int y=0; y<_size; y++) {
-            for (int x=0; x<_size; x++) {
+    }else{//图层模式的全部绘制
+        for (NSInteger x = originX; x < originX + col; x++) {
+            for (NSInteger y = originY; y<originY+row; y++) {
+                CGPoint loc = CGPointMake(x, y);
                 UIColor *topColor = nil;
                 //从顶层向下扫
                 for (NSInteger i=0; i<self.layerAdapters.count; i++) {
@@ -148,8 +165,7 @@
                     if (adapter.visible == NO){
                         continue;
                     }
-                    
-                    UIColor *color = [adapter colorWithLoc:CGPointMake(x, y)];//最上面的数据
+                    UIColor *color = [adapter colorWithLoc:CGPointMake(loc.x, loc.y)];//最上面的数据
                     if (color == nil) {
                         continue;
                     }
@@ -163,27 +179,24 @@
                     if ([color getAlpha] ==  1) {//遇到不透明的颜色后，，它下面的就不用混和了
                         break;
                     }
-
-
                 }
                 
-                
-                
+                //填充最顶上的颜色
                 if (topColor) {
                     [topColor setFill];
                 }else{
                     [self.bgColor setFill];
                 }
                 
-                CGRect pixelRect = CGRectMake(x * self.pixelWidth,
-                                              y * self.pixelWidth,
+                CGRect pixelRect = CGRectMake(loc.x * self.pixelWidth,
+                                              loc.y * self.pixelWidth,
                                               self.pixelWidth,
                                               self.pixelWidth);
                 CGContextAddRect(ctx, pixelRect);
                 CGContextFillPath(ctx);
             }
         }
-        
+
     }
 
 }
@@ -236,6 +249,15 @@
 
 }
 
++(CGFloat)getAdjustedWidthWithWidth:(CGFloat)width andSize:(NSInteger)size
+{
+    CGFloat pixelWidth = [[NSString stringWithFormat:@"%.2f",width/size] floatValue];
+//    CGFloat pixelWidth = floor(width/size);
+    NSLog(@"---%f",pixelWidth);
+    CGFloat viewWidth = pixelWidth * size;
+    NSLog(@"---%f",viewWidth);
+    return viewWidth;
+}
 
 
 @end

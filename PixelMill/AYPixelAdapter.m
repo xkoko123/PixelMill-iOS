@@ -17,12 +17,9 @@
 @end
 @implementation AYPixelAdapter
 {
-    
     CGPoint _origin;
     NSMutableArray *_undoQueue;
     NSMutableArray *_redoQueue;
-
-    
 }
 
 //返回像素化图片adapter
