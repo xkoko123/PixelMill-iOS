@@ -113,20 +113,13 @@
 
 
 -(void)drawRect:(CGRect)rect
-{   NSLog(@"%f %f",_pixelWidth,self.frame.size.width);
+{
     [self drawContentWithRect:rect];
     if (!self.showExtendedContent) {
         return;
     }
 }
 
--(void)pixelsWithRect:(CGRect)rect
-{
-    NSInteger originX = ceil(rect.origin.x / _pixelWidth);
-    NSInteger originY = ceil(rect.origin.y / _pixelWidth);
-    NSInteger col = ceil(rect.size.width / _pixelWidth);
-    NSInteger row = ceil(rect.size.height / _pixelWidth);
-}
 
 -(void)drawContentWithRect:(CGRect)rect
 {
@@ -140,8 +133,8 @@
     NSInteger row = floor(rect.size.height / _pixelWidth);
     
     if (!self.layerBlendMode) {
-        for (int y=0; y<_size; y++) {
-            for (int x=0; x<_size; x++) {
+        for (NSInteger x = originX; x < originX + col; x++) {
+            for (NSInteger y = originY; y<originY+row; y++) {
                 UIColor *color = [self.adapter colorWithLoc:CGPointMake(x, y)];
                 if (color) {
                     [color setFill];

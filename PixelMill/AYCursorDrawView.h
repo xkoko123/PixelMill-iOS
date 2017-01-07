@@ -23,6 +23,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andSize:(NSInteger)size;
 -(instancetype)initWithSize:(NSInteger)size;
+
 -(void)touchDown;
 
 -(void)touchUp;

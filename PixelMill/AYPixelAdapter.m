@@ -32,7 +32,6 @@
     CGImageRef imageRef = [pixelImage CGImage];
     NSUInteger width = CGImageGetWidth(imageRef);
     NSUInteger height = CGImageGetHeight(imageRef);
-    NSLog(@"%ud  %ud",width, height);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
     NSUInteger bytesPerPixel = 4;
@@ -276,7 +275,6 @@
         [_undoQueue removeLastObject];
     }
 }
-
 
 -(void)pushToRedoQueue
 {

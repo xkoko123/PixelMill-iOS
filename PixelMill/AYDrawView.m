@@ -728,7 +728,6 @@
 {
     _lastType = _currentType;
     _currentType = currentType;
-    
 }
 
 //只绘制刷新区域，只遍历刷新对象
