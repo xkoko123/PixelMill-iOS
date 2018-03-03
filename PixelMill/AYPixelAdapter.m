@@ -308,7 +308,6 @@
     for (int y=0; y<size; y++) {
         for (int x=0; x<size; x++) {
             UIColor *topColor = nil;
-            //从顶层向下扫
             for (NSInteger i=0; i<arrays.count; i++) {
                 AYPixelAdapter *adapter = [arrays objectAtIndex:i];
                 if (adapter.visible == NO){

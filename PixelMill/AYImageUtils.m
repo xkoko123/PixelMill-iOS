@@ -23,7 +23,7 @@
     //将CIImage设为源图片
     [filter setValue:sourceImage forKey:@"inputImage"];
     
-    //设置过滤参数(像素大小)
+    //设置过滤参数  像素大小
     [filter setValue: @(image.size.width/size) forKey:@"inputScale"];
     //   3 === 3
     //   2 === 2

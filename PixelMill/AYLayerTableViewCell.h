@@ -29,3 +29,4 @@
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier andSize:(NSInteger)size;
 @end
+

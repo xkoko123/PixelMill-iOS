@@ -79,7 +79,6 @@
         make.right.equalTo(_topBar).with.offset(2);
     }];
     
-
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

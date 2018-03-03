@@ -18,6 +18,7 @@
 #import <Masonry.h>
 #import <MBProgressHUD.h>
 #import "AYNetworkHelper.h"
+
 @interface AYPaintDetailViewController ()<UITableViewDelegate,UITableViewDataSource, AYCommentBottomViewDelegate,UIScrollViewDelegate>
 
 @property (nonatomic, strong)NSMutableArray *commentArray;
@@ -456,37 +457,29 @@
 //    
 //    NSLog(@"%f",_tableView.contentOffset.y);
 //    
-//    //获取tableView的Y方向偏移量
-//    
+//
 //    CGFloat offSet_Y = _tableView.contentOffset.y;
 //    
-//    //向下拖动图片时
 //    if (offSet_Y < - kOriginalImageHeight) {
 //        
-//        //获取imageView的原始frame
 //        CGRect frame = _tableView.tableHeaderView.frame;
 //        
-//        //修改imageView的Y值 等于offSet_Y
 //        frame.origin.y = offSet_Y;
 //        
-//        //修改imageView的height  等于offSet_Y 的绝对值 此时偏移量为负数
 //        frame.size.height =  - offSet_Y;
 //        
-//        //重新赋值
 //        self.imageView.frame = frame;
 //        
 //    }
 //    
-//    //tableView相对于图片的偏移量
-//    
+//
 //    CGFloat reOffset = offSet_Y + kOriginalImageHeight ;
 //    
 //    
 //    
-//    (kOriginalImageHeight - 64)这个数值决定了导航条在图片上滑时开始出现  alpha 从 0 ~ 0.99 变化
+//    (kOriginalImageHeight - 64) 这个数值决定了导航条在图片上滑时开始出现  alpha 从 0 ~ 0.99 变化
 //    
-//    当图片底部到达导航条底部时 导航条  aphla 变为1 导航条完全出现
-//    
+//
 //    CGFloat alpha = reOffset/(kOriginalImageHeight - 64);
 //    
 //    if (alpha>=1) {
@@ -495,8 +488,7 @@
 //    }
 //    
 //    
-//    // 设置导航条的背景图片 其透明度随  alpha 值 而改变
-//    
+//
 //    UIImage *image = [self imageWithColor:[UIColor colorWithRed:0.227 green:0.753 blue:0.757 alpha:alpha]];
 //    
 //    
@@ -541,13 +533,14 @@
         
         [[AYNetManager shareManager] dislikeAtPaintId:self.paintModel.pid success:^(id responseObject) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
             if ([responseObject[@"status"] integerValue] == 1) {
                 self.paintModel.liked = NO;
                 self.paintModel.like_count = [responseObject[@"new_count"] integerValue];
                 NSLog(@"%ld",self.paintModel.like_count);
 
                 [sender setSelected:NO];
-                [sender setTitle:[NSString stringWithFormat:@" %ld",self.paintModel.like_count] forState:UIControlStateSelected];
+                [sender setTitle:[NSString stringWithFormat:@" %ld",self.paintModel.like_count] forState:UIControlStateNormal];
             }
         } failure:^(NSError *error) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];

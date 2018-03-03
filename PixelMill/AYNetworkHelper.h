@@ -1,34 +1,3 @@
-//
-//  AYNetworkHelper.h
-//  AYNetworkHelper
-//
-//  Created by AndyPang on 16/8/12.
-//  Copyright © 2016年 AndyPang. All rights reserved.
-//
-
-/*
- *********************************************************************************
- *
- *⭐️⭐️⭐️ 新建 AY-iOS学习交流群: 323408051 欢迎加入!!! ⭐️⭐️⭐️
- *
- * 如果您在使用 AYNetworkHelper 的过程中出现bug或有更好的建议,还请及时以下列方式联系我,我会及
- * 时修复bug,解决问题.
- *
- * Weibo : CoderPang
- * Email : jkpang@outlook.com
- * QQ 群 : 323408051
- * GitHub: https://github.com/jkpang
- *
- * PS:我的另外两个很好用的封装,欢迎使用!
- * 1.一行代码获取通讯录联系人,并进行A~Z精准排序(已处理姓名所有字符的排序问题):
- *   GitHub:https://github.com/jkpang/AYGetAddressBook
- * 2.iOS中一款高度可定制性商品计数按钮(京东/淘宝/饿了么/美团外卖/百度外卖样式):
- *   GitHub:https://github.com/jkpang/AYNumberButton
- *
- * 如果 AYGetAddressBookSwift 好用,希望您能Star支持,你的 ⭐️ 是我持续更新的动力!
- *********************************************************************************
- */
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "AYNetworkCache.h"
@@ -225,26 +194,6 @@ typedef void(^NetworkStatus)(AYNetworkStatus status);
                                        success:(void(^)(NSString *filePath))success
                                        failure:(HttpRequestFailed)failure;
 
-
-/*
- **************************************  说明  **********************************************
- *
- * 在一开始设计接口的时候就想着方法接口越少越好,越简单越好,只有GET,POST,上传,下载,监测网络状态就够了.
- *
- * 无奈的是在实际开发中,每个APP与后台服务器的数据交互都有不同的请求格式,如果要修改请求格式,就要在此封装
- * 内修改,再加上此封装在支持CocoaPods后,如果使用者pod update最新PPNetworkHelper,那又要重新修改此
- * 封装内的相关参数.
- *
- * 依个人经验,在项目的开发中,一般都会将网络请求部分封装 2~3 层,第2层配置好网络请求工具的在本项目中的各项
- * 参数,其暴露出的方法接口只需留出请求URL与参数的入口就行,第3层就是对整个项目请求API的封装,其对外暴露出的
- * 的方法接口只留出请求参数的入口.这样如果以后项目要更换网络请求库或者修改请求URL,在单个文件内完成配置就好
- * 了,大大降低了项目的后期维护难度
- *
- * 综上所述,最终还是将设置参数的接口暴露出来,如果通过CocoaPods方式使用PPNetworkHelper,在设置项目网络
- * 请求参数的时候,强烈建议开发者在此基础上再封装一层,通过以下方法配置好各种参数与请求的URL,便于维护
- *
- **************************************  说明  **********************************************
- */
 
 #pragma mark - 重置AFHTTPSessionManager相关属性
 /**

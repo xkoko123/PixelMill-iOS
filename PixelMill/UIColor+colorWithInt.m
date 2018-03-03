@@ -27,7 +27,7 @@
     return c;
 }
 
-//UIColor -> int,,,只能转argb形式的
+//UIColor -> int,,,只能转argb形式的color
 - (NSInteger)intData
 {
     CGFloat a,r,g,b;

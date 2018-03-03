@@ -158,7 +158,6 @@
             if (_isPress || _fingerMode) {
                 [self drawLineBetweenLoc:_beginLoc and:_cursorLoc];
             }
-
         }
             break;
         case CIRCLE:

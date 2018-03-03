@@ -39,6 +39,16 @@
     NSLog(@"%@  %@  hhahahah",username, password);
     if (username!=nil && password!=nil) {
         [self.window setRootViewController:tabVc];
+        [[AYNetManager shareManager] loginWithUser:username password:password success:^(id responseObject) {
+            NSLog(@"~~%@", responseObject);
+            if ([responseObject[@"status"] integerValue] != 1) {
+                AYLoginViewController *vc = [[AYLoginViewController alloc] init];
+                self.window.rootViewController = vc;
+                [self.window.window makeKeyAndVisible];
+            }
+        } failure:^(NSError *error) {
+
+        }];
     }else{
         [self.window setRootViewController:logVc];
     }

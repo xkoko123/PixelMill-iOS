@@ -12,8 +12,7 @@
 
 +(UIColor *)colorWithInt:(NSInteger)i;
 
-- (NSInteger)intData;
-
+-(NSInteger)intData;
 
 -(CGFloat)getAlpha;
 

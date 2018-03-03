@@ -875,7 +875,11 @@
         [self showToastWithMessage:@"点击添加按钮把画布内容添加为动画的一祯" andDelay:1.5 andView:nil];
     }
     
-    AYGifFramesView *gifView = [[AYGifFramesView alloc] initWithFrame:self.view.frame Frames:self.girFrames andBottomOffset:self.view.frame.size.height - _tapButton.frame.origin.y Height:_tapButton.frame.origin.y - self.colorBar.frame.origin.y];
+    AYGifFramesView *gifView = [[AYGifFramesView alloc] initWithFrame:self.view.frame Frames:self.girFrames
+                                                      andBottomOffset:
+                                self.view.frame.size.height - _tapButton.frame.origin.y
+                                                               Height:_tapButton.frame.origin.y - self.colorBar.frame.origin.y
+                                ];
     gifView.delegate = self;
     
     gifView.alpha = 0.4;
