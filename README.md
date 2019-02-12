@@ -1,5 +1,4 @@
 #PixelMill
-毕业设计
 
 登陆 浏览
 ![image](https://github.com/tygogo/PixelMill-iOS/blob/master/5.gif)
